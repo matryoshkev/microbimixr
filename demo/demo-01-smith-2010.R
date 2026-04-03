@@ -1,7 +1,7 @@
-# Example usage of mixexptr: smith et al (2010) data
+# Example usage of microbimixr: smith et al (2010) data
 
 library(dplyr)    # Data handling that makes code more readable
-library(ggplot2)  # To customize mixexptr plots
+library(ggplot2)  # To customize microbimixr plots
 
 
 # Calculate fitness ------------------------------------------------------------

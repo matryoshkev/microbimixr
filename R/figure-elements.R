@@ -3,7 +3,7 @@
 # Theme ========================================================================
 
 # Default package theme (suited to figures in papers)
-theme_mixexptr <- function() {
+theme_microbimixr <- function() {
 	ggplot2::theme_grey() +
 	ggplot2::theme(
 		text = ggplot2::element_text(size = 9)
@@ -252,7 +252,7 @@ scale_fill_group <- function() {
 }
 
 # Default shape scale for points. Replaced if user specifies shape.
-# scale_shape_mixexptr <- function() {
+# scale_shape_microbimixr <- function() {
 # 	list(
 # 		ggplot2::aes(shape = TRUE),
 # 		ggplot2::scale_shape_manual(values = 21, guide = "none")
@@ -263,7 +263,7 @@ scale_fill_group <- function() {
 # Geom =========================================================================
 
 # Default points that are more readable when overlapped
-geom_point_mixexptr <- function(shape = 21, ..., na.rm = TRUE) {
+geom_point_microbimixr <- function(shape = 21, ..., na.rm = TRUE) {
 	list(
 		ggplot2::geom_point(shape = shape, ..., na.rm = na.rm),
 		ggplot2::geom_point(shape = shape, fill = NA, ..., na.rm = na.rm)

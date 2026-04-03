@@ -1,8 +1,8 @@
 ---
-title: "Analyzing microbial interactions with mixexptr"
+title: "Analyzing microbial interactions with microbimixr"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Analyzing microbial interactions with mixexptr}
+  %\VignetteIndexEntry{Analyzing microbial interactions with microbimixr}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -20,7 +20,7 @@ behavior depends on mix frequency.
 How do they act differently together than when they're on their own? 
 How does mixing affect their survival and reproductive success (their fitness)?
 
-mixexptr is an R package for analyzing these mix experiments. 
+microbimixr is an R package for analyzing these mix experiments. 
 It helps researchers get the most out of their data by providing tools to 
 calculate and plot fitness measures that are: 
 
@@ -32,7 +32,7 @@ calculate and plot fitness measures that are:
 
 <!-- TEACH PEOPLE HOW TO USE THE PACKAGE -->
 
-The basic workflow for analyzing mix experiments with mixexptr is: 
+The basic workflow for analyzing mix experiments with microbimixr is: 
 
 1. Make a data frame containing the experimental observations used to calculate 
    fitness
@@ -45,12 +45,12 @@ The basic workflow for analyzing mix experiments with mixexptr is:
 
 ## Input data
 
-The input format for mixexptr is a data frame where each row describes microbial abundance at the beginning and end of a mix experiment. The experimentally observed quantities could be any combination of strain abundance (number or density), strain frequency (fraction of total), or total group abundance---anything sufficient to define the absolute abundance of both strains in the experiment. Each row should contain data for a single observational unit: a single experimental replicate with one strain combination, one mix frequency, one combination of experimental treatments, etc.  
+The input format for microbimixr is a data frame where each row describes microbial abundance at the beginning and end of a mix experiment. The experimentally observed quantities could be any combination of strain abundance (number or density), strain frequency (fraction of total), or total group abundance---anything sufficient to define the absolute abundance of both strains in the experiment. Each row should contain data for a single observational unit: a single experimental replicate with one strain combination, one mix frequency, one combination of experimental treatments, etc.  
 
-For example, let's look at some datasets included with mixexptr. This dataset from smith *et al.* (2010) is an experiment mixing a wild-type strain of *Myxococcus* bacteria with an experimentally-evolved cheater strain. The observed quantities are the number of cells from each strain before and after they form multicellular fruiting bodies. 
+For example, let's look at some datasets included with microbimixr This dataset from smith *et al.* (2010) is an experiment mixing a wild-type strain of *Myxococcus* bacteria with an experimentally-evolved cheater strain. The observed quantities are the number of cells from each strain before and after they form multicellular fruiting bodies. 
 
 ```{r data-smith-2010}
-library(mixexptr)
+library(microbimixr)
 head(data_smith_2010)
 ```
 
@@ -133,7 +133,7 @@ The two measures of mix frequency calculated by `calculate_mix_fitness()` are:
 
 ## Plotting fitness
 
-mixexptr offers several functions for plotting fitness measures: 
+microbimixr offers several functions for plotting fitness measures: 
 
 * `plot_mix_fitness()` diagnostic plot
 * `plot_strain_fitness()`
@@ -158,7 +158,7 @@ These are convenience functions that make plots with the ggplot2 package using w
 
 ## Other stuff (maybe include above)
 
-* mixexptr functions work with magrittr pipe `%>%` and base R pipe `|>`
+* microbimixr functions work with magrittr pipe `%>%` and base R pipe `|>`
 
 
 ## References

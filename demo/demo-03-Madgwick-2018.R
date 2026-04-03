@@ -1,8 +1,8 @@
-# Example usage of mixexptr: Madwick et al (2018) data
-# Shows advanced mixexptr features and potential data issues
+# Example usage of microbimixr: Madwick et al (2018) data
+# Shows advanced microbimixr features and potential data issues
 
 library(dplyr)    # Data handling that makes code more readable
-library(ggplot2)  # To customize mixexptr plots
+library(ggplot2)  # To customize microbimixr plots
 
 
 # Calculate fitness ------------------------------------------------------------

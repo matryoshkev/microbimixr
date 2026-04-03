@@ -1,8 +1,8 @@
-# Example usage of mixexptr: Yurtsev et al (2013) data
-# Shows advanced mixexptr features and potential data issues
+# Example usage of microbimixr: Yurtsev et al (2013) data
+# Shows advanced microbimixr features and potential data issues
 
 library(dplyr)    # Data handling that makes code more readable
-library(ggplot2)  # To customize mixexptr plots
+library(ggplot2)  # To customize microbimixr plots
 
 
 # Curate data and calculate fitness --------------------------------------------
@@ -91,7 +91,7 @@ fitness_Fig3AB <- fitness_Fig3AB %>%
 
 # Within-group fitness ---------------------------------------------------------
 
-# We can use mixexptr plot functions with our preferred variable names
+# We can use microbimixr plot functions with our preferred variable names
 # as long as we tell them what's what
 fitness_names_Yurtsev <- c(
 	initial_fraction_A = "initial_freq_AmpR",

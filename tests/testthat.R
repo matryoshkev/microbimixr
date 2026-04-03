@@ -7,6 +7,6 @@
 # * https://testthat.r-lib.org/articles/special-files.html
 
 library(testthat)
-library(mixexptr)
+library(microbimixr)
 
-test_check("mixexptr")
+test_check("microbimixr")

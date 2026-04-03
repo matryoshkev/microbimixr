@@ -1,10 +1,10 @@
-mixexptr - Analyze microbial interactions in mix experiments
+microbimixr - Analyze microbial interactions in mix experiments
 ================
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 <!-- badges: start -->
 
-[![R-CMD-check](https://github.com/matryoshkev/mixexptr/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/matryoshkev/mixexptr/actions/workflows/R-CMD-check.yaml)
+[![R-CMD-check](https://github.com/matryoshkev/microbimixr/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/matryoshkev/microbimixr/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 A common experimental design for studying microbial interactions is to
@@ -13,14 +13,14 @@ example) then measure how their fitness and behavior depends on mix
 frequency. How do they behave differently together compared to on their
 own?
 
-`mixexptr` is an R package that provides tools to **calculate and plot
-the fitness effects of microbial interactions**, helping researchers get
-the most out of their data.
+`microbimixr` is an R package that provides tools to **calculate and
+plot the fitness effects of microbial interactions**, helping
+researchers get the most out of their data.
 
 ## Calculate fitness effects
 
-`mixexptr` provides a convenient way to calculate best-practice fitness
-measures that are:
+`microbimixr` provides a convenient way to calculate best-practice
+fitness measures that are:
 
 -   Robust and quantitatively comparable across different species and
     types of interaction
@@ -30,6 +30,7 @@ measures that are:
     evolution
 
 ``` r
+library("microbimixr")
 fitness_results <- calculate_mix_fitness(
     data_smith_2010, 
     var_names = c(
@@ -60,24 +61,24 @@ head(fitness_results)
 
 ## Plot fitness effects
 
-`mixexptr` provides convenient ways to plot calculated fitness effects.
-Here’s a quick diagnostic plot of the different fitness measures for
-this dataset:
+`microbimixr` provides convenient ways to plot calculated fitness
+effects. Here’s a quick diagnostic plot of the different fitness
+measures for this dataset:
 
 ``` r
 plot_mix_fitness(fitness_results, mix_scale = "fraction")
 ```
 
-![Diagnostic plot from mixexptr](./man/figures/README-smith-2010.png)
+![Diagnostic plot from microbimixr](./man/figures/README-smith-2010.png)
 
 ## Installation
 
-You can install the development version of `mixexptr` from
+You can install the development version of `microbimixr` from
 [GitHub](https://github.com/) with:
 
 ``` r
 # install.packages("devtools")
-devtools::install_github("matryoshkev/mixexptr")
+devtools::install_github("matryoshkev/microbimixr")
 ```
 
 ## Further reading
@@ -93,7 +94,7 @@ This is a basic example which shows you how to solve a common problem:
 
 
 ``` r
-# library(mixexptr)
+# library(microbimixr)
 ## basic example code
 ```
 

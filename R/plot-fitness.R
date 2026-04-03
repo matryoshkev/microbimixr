@@ -198,7 +198,7 @@ plot_strain_fitness <- function(
 	# Construct plot
 	fig_output <-
 		ggplot2::ggplot(data_to_plot) +
-		theme_mixexptr() +
+		theme_microbimixr() +
 		switch(
 			mix_scale,
 			fraction = scale_x_initial_fraction(
@@ -209,7 +209,7 @@ plot_strain_fitness <- function(
 			)
 		) +
 		scale_y_fitness(var_names, ylab = ylab, ylim = ylim) +
-		geom_point_mixexptr() +
+		geom_point_microbimixr() +
 		scale_fill_strain() +
 		scale_color_strain() +
 		ggplot2::ggtitle("")  # Space for legend, align height
@@ -293,7 +293,7 @@ plot_total_group_fitness <- function(
 	# Construct plot
 	fig_output <-
 		ggplot2::ggplot(data) +
-		theme_mixexptr() +
+		theme_microbimixr() +
 		switch(
 			mix_scale,
 			fraction = scale_x_initial_fraction(
@@ -304,7 +304,7 @@ plot_total_group_fitness <- function(
 			)
 		) +
 		scale_y_fitness_total(var_names, ylab = ylab, ylim = ylim) +
-		geom_point_mixexptr() +
+		geom_point_microbimixr() +
 		scale_fill_group() +
 		ggplot2::ggtitle("")  # Space for legend, align height
 
@@ -392,7 +392,7 @@ plot_within_group_fitness <- function(
 	# Construct plot
 	fig_output <-
 		ggplot2::ggplot(data) +
-		theme_mixexptr() +
+		theme_microbimixr() +
 		switch(
 			mix_scale,
 			fraction = scale_x_initial_fraction(
@@ -405,7 +405,7 @@ plot_within_group_fitness <- function(
 		scale_y_fitness_ratio(
 			var_names, strain_names, ylab = ylab, ylim = ylim
 		) +
-		geom_point_mixexptr() +
+		geom_point_microbimixr() +
 		scale_fill_group() +
 		ggplot2::ggtitle("")  # Space for legend, align height
 
@@ -476,7 +476,7 @@ plot_fitness_strain_total <- function(
 	# Construct plot
 	fig_output <-
 		ggplot2::ggplot(data_for_plot) +
-		theme_mixexptr() +
+		theme_microbimixr() +
 		theme_plot_mix_fitness() +
 		switch(
 			mix_scale,
@@ -484,7 +484,7 @@ plot_fitness_strain_total <- function(
 			ratio = scale_x_initial_ratio(var_names, strain_names)
 		) +
 		scale_y_fitness(var_names, ylim = ylim) +
-		geom_point_mixexptr() +
+		geom_point_microbimixr() +
 		scale_color_strain() +
 		scale_fill_strain() +
 		ggplot2::ggtitle("") +  # Space for legend, align height
