@@ -21,7 +21,7 @@ How do they act differently together than when they're on their own?
 How does mixing affect their survival and reproductive success (their fitness)?
 
 microbimixr is an R package for analyzing these mix experiments. 
-It helps researchers get the most out of their data by providing tools to 
+It helps researchers get the most out of their data by providing convenience functions to 
 calculate and plot fitness measures that are: 
 
 * Robust and quantitatively comparable across different species and types of 
@@ -32,22 +32,22 @@ calculate and plot fitness measures that are:
 
 <!-- TEACH PEOPLE HOW TO USE THE PACKAGE -->
 
-The basic workflow for analyzing mix experiments with microbimixr is: 
+The basic workflow for microbimixr is: 
 
-1. Make a data frame containing the experimental observations used to calculate 
+1. Make an input data frame containing the experimental observations used to calculate 
    fitness
 2. Calculate fitness measures with `calculate_mix_fitness()`
 3. Inspect a diagnostic plot of fitness measures with `plot_mix_fitness()`
-4. Plot the measures of interest with `plot_strain_fitness()`, 
+4. Plot measures of interest with `plot_strain_fitness()`, 
   `plot_total_group_fitness()`, and/or `plot_within_group_fitness()`
-5. Fit statistical models of your choosing and plot them with the data 
+5. Fit statistical models of your choosing and plot them with the data
 
 
 ## Input data
 
 The input format for microbimixr is a data frame where each row describes microbial abundance at the beginning and end of a mix experiment. The experimentally observed quantities could be any combination of strain abundance (number or density), strain frequency (fraction of total), or total group abundance---anything sufficient to define the absolute abundance of both strains in the experiment. Each row should contain data for a single observational unit: a single experimental replicate with one strain combination, one mix frequency, one combination of experimental treatments, etc.  
 
-For example, let's look at some datasets included with microbimixr This dataset from smith *et al.* (2010) is an experiment mixing a wild-type strain of *Myxococcus* bacteria with an experimentally-evolved cheater strain. The observed quantities are the number of cells from each strain before and after they form multicellular fruiting bodies. 
+For example, let's look at some datasets included with microbimixr. This dataset from smith *et al.* (2010) is an experiment mixing a wild-type strain of *Myxococcus* bacteria with an experimentally-evolved cheater strain. The observed quantities are the number of cells from each strain before and after they form multicellular fruiting bodies. 
 
 ```{r data-smith-2010}
 library(microbimixr)
@@ -59,7 +59,6 @@ This dataset from Yurtsev *et al.* (2013) describes the results of mix experimen
 ```{r data-Yurtsev-2013}
 head(data_Yurtsev_2013)
 ```
-
 
 ## Calculating fitness
 
@@ -100,36 +99,32 @@ head(fitness_Yurtsev_2013)
 
 Note the warning messages here. `calculate_mix_fitness()` will warn you if any of the data are not biologically meaningful. There cannot be a negative number of cells, for example, and fractions are bounded at zero and one. Some of the Yurtsev data includes negative fractions---likely an artifact of correcting for background fluorescence in flow cytometry. 
 
-* Explain `name_A` and `name_B` arguments
-* Make explicit which is which in the output itself
-* Column or label
-* Column example: Madgwick data
+> TO DO: 
+> 
+> * Explain `name_A` and `name_B` arguments
+> * They make explicit which is which in the output itself
+> * Can be column or label
+> * Column example: Madgwick data
 
+### Fitness measures
 
-
-## Fitness measures
-
-The fitness measures calculated by `calculate_mix_fitness()` are:
+`calculate_mix_fitness()` calculates four fitness measures from the input data:
 
 * `fitness_A` : Fitness of strain A
 * `fitness_B` : Fitness of strain B
 * `fitness_total` : Total-group fitness (strains A and B combined)
-* `fitness_ratio_A_B` : Within-group ratio of strain A fitness to strain B fitness
+* `fitness_ratio_A_B` : Within-group relative fitness measured as `fitness_A / fitness_B`
 
-These fitness measures have been chosen because ...
+The fitness calculations are very simple. If the initial abundance of strain A (measured as the number or density of cells or virions) is $n_A$ and its final abundance is $n'_A$, then its fitness is $w_A = n'_A/n_A$. Similarly, the fitness of strain B is $w_B = n'_B/n_B$. Total group fitness is $W = (n'_A + n'_B)/(n_A + n_B)$ and the within-group fitness ratio is $w_A/w_B$. These values are unscaled Wrightian fitness measured over the entire time period between the initial and final abundances. They measure fold change in absolute abundance. For example: if a bacterial strain's cell density increases 100-fold, its fitness will be $w = 100$. If it decreases to 10% of its initial density, its fitness will be $w = 0.1$.
 
-* Robust across systems and types of interaction
-* Strong, nonadditive effects
-* Both strain and group-focused fitness outcomes
-* Wrightian fitness ... easy intepretation as fold change in abundance ... for example, ...
+These fitness measures are robust across microbial species and types of interaction, make fitness effects quantitatively comparable across systems, and can be meaningfully incorporated into theoretical models of microbial social evolution. They are best visualized and analyzed over $\log_{10}$ scales. Some microbial interactions are more conveniently or more meaningfully analyzed with strain-focused fitness outcomes (`fitness_A` and `fitness_B`) while others are better suited to group-focused outcomes (`fitness_total` and `fitness_ratio_A_B`), so we include both sets by default. 
 
-The fitness calculations are very simple. If the initial abundance of strain A (measured as the number or density of cells or virions) is $n_A$ and its final abundance is $n'_A$, then its fitness is $w_A = n'_A/n_A$. Similarly, the fitness of strain B is $w_B = n'_B/n_B$. Total group fitness is $W = (n'_A + n'_B)/(n_A + n_B)$ and the within-group fitness ratio is $w_A/w_B$. 
+`calculate_mix_fitness()` also calculates two measures of mixing frequency: 
 
-The two measures of mix frequency calculated by `calculate_mix_fitness()` are:
+* `initial_fraction_A` : Initial frequency of strain A measured as the fraction of all cells or virions. 
+* `initial_ratio_A_B` : Initial ratio of strain A to strain B. 
 
-* `initial_fraction_A` : $n_A / (n_A + n_B)$  
-* `initial_ratio_A_B` : $n_A / n_B$ 
-
+`initial_fraction_A` is calculated as $n_A / (n_A + n_B)$ and runs from 0 to 1. `initial_ratio_A_B` is calculated as $n_A / n_B$. It runs from negative infinity to positive infinity and is best analyzed over $\log_{10}$ scales. Microbial interactions may be more relevant or more linear over one scale than the other, so we include both by default. 
 
 ## Plotting fitness
 
@@ -154,6 +149,14 @@ These are convenience functions that make plots with the ggplot2 package using w
 
 * Including fitted statistical models
 * Combine subplots with ??? package
+
+
+### Diagnostic plots
+
+### Plotting specific fitness measures
+
+### Plotting data with fitted statistical models
+
 
 
 ## Other stuff (maybe include above)
