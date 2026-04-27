@@ -8,10 +8,7 @@ vignette: >
 ---
 
 ```{r, include = FALSE}
-knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>"
-)
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
 ```
 
 A common experimental design in microbiology is to mix together two different 
@@ -99,14 +96,15 @@ head(fitness_Yurtsev_2013)
 
 Note the warning messages here. `calculate_mix_fitness()` will warn you if any of the data are not biologically meaningful. There cannot be a negative number of cells, for example, and fractions are bounded at zero and one. Some of the Yurtsev data includes negative fractions---likely an artifact of correcting for background fluorescence in flow cytometry. 
 
-> TO DO: 
-> 
-> * Explain `name_A` and `name_B` arguments
-> * They make explicit which is which in the output itself
-> * Can be column or label
-> * Column example: Madgwick data
+<!-- 
+* Explain `name_A` and `name_B` arguments?
+* They make explicit which is which in the output itself
+* Can be column or label
+* Column example: Madgwick data
+-->
 
-### Fitness measures
+
+## Fitness math
 
 `calculate_mix_fitness()` calculates four fitness measures from the input data:
 
@@ -115,53 +113,56 @@ Note the warning messages here. `calculate_mix_fitness()` will warn you if any o
 * `fitness_total` : Total-group fitness (strains A and B combined)
 * `fitness_ratio_A_B` : Within-group relative fitness measured as `fitness_A / fitness_B`
 
-The fitness calculations are very simple. If the initial abundance of strain A (measured as the number or density of cells or virions) is $n_A$ and its final abundance is $n'_A$, then its fitness is $w_A = n'_A/n_A$. Similarly, the fitness of strain B is $w_B = n'_B/n_B$. Total group fitness is $W = (n'_A + n'_B)/(n_A + n_B)$ and the within-group fitness ratio is $w_A/w_B$. These values are unscaled Wrightian fitness measured over the entire time period between the initial and final abundances. They measure fold change in absolute abundance. For example: if a bacterial strain's cell density increases 100-fold, its fitness will be $w = 100$. If it decreases to 10% of its initial density, its fitness will be $w = 0.1$.
+The actual calculations are very simple. If the initial abundance of strain A (measured as the number or density of cells or virions) is $n_A$ and its final abundance is $n'_A$, then its fitness is $w_A = n'_A/n_A$. Similarly, the fitness of strain B is $w_B = n'_B/n_B$. Total group fitness is $W = (n'_A + n'_B)/(n_A + n_B)$ and the within-group fitness ratio is $w_A/w_B$. These values are unscaled Wrightian fitness measured over the entire time period between the initial and final abundances. They measure fold change in absolute abundance. For example: if a bacterial strain's cell density increases 100-fold, its fitness will be $w = 100$. If it decreases to 10% of its initial density, its fitness will be $w = 0.1$.
 
-These fitness measures are robust across microbial species and types of interaction, make fitness effects quantitatively comparable across systems, and can be meaningfully incorporated into theoretical models of microbial social evolution. They are best visualized and analyzed over $\log_{10}$ scales. Some microbial interactions are more conveniently or more meaningfully analyzed with strain-focused fitness outcomes (`fitness_A` and `fitness_B`) while others are better suited to group-focused outcomes (`fitness_total` and `fitness_ratio_A_B`), so we include both sets by default. 
+These fitness measures are robust across microbial species and types of interaction, make fitness effects quantitatively comparable across systems, and can be meaningfully incorporated into theoretical models of microbial social evolution. They are usually best visualized and analyzed over $\log_{10}$ scales. Some effects are easier to visualize, analyze, and interpret with strain-focused fitness outcomes (`fitness_A` and `fitness_B`), while others are better suited to group-focused outcomes (`fitness_total` and `fitness_ratio_A_B`). So we include both approaches by default. 
 
 `calculate_mix_fitness()` also calculates two measures of mixing frequency: 
 
-* `initial_fraction_A` : Initial frequency of strain A measured as the fraction of all cells or virions. 
-* `initial_ratio_A_B` : Initial ratio of strain A to strain B. 
+* `initial_fraction_A` : Initial frequency of strain A measured as the fraction of all cells or virions
+* `initial_ratio_A_B` : Initial ratio of strain A to strain B
 
 `initial_fraction_A` is calculated as $n_A / (n_A + n_B)$ and runs from 0 to 1. `initial_ratio_A_B` is calculated as $n_A / n_B$. It runs from negative infinity to positive infinity and is best analyzed over $\log_{10}$ scales. Microbial interactions may be more relevant or more linear over one scale than the other, so we include both by default. 
 
-## Plotting fitness
+
+## Diagnostic plots
+
+To quickly see an overview of the various fitness effects in a dataset, we can use `plot_mix_fitness()`. 
+<!-- `plot_mix_fitness()` produces a diagnostic overview of the various fitness effects in a dataset.  -->
+It draws a combined plot of strain, total group, and relative within-group fitness against two measures of mix frequency.
+
+```
+plot_mix_fitness(fitness_smith_2010)
+```
+> [insert image here]
+
+These help you quickly see which fitness measures and mix frequency scales are more informative or easier to analyze. For example, within-group competition among these *Myxo* strains is negatively frequency-dependent and a linear function of log mixing ratio. `plot_mix_fitness()` uses `log10` scales for fitness and mixing ratio, so it will return warnings when some of these values are zero---for data with only one strain, for example. 
+
+As a tool for data inspection, `plot_mix_fitness()` shows each data point individually instead of a statistical summary like the mean value with error bars. For complex datasets with many strains or treatment conditions, it may be easier to inspect subsets of the data. microbimixr's functions work with the R pipe `|>`. 
+
+```
+subset(fitness_Yurtsev_2013, ampicillin == 100 & dilution == 100) |>
+plot_mix_fitness()
+```
+
+> [insert image here]
+
+In this interaction between antibiotic-resistant and sensitive *E. coli* strains, we can see that total group fitness is just a constant determined by experimental conditions (how much the culture was diluted before growing). So we may want to focus on the within-group fitness ratio as a succinct measure of the interesting effects. 
+
+microbimixr's plotting functions can use fitness datasets that aren't made by `calculate_mix_fitness()`, but you may need to specify what the columns mean using the `var_names` option. 
+
+
+## Plotting specific fitness measures
 
 microbimixr offers several functions for plotting fitness measures: 
 
-* `plot_mix_fitness()` diagnostic plot
 * `plot_strain_fitness()`
 * `plot_total_group_fitness()`
 * `plot_within_group_fitness()`
-
-**Explain plot functions**
-
-* Wrightian fitness best visualized and analyzed over log scales
-* Issue: zeroes
-* x-axis quantitative ... fitness effects of microbial interactions usually depend on mix frequency
-* `initial_fraction_A` ... linear scale from zero to one
-* `initial_ratio_A_B` ... log scales ... better for visualizing effects at ... can't show single-strain experiments
-
-**Extending plots**
-
-These are convenience functions that make plots with the ggplot2 package using with reasonable default settings. They return ggplot2 objects that you are free to extend and modify, adding or replacing scales, themes, and so on. 
-
-* Including fitted statistical models
+* Plot data with fitted statistical models
 * Combine subplots with ??? package
 
-
-### Diagnostic plots
-
-### Plotting specific fitness measures
-
-### Plotting data with fitted statistical models
-
-
-
-## Other stuff (maybe include above)
-
-* microbimixr functions work with magrittr pipe `%>%` and base R pipe `|>`
+**Extending plots.** These are convenience functions that make plots with the ggplot2 package using with reasonable default settings. They return ggplot2 objects that you are free to extend and modify, adding or replacing scales, themes, and so on. 
 
 
 ## References
