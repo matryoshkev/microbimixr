@@ -219,7 +219,7 @@ plot_strain_fitness <- function(
 			)
 		) +
 		scale_y_fitness(var_names, ylab = ylab, ylim = ylim) +
-		geom_point_microbimixr() +
+		geom_point_overlap() +
 		scale_color_strain() +
 		scale_fill_strain() +
 		ggplot2::ggtitle("")  # Space for legend, align height
@@ -323,7 +323,7 @@ plot_total_group_fitness <- function(
 			)
 		) +
 		scale_y_fitness_total(var_names, ylab = ylab, ylim = ylim) +
-		geom_point_microbimixr() +
+		geom_point_overlap() +
 		scale_fill_group() +
 		ggplot2::ggtitle("")  # Space for legend, align height
 
@@ -431,7 +431,7 @@ plot_within_group_fitness <- function(
 			)
 		) +
 		scale_y_fitness_ratio(var_names, strain_names, ylab = ylab, ylim = ylim) +
-		geom_point_microbimixr() +
+		geom_point_overlap() +
 		scale_fill_group() +
 		ggplot2::ggtitle("")  # Space for legend, align height
 
@@ -520,7 +520,7 @@ plot_fitness_strain_total <- function(
 			ratio = scale_x_initial_ratio(var_names, strain_names)
 		) +
 		scale_y_fitness(var_names, ylim = ylim) +
-		geom_point_microbimixr() +
+		geom_point_overlap() +
 		scale_color_strain() +
 		scale_fill_strain() +
 		ggplot2::ggtitle("") +  # Space for legend, align height

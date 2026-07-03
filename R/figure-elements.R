@@ -235,10 +235,10 @@ scale_fill_group <- function() {
 # Geom =========================================================================
 
 # Default points that are more readable when overlapped
-geom_point_microbimixr <- function(shape = 21, ..., na.rm = TRUE) {
-	list(
-		ggplot2::geom_point(shape = shape, ..., na.rm = na.rm),
-		ggplot2::geom_point(shape = shape, fill = NA, ..., na.rm = na.rm)
-	)
-}
+# geom_point_microbimixr <- function(shape = 21, ..., na.rm = TRUE) {
+# 	list(
+# 		ggplot2::geom_point(shape = shape, ..., na.rm = na.rm),
+# 		ggplot2::geom_point(shape = shape, fill = NA, ..., na.rm = na.rm)
+# 	)
+# }
 
