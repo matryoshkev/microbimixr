@@ -1,4 +1,4 @@
-# Geoms ========================================================================
+# Geoms for ggplot2 ============================================================
 
 # Points that are more readable when they overlap
 geom_point_overlap <- function(shape = 21, ..., na.rm = TRUE) {
