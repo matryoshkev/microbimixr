@@ -1,27 +1,4 @@
-# Figure elements
-
-# Theme ========================================================================
-
-# # Default package theme (suited to figures in papers)
-# theme_microbimixr <- function() {
-# 	ggplot2::theme_grey() +
-# 	ggplot2::theme(
-# 		text = ggplot2::element_text(size = 9)
-# 	)
-# }
-#
-# # Additional options for plot_mix_fitness() (less clutter)
-# theme_plot_mix_fitness <- function() {
-# 	ggplot2::theme(
-# 		legend.title         = ggplot2::element_blank(),
-# 		legend.background    = ggplot2::element_blank(),
-# 		legend.direction     = "horizontal",
-# 		legend.justification = c(0.5, 0.15),
-# 		legend.position      = c(0.5, 1),
-# 		strip.text           = ggplot2::element_blank(),
-# 		strip.background     = ggplot2::element_blank()
-# 	)
-# }
+# Scales for ggplot2
 
 
 # Axes =========================================================================
@@ -194,33 +171,33 @@ limits_log10 <- function(values) {
 }
 
 
-# Other aesthetics =============================================================
+# Color & fill =================================================================
+
+# Default colors
+color_strain_A <- function() { "tan4" }
+color_strain_B <- function() { "lightsteelblue4" }
+color_group    <- function() { "black" }
+fill_strain_A  <- function() { "tan" }
+fill_strain_B  <- function() { "lightsteelblue" }
+fill_group     <- function() { "gray65" }
 
 # Color points by strain/total-group
 scale_color_strain <- function(
-	values = c(color_strain_A(), color_strain_B(), color_group()),
-	...
+	values = c(color_strain_A(), color_strain_B(), color_group()), ...
 ) {
 	ggplot2::scale_color_manual(values = values, ...)
 }
-color_strain_A <- function() "tan4"
-color_strain_B <- function() "lightsteelblue4"
-color_group    <- function() "black"
 
 # Fill points by strain/total-group
 scale_fill_strain <- function(
-	values = c(fill_strain_A(), fill_strain_B(), fill_group()),
-	...
+	values = c(fill_strain_A(), fill_strain_B(), fill_group()), ...
 ) {
 	ggplot2::scale_fill_manual(values = values, ...)
 }
-fill_strain_A <- function() "tan"
-fill_strain_B <- function() "lightsteelblue"
-fill_group    <- function() "gray65"
 
 # Default fill scale for mixed groups. Replaced if user specifies fill.
-scale_fill_group <- function() {
-	ggplot2::scale_fill_manual(values = fill_group(), guide = "none")
+scale_fill_group <- function(...) {
+	ggplot2::scale_fill_manual(values = fill_group(), guide = "none", ...)
 }
 
 # Default shape scale for points. Replaced if user specifies shape.
@@ -230,15 +207,3 @@ scale_fill_group <- function() {
 # 		ggplot2::scale_shape_manual(values = 21, guide = "none")
 # 	)
 # }
-
-
-# Geom =========================================================================
-
-# Default points that are more readable when overlapped
-# geom_point_microbimixr <- function(shape = 21, ..., na.rm = TRUE) {
-# 	list(
-# 		ggplot2::geom_point(shape = shape, ..., na.rm = na.rm),
-# 		ggplot2::geom_point(shape = shape, fill = NA, ..., na.rm = na.rm)
-# 	)
-# }
-
