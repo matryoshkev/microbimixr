@@ -183,7 +183,7 @@ plot_strain_fitness <- function(
 	if (missing(xlim)) { xlim <- NULL }
 	if (missing(ylim)) { ylim <- NULL }
 
-	# Long-format data
+	# Make long-format data frame for plot
 	data_to_plot <- stats::reshape(
 		as.data.frame(data),  # reshape() chokes on tibbles
 		direction = "long",
@@ -195,9 +195,19 @@ plot_strain_fitness <- function(
 
 	if (is.null(ylim)) { ylim <- limits_log10(data_to_plot$fitness) }
 
-	# Construct plot
+	# Make plot
 	fig_output <-
 		ggplot2::ggplot(data_to_plot) +
+		ggplot2::aes(
+			x = switch(
+				mix_scale,
+				fraction = .data[[var_names$initial_fraction_A]],
+				ratio = .data[[var_names$initial_ratio_A_B]]
+			),
+			y = .data$fitness,
+			color = .data$strain,
+			fill = .data$strain
+		) +
 		theme_microbimixr() +
 		switch(
 			mix_scale,
@@ -210,8 +220,8 @@ plot_strain_fitness <- function(
 		) +
 		scale_y_fitness(var_names, ylab = ylab, ylim = ylim) +
 		geom_point_microbimixr() +
-		scale_fill_strain() +
 		scale_color_strain() +
+		scale_fill_strain() +
 		ggplot2::ggtitle("")  # Space for legend, align height
 
 	# Expand limits to include log-intercepts
@@ -293,6 +303,15 @@ plot_total_group_fitness <- function(
 	# Construct plot
 	fig_output <-
 		ggplot2::ggplot(data) +
+		ggplot2::aes(
+			x = switch(
+				mix_scale,
+				fraction = .data[[var_names$initial_fraction_A]],
+				ratio = .data[[var_names$initial_ratio_A_B]]
+			),
+			y = .data[[var_names$fitness_total]],
+			fill = TRUE
+		) +
 		theme_microbimixr() +
 		switch(
 			mix_scale,
@@ -392,6 +411,15 @@ plot_within_group_fitness <- function(
 	# Construct plot
 	fig_output <-
 		ggplot2::ggplot(data) +
+		ggplot2::aes(
+			x = switch(
+				mix_scale,
+				fraction = .data[[var_names$initial_fraction_A]],
+				ratio = .data[[var_names$initial_ratio_A_B]]
+			),
+			y = .data[[var_names$fitness_ratio_A_B]],
+			fill = TRUE
+		) +
 		theme_microbimixr() +
 		switch(
 			mix_scale,
@@ -402,9 +430,7 @@ plot_within_group_fitness <- function(
 				var_names, strain_names, xlab = xlab, xlim = xlim
 			)
 		) +
-		scale_y_fitness_ratio(
-			var_names, strain_names, ylab = ylab, ylim = ylim
-		) +
+		scale_y_fitness_ratio(var_names, strain_names, ylab = ylab, ylim = ylim) +
 		geom_point_microbimixr() +
 		scale_fill_group() +
 		ggplot2::ggtitle("")  # Space for legend, align height
@@ -455,7 +481,7 @@ plot_fitness_strain_total <- function(
 	# Scale options
 	mix_scale <- rlang::arg_match(mix_scale, c("fraction", "ratio"))
 
-	# Long-format data
+	# Make long-format data
 	# data_for_plot <- format_to_plot_fitness(data, var_names, mix_scale)
 	data_for_plot <- stats::reshape(
 		as.data.frame(data),
@@ -473,9 +499,19 @@ plot_fitness_strain_total <- function(
 	)
 	data_for_plot$my_facet <- data_for_plot$strain == name_total
 
-	# Construct plot
+	# Make plot
 	fig_output <-
 		ggplot2::ggplot(data_for_plot) +
+		ggplot2::aes(
+			x = switch(
+				mix_scale,
+				fraction = .data[[var_names$initial_fraction_A]],
+				ratio = .data[[var_names$initial_ratio_A_B]]
+			),
+			y = .data$fitness,
+			color = .data$strain,
+			fill = .data$strain
+		) +
 		theme_microbimixr() +
 		theme_plot_mix_fitness() +
 		switch(

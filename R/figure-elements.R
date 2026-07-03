@@ -44,14 +44,11 @@ scale_x_initial_fraction <- function(
 		breaks <- seq(0, 1, by = 0.2)
 		minor_breaks <- NULL
 	}
-	list(
-		ggplot2::aes(x = .data[[var_names$initial_fraction_A]]),
-		ggplot2::scale_x_continuous(
-			name = xlab,
-			limits = xlim,
-			breaks = breaks,
-			minor_breaks = minor_breaks
-		)
+	ggplot2::scale_x_continuous(
+		name = xlab,
+		limits = xlim,
+		breaks = breaks,
+		minor_breaks = minor_breaks
 	)
 }
 
@@ -72,17 +69,13 @@ scale_x_initial_ratio <- function(
 		breaks <- 10^c(-12:12)
 		minor_breaks <- NULL
 	}
-	scale <- list(
-		ggplot2::aes(x = .data[[var_names$initial_ratio_A_B]]),
-		ggplot2::scale_x_log10(
-			name = xlab,
-			limits = xlim,
-			breaks = breaks_log10,
-			labels = labels_log10,
-			minor_breaks = minor_breaks_log10
-		)
+	ggplot2::scale_x_log10(
+		name = xlab,
+		limits = xlim,
+		breaks = breaks_log10,
+		labels = labels_log10,
+		minor_breaks = minor_breaks_log10
 	)
-	scale
 }
 
 # Add y-axis scale: fitness (strain A, strain B, total group)
@@ -91,17 +84,13 @@ scale_y_fitness <- function(var_names, ..., ylab = NULL, ylim = NULL) {
 	if (is.null(ylab)) {
 		ylab <- "Wrightian fitness\n (final no. / initial no.)"
 	}
-	scale <- list(
-		ggplot2::aes(y = .data[[var_names$fitness]]),
-		ggplot2::scale_y_log10(
-			name = ylab,
-			limits = ylim,
-			breaks = breaks_log10,
-			labels = labels_log10,
-			minor_breaks = minor_breaks_log10
-		)
+	ggplot2::scale_y_log10(
+		name = ylab,
+		limits = ylim,
+		breaks = breaks_log10,
+		labels = labels_log10,
+		minor_breaks = minor_breaks_log10
 	)
-	scale
 }
 
 # Add y-axis scale: total-group fitness
@@ -110,17 +99,13 @@ scale_y_fitness_total <- function(var_names, ..., ylab = NULL, ylim = NULL) {
 	if (is.null(ylab)) {
 		ylab <- "Total group fitness\n(final no. / initial no.)"
 	}
-	scale <- list(
-		ggplot2::aes(y = .data[[var_names$fitness_total]]),
-		ggplot2::scale_y_log10(
-			name = ylab,
-			limits = ylim,
-			breaks = breaks_log10,
-			labels = labels_log10,
-			minor_breaks = minor_breaks_log10
-		)
+	ggplot2::scale_y_log10(
+		name = ylab,
+		limits = ylim,
+		breaks = breaks_log10,
+		labels = labels_log10,
+		minor_breaks = minor_breaks_log10
 	)
-	scale
 }
 
 # Add y-axis scale: within-group fitness ratio A/B
@@ -131,17 +116,13 @@ scale_y_fitness_ratio <- function(
 	if (is.null(ylab)) {
 		ylab <- paste("Fitness ratio\n", strain_names$A, "/", strain_names$B)
 	}
-	scale <- list(
-		ggplot2::aes(y = .data[[var_names$fitness_ratio_A_B]]),
-		ggplot2::scale_y_log10(
-			name = ylab,
-			limits = ylim,
-			breaks = breaks_log10,
-			labels = labels_log10,
-			minor_breaks = minor_breaks_log10
-		)
+	ggplot2::scale_y_log10(
+		name = ylab,
+		limits = ylim,
+		breaks = breaks_log10,
+		labels = labels_log10,
+		minor_breaks = minor_breaks_log10
 	)
-	scale
 }
 
 # Breaks for log10 axes
@@ -220,10 +201,7 @@ scale_color_strain <- function(
 	values = c(color_strain_A(), color_strain_B(), color_group()),
 	...
 ) {
-	list(
-		ggplot2::aes(color = .data$strain),
-		ggplot2::scale_color_manual(values = values, ...)
-	)
+	ggplot2::scale_color_manual(values = values, ...)
 }
 color_strain_A <- function() "tan4"
 color_strain_B <- function() "lightsteelblue4"
@@ -234,10 +212,7 @@ scale_fill_strain <- function(
 	values = c(fill_strain_A(), fill_strain_B(), fill_group()),
 	...
 ) {
-	list(
-		ggplot2::aes(fill = .data$strain),
-		ggplot2::scale_fill_manual(values = values, ...)
-	)
+	ggplot2::scale_fill_manual(values = values, ...)
 }
 fill_strain_A <- function() "tan"
 fill_strain_B <- function() "lightsteelblue"
@@ -245,10 +220,7 @@ fill_group    <- function() "gray65"
 
 # Default fill scale for mixed groups. Replaced if user specifies fill.
 scale_fill_group <- function() {
-	list(
-		ggplot2::aes(fill = TRUE),
-		ggplot2::scale_fill_manual(values = fill_group(), guide = "none")
-	)
+	ggplot2::scale_fill_manual(values = fill_group(), guide = "none")
 }
 
 # Default shape scale for points. Replaced if user specifies shape.

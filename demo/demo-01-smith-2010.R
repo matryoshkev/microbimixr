@@ -108,6 +108,10 @@ fig_smith_2010
 
 # Dev code ---------------------------------------------------------------------
 
+dev.new(width = 3.5, height = 2.25, units = "in")
 fitness_smith_2010 %>% plot_strain_fitness(mix_scale = "ratio")
 
+fitness_smith_2010 %>% plot_strain_fitness(mix_scale = "fraction")
+
+dev.new(width = 4.5, height = 2.25, units = "in")
 fitness_smith_2010 %>% plot_fitness_strain_total()
