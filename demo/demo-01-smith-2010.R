@@ -115,3 +115,20 @@ fitness_smith_2010 %>% plot_strain_fitness(mix_scale = "fraction")
 
 dev.new(width = 4.5, height = 2.25, units = "in")
 fitness_smith_2010 %>% plot_fitness_strain_total()
+
+dev.new(width = 3.5, height = 2.25, units = "in")
+fitness_smith_2010 %>% plot_strain_fitness(mix_scale = "ratio")
+
+# Plot elements ----------------------------------------------------------------
+
+fitness_smith_2010 |>
+	filter(!is.na(fitness_A)) |>
+	ggplot() +
+	aes(x = initial_fraction_A, y = log10(fitness_A)) +
+	# scale_x_initial_fraction(
+	# 	strain_names = c(A = "cheat", B = "coop")
+	# ) +
+	geom_point_overlap(fill = "grey75", shape = 23, size = 2)
+
+
+
