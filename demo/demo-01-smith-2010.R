@@ -130,7 +130,7 @@ fitness_smith_2010 |>
 	aes(x = initial_fraction_A, y = log10(fitness_total)) +
 	scale_x_initial_fraction(
 		strain_names = c(A = "evolved", B = "ancestor"),
-		name = "Frequency of evolved strain"
+		name = NULL
 	) +
 	geom_point_overlap(aes(fill = exptl_block), shape = 21, size = 2)
 

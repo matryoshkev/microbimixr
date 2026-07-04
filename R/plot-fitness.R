@@ -212,13 +212,13 @@ plot_strain_fitness <- function(
 		switch(
 			mix_scale,
 			fraction = scale_x_initial_fraction(
-				strain_names, name = xlab, xlim = xlim
+				strain_names, name = xlab, limits = xlim
 			),
 			ratio = scale_x_initial_ratio(
-				strain_names, name = xlab, xlim = xlim
+				strain_names, name = xlab, limits = xlim
 			)
 		) +
-		scale_y_fitness(name = ylab, ylim = ylim) +
+		scale_y_fitness(name = ylab, limits = ylim) +
 		geom_point_overlap(shape = 21) +
 		scale_color_strain() +
 		scale_fill_strain() +
@@ -316,13 +316,13 @@ plot_total_group_fitness <- function(
 		switch(
 			mix_scale,
 			fraction = scale_x_initial_fraction(
-				strain_names, name = xlab, xlim = xlim
+				strain_names, name = xlab, limits = xlim
 			),
 			ratio = scale_x_initial_ratio(
-				strain_names, name = xlab, xlim = xlim
+				strain_names, name = xlab, limits = xlim
 			)
 		) +
-		scale_y_fitness_total(name = ylab, ylim = ylim) +
+		scale_y_fitness_total(name = ylab, limits = ylim) +
 		geom_point_overlap(shape = 21, color = color_group(), fill = fill_group()) +
 		ggplot2::ggtitle("")  # Space for legend, align height
 
@@ -423,13 +423,13 @@ plot_within_group_fitness <- function(
 		switch(
 			mix_scale,
 			fraction = scale_x_initial_fraction(
-				strain_names, name = xlab, xlim = xlim
+				strain_names, name = xlab, limits = xlim
 			),
 			ratio = scale_x_initial_ratio(
-				strain_names, name = xlab, xlim = xlim
+				strain_names, name = xlab, limits = xlim
 			)
 		) +
-		scale_y_fitness_ratio(strain_names, name = ylab, ylim = ylim) +
+		scale_y_fitness_ratio(strain_names, name = ylab, limits = ylim) +
 		geom_point_overlap(shape = 21, color = color_group(), fill = fill_group()) +
 		ggplot2::ggtitle("")  # Space for legend, align height
 
@@ -517,7 +517,7 @@ plot_fitness_strain_total <- function(
 			fraction = scale_x_initial_fraction(strain_names),
 			ratio = scale_x_initial_ratio(strain_names)
 		) +
-		scale_y_fitness(ylim = ylim) +
+		scale_y_fitness(limits = ylim) +
 		geom_point_overlap(shape = 21) +
 		scale_color_strain() +
 		scale_fill_strain() +

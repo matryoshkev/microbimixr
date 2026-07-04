@@ -7,23 +7,24 @@
 scale_x_initial_fraction <- function(
 	strain_names,
 	name = NA,
-	xlim = NULL,
+	limits = NULL,
 	breaks = ggplot2::waiver(),
 	minor_breaks = ggplot2::waiver(),
 	...
 ) {
 	strain_names <- as.list(strain_names)
-	if (is.na(name)) { name <- paste("Initial fraction", strain_names$A) }
-	if (is.null(xlim)) {
-		xlim <- c(0, 1)
+	if (missing(name)) { name <- paste("Initial fraction", strain_names$A) }
+	if (is.null(limits)) {
+		limits <- c(0, 1)
 		breaks <- seq(0, 1, by = 0.2)
 		minor_breaks <- NULL
 	}
 	ggplot2::scale_x_continuous(
 		name = name,
-		limits = xlim,
+		limits = limits,
 		breaks = breaks,
-		minor_breaks = minor_breaks
+		minor_breaks = minor_breaks,
+		...
 	)
 }
 
@@ -31,55 +32,58 @@ scale_x_initial_fraction <- function(
 scale_x_initial_ratio <- function(
 	strain_names,
 	name = NA,
-	xlim = NULL,
+	limits = NULL,
 	...
 ) {
 	strain_names <- as.list(strain_names)
-	if (is.na(name)) {
+	if (missing(name)) {
 		name <- paste("Initial ratio", strain_names$A, "/", strain_names$B)
 	}
-	if (is.null(xlim)) {
+	if (is.null(limits)) {
 		breaks <- 10^c(-12:12)
 		minor_breaks <- NULL
 	}
 	ggplot2::scale_x_log10(
 		name = name,
-		limits = xlim,
+		limits = limits,
 		breaks = breaks_log10,
 		labels = labels_log10,
-		minor_breaks = minor_breaks_log10
+		minor_breaks = minor_breaks_log10,
+		...
 	)
 }
 
 # Y-axis: fitness (strain A, strain B, total group)
 scale_y_fitness <- function(
 	name = NA,
-	ylim = NULL,
+	limits = NULL,
 	...
 ) {
-	if (is.na(name)) { name <- "Wrightian fitness\n (final no. / initial no.)" }
+	if (missing(name)) { name <- "Wrightian fitness\n (final no. / initial no.)" }
 	ggplot2::scale_y_log10(
 		name = name,
-		limits = ylim,
+		limits = limits,
 		breaks = breaks_log10,
 		labels = labels_log10,
-		minor_breaks = minor_breaks_log10
+		minor_breaks = minor_breaks_log10,
+		...
 	)
 }
 
 # Y-axis: total-group fitness
 scale_y_fitness_total <- function(
 	name = NA,
-	ylim = NULL,
+	limits = NULL,
 	...
 ) {
-	if (is.na(name)) { name <- "Total group fitness\n(final no. / initial no.)" }
+	if (missing(name)) { name <- "Total group fitness\n(final no. / initial no.)" }
 	ggplot2::scale_y_log10(
 		name = name,
-		limits = ylim,
+		limits = limits,
 		breaks = breaks_log10,
 		labels = labels_log10,
-		minor_breaks = minor_breaks_log10
+		minor_breaks = minor_breaks_log10,
+		...
 	)
 }
 
@@ -87,19 +91,20 @@ scale_y_fitness_total <- function(
 scale_y_fitness_ratio <- function(
 	strain_names,
 	name = NA,
-	ylim = NULL,
+	limits = NULL,
 	...
 ) {
 	strain_names <- as.list(strain_names)
-	if (is.na(name)) {
+	if (missing(name)) {
 		name <- paste("Fitness ratio\n", strain_names$A, "/", strain_names$B)
 	}
 	ggplot2::scale_y_log10(
 		name = name,
-		limits = ylim,
+		limits = limits,
 		breaks = breaks_log10,
 		labels = labels_log10,
-		minor_breaks = minor_breaks_log10
+		minor_breaks = minor_breaks_log10,
+		...
 	)
 }
 
