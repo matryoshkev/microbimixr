@@ -5,15 +5,16 @@
 
 # X-axis: initial fraction strain A
 scale_x_initial_fraction <- function(
-	strain_names,
+	strain_A_name = "strain A",
 	name = NA,
 	limits = NULL,
 	breaks = ggplot2::waiver(),
 	minor_breaks = ggplot2::waiver(),
 	...
 ) {
-	strain_names <- as.list(strain_names)
-	if (missing(name)) { name <- paste("Initial fraction", strain_names$A) }
+	if (is.na(name)) {
+		name <- paste("Initial fraction", strain_A_name)
+	}
 	if (is.null(limits)) {
 		limits <- c(0, 1)
 		breaks <- seq(0, 1, by = 0.2)
@@ -30,13 +31,13 @@ scale_x_initial_fraction <- function(
 
 # X-axis: initial ratio A/B (log10)
 scale_x_initial_ratio <- function(
-	strain_names,
+	strain_names = c(A = "strain A", B = "strain B"),
 	name = NA,
 	limits = NULL,
 	...
 ) {
-	strain_names <- as.list(strain_names)
-	if (missing(name)) {
+	if (is.na(name)) {
+		strain_names <- as.list(strain_names)
 		name <- paste("Initial ratio", strain_names$A, "/", strain_names$B)
 	}
 	if (is.null(limits)) {
@@ -59,7 +60,7 @@ scale_y_fitness <- function(
 	limits = NULL,
 	...
 ) {
-	if (missing(name)) { name <- "Wrightian fitness\n (final no. / initial no.)" }
+	if (is.na(name)) { name <- "Wrightian fitness\n (final no. / initial no.)" }
 	ggplot2::scale_y_log10(
 		name = name,
 		limits = limits,
@@ -76,7 +77,9 @@ scale_y_fitness_total <- function(
 	limits = NULL,
 	...
 ) {
-	if (missing(name)) { name <- "Total group fitness\n(final no. / initial no.)" }
+	if (is.na(name)) {
+		name <- "Total group fitness\n(final no. / initial no.)"
+	}
 	ggplot2::scale_y_log10(
 		name = name,
 		limits = limits,
@@ -89,13 +92,13 @@ scale_y_fitness_total <- function(
 
 # Y-axis: within-group fitness ratio A/B
 scale_y_fitness_ratio <- function(
-	strain_names,
+	strain_names = c(A = "strain A", B = "strain B"),
 	name = NA,
 	limits = NULL,
 	...
 ) {
-	strain_names <- as.list(strain_names)
-	if (missing(name)) {
+	if (is.na(name)) {
+		strain_names <- as.list(strain_names)
 		name <- paste("Fitness ratio\n", strain_names$A, "/", strain_names$B)
 	}
 	ggplot2::scale_y_log10(

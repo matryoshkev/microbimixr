@@ -127,10 +127,11 @@ fitness_smith_2010 %>% plot_total_group_fitness()
 fitness_smith_2010 |>
 	filter(!is.na(fitness_total)) |>
 	ggplot() +
-	aes(x = initial_fraction_A, y = log10(fitness_total)) +
-	scale_x_initial_fraction(
+	aes(x = initial_ratio_A_B, y = log10(fitness_total)) +
+	scale_x_initial_ratio(
 		strain_names = c(A = "evolved", B = "ancestor"),
-		name = NULL
+		# name = "NULL",
+		position = "top"
 	) +
 	geom_point_overlap(aes(fill = exptl_block), shape = 21, size = 2)
 

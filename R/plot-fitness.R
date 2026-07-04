@@ -212,10 +212,10 @@ plot_strain_fitness <- function(
 		switch(
 			mix_scale,
 			fraction = scale_x_initial_fraction(
-				strain_names, name = xlab, limits = xlim
+				strain_A_name = strain_names$A, name = xlab, limits = xlim
 			),
 			ratio = scale_x_initial_ratio(
-				strain_names, name = xlab, limits = xlim
+				strain_names = strain_names, name = xlab, limits = xlim
 			)
 		) +
 		scale_y_fitness(name = ylab, limits = ylim) +
@@ -316,10 +316,10 @@ plot_total_group_fitness <- function(
 		switch(
 			mix_scale,
 			fraction = scale_x_initial_fraction(
-				strain_names, name = xlab, limits = xlim
+				strain_A_name = strain_names$A, name = xlab, limits = xlim
 			),
 			ratio = scale_x_initial_ratio(
-				strain_names, name = xlab, limits = xlim
+				strain_names = strain_names, name = xlab, limits = xlim
 			)
 		) +
 		scale_y_fitness_total(name = ylab, limits = ylim) +
@@ -423,10 +423,10 @@ plot_within_group_fitness <- function(
 		switch(
 			mix_scale,
 			fraction = scale_x_initial_fraction(
-				strain_names, name = xlab, limits = xlim
+				strain_A_name = strain_names$A, name = xlab, limits = xlim
 			),
 			ratio = scale_x_initial_ratio(
-				strain_names, name = xlab, limits = xlim
+				strain_names = strain_names, name = xlab, limits = xlim
 			)
 		) +
 		scale_y_fitness_ratio(strain_names, name = ylab, limits = ylim) +
@@ -514,7 +514,7 @@ plot_fitness_strain_total <- function(
 		theme_plot_mix_fitness() +
 		switch(
 			mix_scale,
-			fraction = scale_x_initial_fraction(strain_names),
+			fraction = scale_x_initial_fraction(strain_names$A),
 			ratio = scale_x_initial_ratio(strain_names)
 		) +
 		scale_y_fitness(limits = ylim) +
