@@ -3,16 +3,16 @@
 
 # Axes =========================================================================
 
-# Add x-axis scale: initial fraction strain A
+# X-axis: initial fraction strain A
 scale_x_initial_fraction <- function(
-	var_names,
 	strain_names,
-	...,
 	xlab = NULL,
 	xlim = NULL,
 	breaks = ggplot2::waiver(),
-	minor_breaks = ggplot2::waiver()
+	minor_breaks = ggplot2::waiver(),
+	...
 ) {
+	strain_names <- as.list(strain_names)
 	if (is.null(xlab)) {
 		xlab <- paste("Initial fraction", strain_names$A)
 	}
@@ -29,16 +29,14 @@ scale_x_initial_fraction <- function(
 	)
 }
 
-# Add x-axis scale: initial ratio A/B (log10)
+# X-axis: initial ratio A/B (log10)
 scale_x_initial_ratio <- function(
-	var_names,
 	strain_names,
-	...,
 	xlab = NULL,
 	xlim = NULL,
-	breaks = ggplot2::waiver(),
-	minor_breaks = ggplot2::waiver()
+	...
 ) {
+	strain_names <- as.list(strain_names)
 	if (is.null(xlab)) {
 		xlab <- paste("Initial ratio", strain_names$A, "/", strain_names$B)
 	}
@@ -55,16 +53,12 @@ scale_x_initial_ratio <- function(
 	)
 }
 
-# Add y-axis scale: fitness (strain A, strain B, total group)
+# Y-axis: fitness (strain A, strain B, total group)
 scale_y_fitness <- function(
-	var_names,
-	...,
 	ylab = NULL,
 	ylim = NULL,
-	breaks = ggplot2::waiver(),
-	minor_breaks = ggplot2::waiver()
+	...
 ) {
-	var_names <- as.list(var_names)
 	if (is.null(ylab)) {
 		ylab <- "Wrightian fitness\n (final no. / initial no.)"
 	}
@@ -77,14 +71,12 @@ scale_y_fitness <- function(
 	)
 }
 
-# Add y-axis scale: total-group fitness
+# Y-axis: total-group fitness
 scale_y_fitness_total <- function(
-	var_names,
-	...,
 	ylab = NULL,
-	ylim = NULL
+	ylim = NULL,
+	...
 ) {
-	var_names <- as.list(var_names)
 	if (is.null(ylab)) {
 		ylab <- "Total group fitness\n(final no. / initial no.)"
 	}
@@ -97,15 +89,14 @@ scale_y_fitness_total <- function(
 	)
 }
 
-# Add y-axis scale: within-group fitness ratio A/B
+# Y-axis: within-group fitness ratio A/B
 scale_y_fitness_ratio <- function(
-	var_names,
 	strain_names,
-	...,
 	ylab = NULL,
-	ylim = NULL
+	ylim = NULL,
+	...
 ) {
-	var_names <- as.list(var_names)
+	strain_names <- as.list(strain_names)
 	if (is.null(ylab)) {
 		ylab <- paste("Fitness ratio\n", strain_names$A, "/", strain_names$B)
 	}

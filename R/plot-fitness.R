@@ -212,13 +212,13 @@ plot_strain_fitness <- function(
 		switch(
 			mix_scale,
 			fraction = scale_x_initial_fraction(
-				var_names, strain_names, xlab = xlab, xlim = xlim
+				strain_names, xlab = xlab, xlim = xlim
 			),
 			ratio = scale_x_initial_ratio(
-				var_names, strain_names, xlab = xlab, xlim = xlim
+				strain_names, xlab = xlab, xlim = xlim
 			)
 		) +
-		scale_y_fitness(var_names, ylab = ylab, ylim = ylim) +
+		scale_y_fitness(ylab = ylab, ylim = ylim) +
 		geom_point_overlap(shape = 21) +
 		scale_color_strain() +
 		scale_fill_strain() +
@@ -316,13 +316,13 @@ plot_total_group_fitness <- function(
 		switch(
 			mix_scale,
 			fraction = scale_x_initial_fraction(
-				var_names, strain_names, xlab = xlab, xlim = xlim
+				strain_names, xlab = xlab, xlim = xlim
 			),
 			ratio = scale_x_initial_ratio(
-				var_names, strain_names, xlab = xlab, xlim = xlim
+				strain_names, xlab = xlab, xlim = xlim
 			)
 		) +
-		scale_y_fitness_total(var_names, ylab = ylab, ylim = ylim) +
+		scale_y_fitness_total(ylab = ylab, ylim = ylim) +
 		geom_point_overlap(shape = 21, color = color_group(), fill = fill_group()) +
 		ggplot2::ggtitle("")  # Space for legend, align height
 
@@ -423,13 +423,13 @@ plot_within_group_fitness <- function(
 		switch(
 			mix_scale,
 			fraction = scale_x_initial_fraction(
-				var_names, strain_names, xlab = xlab, xlim = xlim
+				strain_names, xlab = xlab, xlim = xlim
 			),
 			ratio = scale_x_initial_ratio(
-				var_names, strain_names, xlab = xlab, xlim = xlim
+				strain_names, xlab = xlab, xlim = xlim
 			)
 		) +
-		scale_y_fitness_ratio(var_names, strain_names, ylab = ylab, ylim = ylim) +
+		scale_y_fitness_ratio(strain_names, ylab = ylab, ylim = ylim) +
 		geom_point_overlap(shape = 21, color = color_group(), fill = fill_group()) +
 		ggplot2::ggtitle("")  # Space for legend, align height
 
@@ -514,10 +514,10 @@ plot_fitness_strain_total <- function(
 		theme_plot_mix_fitness() +
 		switch(
 			mix_scale,
-			fraction = scale_x_initial_fraction(var_names, strain_names),
-			ratio = scale_x_initial_ratio(var_names, strain_names)
+			fraction = scale_x_initial_fraction(strain_names),
+			ratio = scale_x_initial_ratio(strain_names)
 		) +
-		scale_y_fitness(var_names, ylim = ylim) +
+		scale_y_fitness(ylim = ylim) +
 		geom_point_overlap(shape = 21) +
 		scale_color_strain() +
 		scale_fill_strain() +

@@ -121,21 +121,16 @@ fitness_smith_2010 %>% plot_strain_fitness(mix_scale = "ratio")
 
 fitness_smith_2010 %>% plot_total_group_fitness()
 
-fitness_smith_2010 %>% plot_total_group_fitness(color = exptl_block)
 
 
 # Plot elements ----------------------------------------------------------------
 
 fitness_smith_2010 |>
-	filter(!is.na(fitness_A)) |>
+	filter(!is.na(fitness_total)) |>
 	ggplot() +
 	aes(x = initial_fraction_A, y = log10(fitness_total)) +
-	geom_point_overlap(
-		aes(fill = exptl_block),
-		shape = 21,
-		# fill = "grey75",
-		size = 2
-	)
+	scale_x_initial_fraction(strain_names = c(A = "evolved", B = "ancestor")) +
+	geom_point_overlap(aes(fill = exptl_block), shape = 21, size = 2)
 
 
 
