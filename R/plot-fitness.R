@@ -167,8 +167,8 @@ plot_strain_fitness <- function(
 	data,
 	var_names = NULL,
 	mix_scale = "fraction",
-	xlab = NULL,
-	ylab = NULL,
+	xlab = NA,
+	ylab = NA,
 	xlim = c(NA, NA),
 	ylim = c(NA, NA)
 ) {
@@ -212,13 +212,13 @@ plot_strain_fitness <- function(
 		switch(
 			mix_scale,
 			fraction = scale_x_initial_fraction(
-				strain_names, xlab = xlab, xlim = xlim
+				strain_names, name = xlab, xlim = xlim
 			),
 			ratio = scale_x_initial_ratio(
-				strain_names, xlab = xlab, xlim = xlim
+				strain_names, name = xlab, xlim = xlim
 			)
 		) +
-		scale_y_fitness(ylab = ylab, ylim = ylim) +
+		scale_y_fitness(name = ylab, ylim = ylim) +
 		geom_point_overlap(shape = 21) +
 		scale_color_strain() +
 		scale_fill_strain() +
@@ -284,8 +284,8 @@ plot_total_group_fitness <- function(
 	data,
 	var_names = NULL,
 	mix_scale = "fraction",
-	xlab = NULL,
-	ylab = NULL,
+	xlab = NA,
+	ylab = NA,
 	xlim = c(NA, NA),
 	ylim = c(NA, NA)
 ) {
@@ -316,13 +316,13 @@ plot_total_group_fitness <- function(
 		switch(
 			mix_scale,
 			fraction = scale_x_initial_fraction(
-				strain_names, xlab = xlab, xlim = xlim
+				strain_names, name = xlab, xlim = xlim
 			),
 			ratio = scale_x_initial_ratio(
-				strain_names, xlab = xlab, xlim = xlim
+				strain_names, name = xlab, xlim = xlim
 			)
 		) +
-		scale_y_fitness_total(ylab = ylab, ylim = ylim) +
+		scale_y_fitness_total(name = ylab, ylim = ylim) +
 		geom_point_overlap(shape = 21, color = color_group(), fill = fill_group()) +
 		ggplot2::ggtitle("")  # Space for legend, align height
 
@@ -389,8 +389,8 @@ plot_within_group_fitness <- function(
 	data,
 	var_names = NULL,
 	mix_scale = "fraction",
-	xlab = NULL,
-	ylab = NULL,
+	xlab = NA,
+	ylab = NA,
 	xlim = c(NA, NA),
 	ylim = c(NA, NA)
 ) {
@@ -423,13 +423,13 @@ plot_within_group_fitness <- function(
 		switch(
 			mix_scale,
 			fraction = scale_x_initial_fraction(
-				strain_names, xlab = xlab, xlim = xlim
+				strain_names, name = xlab, xlim = xlim
 			),
 			ratio = scale_x_initial_ratio(
-				strain_names, xlab = xlab, xlim = xlim
+				strain_names, name = xlab, xlim = xlim
 			)
 		) +
-		scale_y_fitness_ratio(strain_names, ylab = ylab, ylim = ylim) +
+		scale_y_fitness_ratio(strain_names, name = ylab, ylim = ylim) +
 		geom_point_overlap(shape = 21, color = color_group(), fill = fill_group()) +
 		ggplot2::ggtitle("")  # Space for legend, align height
 

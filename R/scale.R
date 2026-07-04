@@ -6,23 +6,21 @@
 # X-axis: initial fraction strain A
 scale_x_initial_fraction <- function(
 	strain_names,
-	xlab = NULL,
+	name = NA,
 	xlim = NULL,
 	breaks = ggplot2::waiver(),
 	minor_breaks = ggplot2::waiver(),
 	...
 ) {
 	strain_names <- as.list(strain_names)
-	if (is.null(xlab)) {
-		xlab <- paste("Initial fraction", strain_names$A)
-	}
+	if (is.na(name)) { name <- paste("Initial fraction", strain_names$A) }
 	if (is.null(xlim)) {
 		xlim <- c(0, 1)
 		breaks <- seq(0, 1, by = 0.2)
 		minor_breaks <- NULL
 	}
 	ggplot2::scale_x_continuous(
-		name = xlab,
+		name = name,
 		limits = xlim,
 		breaks = breaks,
 		minor_breaks = minor_breaks
@@ -32,20 +30,20 @@ scale_x_initial_fraction <- function(
 # X-axis: initial ratio A/B (log10)
 scale_x_initial_ratio <- function(
 	strain_names,
-	xlab = NULL,
+	name = NA,
 	xlim = NULL,
 	...
 ) {
 	strain_names <- as.list(strain_names)
-	if (is.null(xlab)) {
-		xlab <- paste("Initial ratio", strain_names$A, "/", strain_names$B)
+	if (is.na(name)) {
+		name <- paste("Initial ratio", strain_names$A, "/", strain_names$B)
 	}
 	if (is.null(xlim)) {
 		breaks <- 10^c(-12:12)
 		minor_breaks <- NULL
 	}
 	ggplot2::scale_x_log10(
-		name = xlab,
+		name = name,
 		limits = xlim,
 		breaks = breaks_log10,
 		labels = labels_log10,
@@ -55,15 +53,13 @@ scale_x_initial_ratio <- function(
 
 # Y-axis: fitness (strain A, strain B, total group)
 scale_y_fitness <- function(
-	ylab = NULL,
+	name = NA,
 	ylim = NULL,
 	...
 ) {
-	if (is.null(ylab)) {
-		ylab <- "Wrightian fitness\n (final no. / initial no.)"
-	}
+	if (is.na(name)) { name <- "Wrightian fitness\n (final no. / initial no.)" }
 	ggplot2::scale_y_log10(
-		name = ylab,
+		name = name,
 		limits = ylim,
 		breaks = breaks_log10,
 		labels = labels_log10,
@@ -73,15 +69,13 @@ scale_y_fitness <- function(
 
 # Y-axis: total-group fitness
 scale_y_fitness_total <- function(
-	ylab = NULL,
+	name = NA,
 	ylim = NULL,
 	...
 ) {
-	if (is.null(ylab)) {
-		ylab <- "Total group fitness\n(final no. / initial no.)"
-	}
+	if (is.na(name)) { name <- "Total group fitness\n(final no. / initial no.)" }
 	ggplot2::scale_y_log10(
-		name = ylab,
+		name = name,
 		limits = ylim,
 		breaks = breaks_log10,
 		labels = labels_log10,
@@ -92,16 +86,16 @@ scale_y_fitness_total <- function(
 # Y-axis: within-group fitness ratio A/B
 scale_y_fitness_ratio <- function(
 	strain_names,
-	ylab = NULL,
+	name = NA,
 	ylim = NULL,
 	...
 ) {
 	strain_names <- as.list(strain_names)
-	if (is.null(ylab)) {
-		ylab <- paste("Fitness ratio\n", strain_names$A, "/", strain_names$B)
+	if (is.na(name)) {
+		name <- paste("Fitness ratio\n", strain_names$A, "/", strain_names$B)
 	}
 	ggplot2::scale_y_log10(
-		name = ylab,
+		name = name,
 		limits = ylim,
 		breaks = breaks_log10,
 		labels = labels_log10,
