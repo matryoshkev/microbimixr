@@ -1,7 +1,4 @@
-# Scales for ggplot2
-
-
-# Axes =========================================================================
+# Axes for ggplot2 =============================================================
 
 # X-axis: initial fraction strain A
 scale_x_initial_fraction <- function(
@@ -178,41 +175,3 @@ limits_log10 <- function(values) {
 	max <- 10^(midpoint + span/2)
 	c(min, max)
 }
-
-
-# Color & fill =================================================================
-
-# Default colors
-color_strain_A <- function() { "tan4" }
-color_strain_B <- function() { "lightsteelblue4" }
-color_group    <- function() { "black" }
-fill_strain_A  <- function() { "tan" }
-fill_strain_B  <- function() { "lightsteelblue" }
-fill_group     <- function() { "gray65" }
-
-# Color points by strain/total-group
-scale_color_strain <- function(
-	values = c(color_strain_A(), color_strain_B(), color_group()), ...
-) {
-	ggplot2::scale_color_manual(values = values, ...)
-}
-
-# Fill points by strain/total-group
-scale_fill_strain <- function(
-	values = c(fill_strain_A(), fill_strain_B(), fill_group()), ...
-) {
-	ggplot2::scale_fill_manual(values = values, ...)
-}
-
-# Default fill scale for mixed groups. Replaced if user specifies fill.
-# scale_fill_group <- function(...) {
-# 	ggplot2::scale_fill_manual(values = fill_group(), guide = "none", ...)
-# }
-
-# Default shape scale for points. Replaced if user specifies shape.
-# scale_shape_microbimixr <- function() {
-# 	list(
-# 		ggplot2::aes(shape = TRUE),
-# 		ggplot2::scale_shape_manual(values = 21, guide = "none")
-# 	)
-# }
