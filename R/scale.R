@@ -56,7 +56,14 @@ scale_x_initial_ratio <- function(
 }
 
 # Add y-axis scale: fitness (strain A, strain B, total group)
-scale_y_fitness <- function(var_names, ..., ylab = NULL, ylim = NULL) {
+scale_y_fitness <- function(
+	var_names,
+	...,
+	ylab = NULL,
+	ylim = NULL,
+	breaks = ggplot2::waiver(),
+	minor_breaks = ggplot2::waiver()
+) {
 	var_names <- as.list(var_names)
 	if (is.null(ylab)) {
 		ylab <- "Wrightian fitness\n (final no. / initial no.)"
@@ -71,7 +78,12 @@ scale_y_fitness <- function(var_names, ..., ylab = NULL, ylim = NULL) {
 }
 
 # Add y-axis scale: total-group fitness
-scale_y_fitness_total <- function(var_names, ..., ylab = NULL, ylim = NULL) {
+scale_y_fitness_total <- function(
+	var_names,
+	...,
+	ylab = NULL,
+	ylim = NULL
+) {
 	var_names <- as.list(var_names)
 	if (is.null(ylab)) {
 		ylab <- "Total group fitness\n(final no. / initial no.)"
@@ -87,7 +99,11 @@ scale_y_fitness_total <- function(var_names, ..., ylab = NULL, ylim = NULL) {
 
 # Add y-axis scale: within-group fitness ratio A/B
 scale_y_fitness_ratio <- function(
-	var_names, strain_names, ..., ylab = NULL, ylim = NULL
+	var_names,
+	strain_names,
+	...,
+	ylab = NULL,
+	ylim = NULL
 ) {
 	var_names <- as.list(var_names)
 	if (is.null(ylab)) {
@@ -196,9 +212,9 @@ scale_fill_strain <- function(
 }
 
 # Default fill scale for mixed groups. Replaced if user specifies fill.
-scale_fill_group <- function(...) {
-	ggplot2::scale_fill_manual(values = fill_group(), guide = "none", ...)
-}
+# scale_fill_group <- function(...) {
+# 	ggplot2::scale_fill_manual(values = fill_group(), guide = "none", ...)
+# }
 
 # Default shape scale for points. Replaced if user specifies shape.
 # scale_shape_microbimixr <- function() {
