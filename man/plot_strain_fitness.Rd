@@ -8,8 +8,8 @@ plot_strain_fitness(
   data,
   var_names = NULL,
   mix_scale = "fraction",
-  xlab = NULL,
-  ylab = NULL,
+  xlab = NA,
+  ylab = NA,
   xlim = c(NA, NA),
   ylim = c(NA, NA)
 )
