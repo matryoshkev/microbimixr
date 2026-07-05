@@ -50,7 +50,8 @@ fitness_Madgwick %>%
 	plot_total_group_fitness()
 
 dev.new(width = 3, height = 2.5)
-fitness_NC105_NC63 %>% plot_within_group_fitness()
+fitness_NC105_NC63 %>%
+	plot_within_group_fitness(mix_scale = "ratio")
 
 
 # Tmp for dev -------------------------------------------

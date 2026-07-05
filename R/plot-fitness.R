@@ -198,33 +198,24 @@ plot_strain_fitness <- function(
 	# Make plot
 	fig_output <-
 		ggplot2::ggplot(data_to_plot) +
-		ggplot2::aes(
-			x = switch(
-				mix_scale,
-				fraction = .data[[var_names$initial_fraction_A]],
-				ratio = .data[[var_names$initial_ratio_A_B]]
-			),
-			y = .data$fitness,
-			color = .data$strain,
-			fill = .data$strain
-		) +
+		ggplot2::aes(y = .data$fitness, color = .data$strain, fill = .data$strain) +
 		theme_microbimixr() +
-		switch(
-			mix_scale,
-			fraction = scale_x_initial_fraction(
-				strain_A_name = strain_names$A, name = xlab, limits = xlim
-			),
-			ratio = scale_x_initial_ratio(
-				strain_names = strain_names, name = xlab, limits = xlim
-			)
-		) +
 		scale_y_fitness(name = ylab, limits = ylim) +
 		geom_point_overlap(shape = 21) +
 		scale_color_strain() +
 		scale_fill_strain() +
 		ggplot2::ggtitle("")  # Space for legend, align height
 
-	# Expand limits to include log-intercepts
+	# Add x-axis mixing scale
+	fig_output <- fig_output |> add_mix_axis(
+		mix_scale = mix_scale,
+		var_names = var_names,
+		strain_names = strain_names,
+		xlab = xlab,
+		xlim = xlim
+	)
+
+		# Expand limits to include log-intercepts
 	if (is.null(xlim) & mix_scale == "ratio")
 		fig_output <- fig_output + ggplot2::expand_limits(x = 1)
 	if (is.null(ylim))
@@ -289,7 +280,7 @@ plot_total_group_fitness <- function(
 	xlim = c(NA, NA),
 	ylim = c(NA, NA)
 ) {
-	# Variable names
+	# Get variable and strain names
 	if (is.null(var_names)) {var_names <- fitness_vars_default()}
 	var_names <- as.list(var_names)
 	strain_names <- get_strain_names(data, var_names)
@@ -303,28 +294,20 @@ plot_total_group_fitness <- function(
 	# Construct plot
 	fig_output <-
 		ggplot2::ggplot(data) +
-		ggplot2::aes(
-			x = switch(
-				mix_scale,
-				fraction = .data[[var_names$initial_fraction_A]],
-				ratio = .data[[var_names$initial_ratio_A_B]]
-			),
-			y = .data[[var_names$fitness_total]],
-			fill = TRUE
-		) +
+		ggplot2::aes(y = .data[[var_names$fitness_total]], fill = TRUE) +
 		theme_microbimixr() +
-		switch(
-			mix_scale,
-			fraction = scale_x_initial_fraction(
-				strain_A_name = strain_names$A, name = xlab, limits = xlim
-			),
-			ratio = scale_x_initial_ratio(
-				strain_names = strain_names, name = xlab, limits = xlim
-			)
-		) +
 		scale_y_fitness_total(name = ylab, limits = ylim) +
 		geom_point_overlap(shape = 21, color = color_group(), fill = fill_group()) +
 		ggplot2::ggtitle("")  # Space for legend, align height
+
+	# Add x-axis mixing scale
+	fig_output <- fig_output |> add_mix_axis(
+		mix_scale = mix_scale,
+		var_names = var_names,
+		strain_names = strain_names,
+		xlab = xlab,
+		xlim = xlim
+	)
 
 	# Expand limits to include log-intercepts
 	if (is.null(xlim) & mix_scale == "ratio") {
@@ -410,28 +393,20 @@ plot_within_group_fitness <- function(
 	# Construct plot
 	fig_output <-
 		ggplot2::ggplot(data) +
-		ggplot2::aes(
-			x = switch(
-				mix_scale,
-				fraction = .data[[var_names$initial_fraction_A]],
-				ratio = .data[[var_names$initial_ratio_A_B]]
-			),
-			y = .data[[var_names$fitness_ratio_A_B]],
-			fill = TRUE
-		) +
+		ggplot2::aes(y = .data[[var_names$fitness_ratio_A_B]], fill = TRUE) +
 		theme_microbimixr() +
-		switch(
-			mix_scale,
-			fraction = scale_x_initial_fraction(
-				strain_A_name = strain_names$A, name = xlab, limits = xlim
-			),
-			ratio = scale_x_initial_ratio(
-				strain_names = strain_names, name = xlab, limits = xlim
-			)
-		) +
 		scale_y_fitness_ratio(strain_names, name = ylab, limits = ylim) +
 		geom_point_overlap(shape = 21, color = color_group(), fill = fill_group()) +
 		ggplot2::ggtitle("")  # Space for legend, align height
+
+	# Add x-axis mixing scale
+	fig_output <- fig_output |> add_mix_axis(
+		mix_scale = mix_scale,
+		var_names = var_names,
+		strain_names = strain_names,
+		xlab = xlab,
+		xlim = xlim
+	)
 
 	# Expand limits to include log-intercepts
 	if (is.null(xlim) & mix_scale == "ratio") {
@@ -460,6 +435,32 @@ fitness_vars_default <- function() {
 		fitness_B = "fitness_B",
 		fitness_total = "fitness_total",
 		fitness_ratio_A_B = "fitness_ratio_A_B"
+	)
+}
+
+# Add x-axis mixing scale to ggplot object
+add_mix_axis <- function(
+	fig_input,
+	mix_scale,
+	var_names,
+	strain_names,
+	xlab = NA,
+	xlim = NULL
+) {
+	fig_input + switch(
+		mix_scale,
+		fraction = list(
+			ggplot2::aes(.data[[var_names$initial_fraction_A]]),
+			scale_x_initial_fraction(
+				name = xlab, strain_A_name = strain_names$A, limits = xlim
+			)
+		),
+		ratio = list(
+			ggplot2::aes(.data[[var_names$initial_ratio_A_B]]),
+			scale_x_initial_ratio(
+				name = xlab, strain_names = strain_names, limits = xlim
+			)
+		)
 	)
 }
 
@@ -501,28 +502,25 @@ plot_fitness_strain_total <- function(
 	fig_output <-
 		ggplot2::ggplot(data_for_plot) +
 		ggplot2::aes(
-			x = switch(
-				mix_scale,
-				fraction = .data[[var_names$initial_fraction_A]],
-				ratio = .data[[var_names$initial_ratio_A_B]]
-			),
 			y = .data$fitness,
 			color = .data$strain,
 			fill = .data$strain
 		) +
 		theme_microbimixr() +
 		theme_plot_mix_fitness() +
-		switch(
-			mix_scale,
-			fraction = scale_x_initial_fraction(strain_names$A),
-			ratio = scale_x_initial_ratio(strain_names)
-		) +
 		scale_y_fitness(limits = ylim) +
 		geom_point_overlap(shape = 21) +
 		scale_color_strain() +
 		scale_fill_strain() +
 		ggplot2::ggtitle("") +  # Space for legend, align height
 		ggplot2::facet_wrap(~ my_facet, nrow = 1)
+
+	# Add x-axis mixing scale
+	fig_output <- fig_output |> add_mix_axis(
+		mix_scale = mix_scale,
+		var_names = var_names,
+		strain_names = strain_names
+	)
 
 	# Expand limits to include log-intercepts
 	fig_output <- fig_output +
