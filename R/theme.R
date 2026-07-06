@@ -13,11 +13,9 @@ theme_plot_mix_fitness <- function() {
 	ggplot2::theme(
 		legend.title         = ggplot2::element_blank(),
 		legend.background    = ggplot2::element_blank(),
-		legend.direction     = "horizontal",
-		legend.justification = c(0.5, 0.15),
-		legend.position      = c(0.5, 1),
+		legend.position      = "top",
+		legend.box.spacing   = unit(0, "points"),
 		strip.text           = ggplot2::element_blank(),
 		strip.background     = ggplot2::element_blank()
 	)
 }
-
