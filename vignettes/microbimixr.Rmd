@@ -15,12 +15,9 @@ library(patchwork)
 
 A common experimental design in microbiology is to mix together two different 
 microbes (different genotypes of bacteria, for example) then measure how their 
-behavior depends on mix frequency. 
-How do they act differently together than when they're on their own? 
-How does mixing affect their survival and reproductive success (their fitness)?
+behavior depends on mix frequency. How do they act differently together than when they're on their own? How does mixing affect their survival and reproductive success (their fitness)?
 
-microbimixr is an R package for analyzing these mix experiments. 
-It helps researchers get the most out of their data by providing convenience functions to 
+microbimixr is an R package for analyzing microbial mix experiments. It helps researchers get the most out of their data by providing convenience functions to 
 calculate and plot fitness measures that are: 
 
 * Robust and quantitatively comparable across different species and types of 
@@ -33,8 +30,7 @@ calculate and plot fitness measures that are:
 
 The basic workflow for microbimixr is: 
 
-1. Make an input data frame containing the experimental observations used to calculate 
-   fitness
+1. Make an input data frame containing the experimental observations used to calculate fitness
 2. Calculate fitness measures with `calculate_mix_fitness()`
 3. Inspect a diagnostic plot of fitness measures with `plot_mix_fitness()`
 4. Plot measures of interest with `plot_strain_fitness()`, 
@@ -48,13 +44,13 @@ The input format for microbimixr is a data frame where each row describes microb
 
 For example, let's look at some datasets included with microbimixr. This dataset from smith *et al.* (2010) is an experiment mixing a wild-type strain of *Myxococcus* bacteria with an experimentally-evolved cheater strain. The observed quantities are the number of cells from each strain before and after they form multicellular fruiting bodies. 
 
-```{r data-smith-2010}
+```{r data-smith2010}
 head(data_smith_2010)
 ```
 
 This dataset from Yurtsev *et al.* (2013) describes the results of mix experiments with an antibiotic-sensitive strain of *Escherichia coli* and an antibiotic-resistant strain that detoxifies its local environment. The observed quantities here are total cell density (from OD~600~) and the fraction of cells belonging to each strain (from flow cytometry). The dataset also includes several experimental treatments with different antibiotic concentrations and different amounts of culture growth. 
 
-```{r data-Yurtsev-2013}
+```{r data-Yurtsev2013}
 head(data_Yurtsev_2013)
 ```
 * Explain how made to take tidy data, best archiveable form
@@ -62,9 +58,11 @@ head(data_Yurtsev_2013)
 
 ## Calculating fitness
 
+There are lots of quantities you can calculate to measure microbial survival and reproductive success that work well enough for a particular biological system and research question. But only a few fitness measures are robust enough to be quantitatively meaningful across different species and different types of interaction. microbimixr makes it easy to calculate them. 
+
 The microbimixr function to calculate fitness is `calculate_mix_fitness()`. It accepts an input data frame of microbial abundances and a character vector describing what the data columns are. It returns a data frame with several calculated measures of fitness and two measures of mix frequency. For example: 
 
-```{r fitness_smith_2010}
+```{r fitness-smith2010}
 fitness_smith_2010 <- calculate_mix_fitness(
 	data = data_smith_2010, 
 	var_names = c(
@@ -81,7 +79,7 @@ head(fitness_smith_2010)
 
 To include data columns in the fitness output that describe experimental treatments, experimental block, and so on, use the `keep` argument. For the Yurtsev data, for example, we want to keep antibiotic concentration and culture dilution: 
 
-```{r fitness_Yurtsev_2013}
+```{r fitness-Yurtsev2013}
 fitness_Yurtsev_2013 <- calculate_mix_fitness(
 	data_Yurtsev_2013, 
 	var_names = c(
@@ -134,21 +132,24 @@ Microbial interactions may be more relevant or more linear over one scale than t
 
 ## Diagnostic plots
 
+To quickly see which fitness measures are most useful for analyzing your dataset, use `plot_mix_fitness()`. 
+<!-- 
+`plot_mix_fitness()` produces a diagnostic overview of the various fitness effects in a dataset.  
 To quickly see an overview of the various fitness effects in a dataset, use `plot_mix_fitness()`. 
-<!-- `plot_mix_fitness()` produces a diagnostic overview of the various fitness effects in a dataset.  -->
-It draws a combined plot of strain, total group, and relative within-group fitness against two measures of mix frequency.
+-->
+It draws a combined figure with strain fitness, total group fitness, and relative within-group fitness plotted against two measures of mix frequency.
 
-```{r fig.width = 6, fig.height = 4.5, fig.align = "center", out.width = "100%"}
+```{r diagnostic-smith2010, fig.width = 6, fig.height = 4.5, fig.align = "center", out.width = "100%"}
 plot_mix_fitness(fitness_smith_2010)
 ```
 
-These plots help you quickly see which fitness measures and mix frequency scales are more informative or easier to analyze. For example, within-group competition among these *Myxo* strains is negatively frequency-dependent and a linear function of log mixing ratio. 
+These plots help you see which fitness measures and mixing scales are more informative or easier to analyze. For example, within-group competition among these *Myxo* strains is negatively frequency-dependent and a linear function of log mixing ratio. 
 
 `plot_mix_fitness()` uses `log10` scales for fitness and mixing ratio, so it will return warnings when some of these values are zero---for data with only one strain, for example. 
 
 As a tool for data inspection, `plot_mix_fitness()` shows each data point individually instead of a statistical summary like the mean value with error bars. For complex datasets with many strain combinations or treatment conditions, it may be easier to inspect subsets of the data. microbimixr functions work with the R pipe `|>`. 
 
-```{r fig.width = 6, fig.height = 4.5, fig.align = "center", out.width = "100%"}
+```{r diagnostic-Yurtsev2013, fig.width = 6, fig.height = 4.5, fig.align = "center", out.width = "100%"}
 fitness_Yurtsev_2013 |>
 subset(ampicillin == 100 & dilution == 100) |>
 plot_mix_fitness()
@@ -161,48 +162,64 @@ microbimixr's plotting functions can use fitness datasets that aren't made by `c
 -->
 
 
-## Plotting specific fitness measures
+## Plot specific fitness measures
 
+<!-- 
 Once you know which fitness measures to focus on, you can visualize them with microbimixr's built-in plotting functions: 
 
-<!-- microbimixr offers several functions for plotting specific fitness measures as a function of their initial frequency -->
+microbimixr offers several functions for plotting specific fitness measures as a function of their initial frequency 
+-->
 
-* `plot_strain_fitness()`: Plots absolute fitness for each of two strains
-* `plot_total_group_fitness()` : Plots total-group fitness
-* `plot_within_group_fitness()` : Plots relative within-group fitness of two strains
+Once you know which fitness measures to focus on, you can use microbimixr to visualize them. There are two ways to do this. The first and simplest way is to
+use microbimixr's built-in plot functions: 
 
-These are convenience functions that use the ggplot2 graphics package to plot fitness data with reasonable default settings. 
+* `plot_strain_fitness()`: Plot absolute fitness for each of two strains
+* `plot_total_group_fitness()` : Plot total-group fitness
+* `plot_within_group_fitness()` : Plot relative within-group fitness of two strains
 
-```{r fig.width = 2.75, fig.height = 2.25, fig.align = "center", out.width = "50%"}
+These functions let you reproduce the individual parts of the diagnostic plots. They use the ggplot2 graphics package to plot fitness data with reasonable default settings and some basic graphical options. They work best with simple mix experiments with two strains and no other treatment variables. 
+
+```{r plot-total-smith2010, fig.width = 2.75, fig.height = 2.25, fig.align = "center", out.width = "50%"}
 plot_total_group_fitness(fitness_smith_2010)
 ```
 
 The default mixing scale for the `plot_*_fitness()` is the initial proportion of strain A. To instead use the ratio of strain A to strain B (on a log~10~ scale), use the `mix_scale = "ratio"` option: 
 
-```{r fig.width = 2.75, fig.height = 2.25, fig.align = "center", out.width = "50%"}
+```{r plot-within-smith2010, fig.width = 2.75, fig.height = 2.25, fig.align = "center", out.width = "50%"}
 plot_within_group_fitness(fitness_smith_2010, mix_scale = "ratio")
 ```
 
-* Demonstrate functions and options
+* Demonstrate functions and options?
 * Describe default setting choices: scales, etc
 
+<!--
 The `plot_*_fitness()` functions return ggplot2 objects, so you can extend and modify them by adding or replacing scales, themes, and so on. 
+-->
+
+
+## Custom plot elements for ggplot2
+
+For more-complex figures with different experimental conditions or multiple strain combinations, it's best to construct plots directly with ggplot2. But you can still use axes and other parts of the diagnostic plots in your own figures. These include:
+
+* Mixing axes `scale_x_initial_fraction()` and `scale_x_initial_ratio()`
+* Fitness axes `scale_y_fitness()`, `scale_y_fitness_total()`, and `scale_y_fitness_ratio()`
+* Data points `geom_point_overlap()` that easier to read when they overlap
+
+These are custom plot elements for ggplot2 that have default settings appropriate for microbial mix experiments. 
+
+<!--
+As your results and figures become more complex, you may find it simpler to just make them with ggplot2 directly, from the ground up. 
+-->
+
 
 ```
 code_example_here
 ```
 
 * Panels/colors for mix expts under different conditions (Gore data)
-* Combine subplots with patchwork package?
-
-As your results and figures become more complex, you may find it simpler to just make them with ggplot2 directly, from the ground up. 
-
-* Make way to reuse microbimixr scales in direct `ggplot()` construction?
-
-
-## Plotting data with fitted statistical models
-
-...
+* Panels/color for different strain combination (Madgwick data)
+* microbimixr included patchwork package for combining subplots
+* Plot data with fitted statistical models
 
 
 ## References
