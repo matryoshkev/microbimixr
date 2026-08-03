@@ -1,8 +1,10 @@
 # Themes for ggplot2 ===========================================================
 
 # Default package theme (suited to figures in papers)
+
+#' @importFrom ggplot2 %+replace%
 theme_microbimixr <- function() {
-	ggplot2::theme_grey() +
+	ggplot2::theme_grey() %+replace%
 	ggplot2::theme(
 		text = ggplot2::element_text(size = 9)
 	)
@@ -14,7 +16,7 @@ theme_plot_mix_fitness <- function() {
 		legend.title         = ggplot2::element_blank(),
 		legend.background    = ggplot2::element_blank(),
 		legend.position      = "top",
-		legend.box.spacing   = unit(0, "points"),
+		legend.box.spacing   = grid::unit(0, "points"),
 		strip.text           = ggplot2::element_blank(),
 		strip.background     = ggplot2::element_blank()
 	)
