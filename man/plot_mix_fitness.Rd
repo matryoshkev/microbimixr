@@ -4,7 +4,7 @@
 \alias{plot_mix_fitness}
 \title{Plot strain and multilevel fitness}
 \usage{
-plot_mix_fitness(data, var_names = NULL, mix_scale = c("fraction", "ratio"))
+plot_mix_fitness(data, var_names = NULL)
 }
 \arguments{
 \item{data}{Data frame of fitness values. Wide format: each row must contain
@@ -14,17 +14,11 @@ extensions like \code{tibble}.}
 \item{var_names}{Named character vector identifying fitness and mixing
 variables in \code{data}. If \code{NULL}, defaults to column names returned by
 \code{\link[=calculate_mix_fitness]{calculate_mix_fitness()}}. See Details.}
-
-\item{mix_scale}{Determines mixing scale for x axis. When \code{"fraction"}, uses
-initial frequency of strain A (proportion of total) from the
-\code{initial_fraction_A} variable. When \code{"ratio"}, uses ratio of strain A
-to strain B (on \eqn{\log_{10}} scale) from the \code{initial_ratio_A_B}
-variable. Defaults to show both.}
 }
 \description{
 \code{plot_mix_fitness()} shows a diagnostic overview of various fitness effects in
 a dataset. Draws a combined plot of strain, total group, and relative
-within-group fitness against mix frequency.
+within-group fitness against two measures of mix frequency.
 }
 \details{
 Expects Wrightian fitness measures like those returned by

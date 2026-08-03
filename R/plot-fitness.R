@@ -4,7 +4,7 @@
 #'
 #' `plot_mix_fitness()` shows a diagnostic overview of various fitness effects in
 #' a dataset. Draws a combined plot of strain, total group, and relative
-#' within-group fitness against mix frequency.
+#' within-group fitness against two measures of mix frequency.
 #'
 #' @param data Data frame of fitness values. Wide format: each row must contain
 #'   data for two microbes in the same population. Accepts data frame
@@ -12,11 +12,6 @@
 #' @param var_names Named character vector identifying fitness and mixing
 #'   variables in `data`. If `NULL`, defaults to column names returned by
 #'   [calculate_mix_fitness()]. See Details.
-#' @param mix_scale Determines mixing scale for x axis. When `"fraction"`, uses
-#'   initial frequency of strain A (proportion of total) from the
-#'   `initial_fraction_A` variable. When `"ratio"`, uses ratio of strain A
-#'   to strain B (on \eqn{\log_{10}} scale) from the `initial_ratio_A_B`
-#'   variable. Defaults to show both.
 #'
 #' @details
 #' Expects Wrightian fitness measures like those returned by
@@ -59,43 +54,28 @@
 #' @export
 #'
 plot_mix_fitness <- function(
-	data, var_names = NULL, mix_scale = c("fraction", "ratio")
+	data, var_names = NULL
 ) {
 	# Variable names
 	if (is.null(var_names)) {var_names <- fitness_vars_default()}
 
 	# Scale options
-	mix_scale <- rlang::arg_match(
-		mix_scale, c("fraction", "ratio"), multiple = TRUE
-	)
 	ylim <- get_ylim_mix_fitness(data, var_names)
 
 	# Make subplots
-	if (("fraction" %in% mix_scale) & ("ratio" %in% mix_scale)) {
-		# Show both mix scales
-		figA <- plot_fitness_strain_total(
-			data, var_names, mix_scale = "fraction", ylim = ylim$fitness
-		)
-		figB <- plot_within_group_fitness(
-			data, var_names, mix_scale = "fraction", ylim = ylim$fitness_ratio
-		)
-		figC <- plot_fitness_strain_total(
-			data, var_names, mix_scale = "ratio", ylim = ylim$fitness
-		)
-		figD <- plot_within_group_fitness(
-			data, var_names, mix_scale = "ratio", ylim = ylim$fitness_ratio
-		)
-		fig_output <- figA + figB + figC + figD
-	} else {
-		# Show one mix scale
-		figA <- plot_fitness_strain_total(
-			data, var_names, mix_scale, ylim = ylim$fitness
-		)
-		figB <- plot_within_group_fitness(
-			data, var_names, mix_scale, ylim = ylim$fitness_ratio
-		)
-		fig_output <- figA + figB
-	}
+	figA <- plot_fitness_strain_total(
+		data, var_names, mix_scale = "fraction", ylim = ylim$fitness
+	)
+	figB <- plot_within_group_fitness(
+		data, var_names, mix_scale = "fraction", ylim = ylim$fitness_ratio
+	)
+	figC <- plot_fitness_strain_total(
+		data, var_names, mix_scale = "ratio", ylim = ylim$fitness
+	)
+	figD <- plot_within_group_fitness(
+		data, var_names, mix_scale = "ratio", ylim = ylim$fitness_ratio
+	)
+	fig_output <- figA + figB + figC + figD
 
 	# Size plots for page-width figure
 	fig_output <- fig_output + patchwork::plot_layout(
