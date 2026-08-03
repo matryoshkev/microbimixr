@@ -104,7 +104,7 @@ plot_mix_fitness <- function(
 		# Units affect plotting area, not total size
 	)
 
-	fig_output
+	suppressWarnings(print(fig_output))
 }
 
 #' Plot strain fitness
@@ -206,13 +206,14 @@ plot_strain_fitness <- function(
 		scale_fill_strain()
 
 	# Add x-axis mixing scale
-	fig_output <- fig_output |> add_mix_axis(
-		mix_scale = mix_scale,
-		var_names = var_names,
-		strain_names = strain_names,
-		xlab = xlab,
-		xlim = xlim
-	)
+	fig_output <- fig_output |>
+		add_mix_axis(
+			mix_scale = mix_scale,
+			var_names = var_names,
+			strain_names = strain_names,
+			xlab = xlab,
+			xlim = xlim
+		)
 
 		# Expand limits to include log-intercepts
 	if (is.null(xlim) & mix_scale == "ratio")
@@ -301,13 +302,14 @@ plot_total_group_fitness <- function(
 		)
 
 	# Add x-axis mixing scale
-	fig_output <- fig_output |> add_mix_axis(
-		mix_scale = mix_scale,
-		var_names = var_names,
-		strain_names = strain_names,
-		xlab = xlab,
-		xlim = xlim
-	)
+	fig_output <- fig_output |>
+		add_mix_axis(
+			mix_scale = mix_scale,
+			var_names = var_names,
+			strain_names = strain_names,
+			xlab = xlab,
+			xlim = xlim
+		)
 
 	# Expand limits to include log-intercepts
 	if (is.null(xlim) & mix_scale == "ratio") {
@@ -401,13 +403,14 @@ plot_within_group_fitness <- function(
 		)
 
 	# Add x-axis mixing scale
-	fig_output <- fig_output |> add_mix_axis(
-		mix_scale = mix_scale,
-		var_names = var_names,
-		strain_names = strain_names,
-		xlab = xlab,
-		xlim = xlim
-	)
+	fig_output <- fig_output |>
+		add_mix_axis(
+			mix_scale = mix_scale,
+			var_names = var_names,
+			strain_names = strain_names,
+			xlab = xlab,
+			xlim = xlim
+		)
 
 	# Expand limits to include log-intercepts
 	if (is.null(xlim) & mix_scale == "ratio") {
