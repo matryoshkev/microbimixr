@@ -139,15 +139,18 @@ To quickly see an overview of the various fitness effects in a dataset, use `plo
 -->
 It draws a combined figure with strain fitness, total group fitness, and relative within-group fitness plotted against two measures of mix frequency.
 
-```{r diagnostic-smith2010, fig.width = 6, fig.height = 4.5, fig.align = "center", out.width = "100%"}
+```{r diagnostic-smith2010, fig.width = 6, fig.height = 4.5, fig.align = "center", out.width = "100%", warning = FALSE}
 plot_mix_fitness(fitness_smith_2010)
 ```
 
 These plots help you see which fitness measures and mixing scales are more informative or easier to analyze. For example, within-group competition among these *Myxo* strains is negatively frequency-dependent and a linear function of log mixing ratio. 
 
+<!--
 `plot_mix_fitness()` uses `log10` scales for fitness and mixing ratio, so it will return warnings when some of these values are zero---for data with only one strain, for example. 
+-->
 
-As a tool for data inspection, `plot_mix_fitness()` shows each data point individually instead of a statistical summary like the mean value with error bars. For complex datasets with many strain combinations or treatment conditions, it may be easier to inspect subsets of the data. microbimixr functions work with the R pipe `|>`. 
+As a tool for data inspection, `plot_mix_fitness()` shows each data point individually instead of a statistical summary like the mean value with error bars. For complex datasets with many strain combinations or treatment conditions, it may be easier to inspect subsets of the data. 
+<!-- microbimixr functions work with the R pipe `|>`. -->
 
 ```{r diagnostic-Yurtsev2013, fig.width = 6, fig.height = 4.5, fig.align = "center", out.width = "100%"}
 fitness_Yurtsev_2013 |>
@@ -185,7 +188,7 @@ plot_total_group_fitness(fitness_smith_2010)
 
 The default mixing scale for the `plot_*_fitness()` is the initial proportion of strain A. To instead use the ratio of strain A to strain B (on a log~10~ scale), use the `mix_scale = "ratio"` option: 
 
-```{r plot-within-smith2010, fig.width = 2.75, fig.height = 2.25, fig.align = "center", out.width = "50%"}
+```{r plot-within-smith2010, fig.width = 2.75, fig.height = 2.25, fig.align = "center", out.width = "50%", warning = FALSE}
 plot_within_group_fitness(fitness_smith_2010, mix_scale = "ratio")
 ```
 

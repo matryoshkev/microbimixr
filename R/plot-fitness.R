@@ -392,6 +392,15 @@ plot_within_group_fitness <- function(
 		ylim <- limits_log10(data[[var_names$fitness_ratio_A_B]])
 	}
 
+	# Filter out single-strain data
+	if (mix_scale == "fraction") {
+		mixvar <- var_names$initial_fraction_A
+		data <- data[(data[[mixvar]] > 0) & (data[[mixvar]] < 1), ]
+	} else if (mix_scale == "ratio") {
+		mixvar <- var_names$initial_ratio_A_B
+		data <- data[(is.finite(data[[mixvar]])) & (data[[mixvar]] > 0), ]
+	}
+
 	# Construct plot
 	fig_output <-
 		ggplot2::ggplot(data) +
