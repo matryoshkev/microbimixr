@@ -55,6 +55,9 @@ scale_x_initial_ratio <- function(
 scale_y_fitness <- function(
 	name = NA,
 	limits = NULL,
+	breaks = ggplot2::waiver(),
+	labels = ggplot2::waiver(),
+	minor_breaks = ggplot2::waiver(),
 	...
 ) {
 	if (is.na(name)) { name <- "Wrightian fitness\n (final no. / initial no.)" }
@@ -64,6 +67,9 @@ scale_y_fitness <- function(
 		breaks = breaks_log10,
 		labels = labels_log10,
 		minor_breaks = minor_breaks_log10,
+		# breaks = breaks,
+		# labels = labels,
+		# minor_breaks = minor_breaks,
 		...
 	)
 }
@@ -132,18 +138,15 @@ breaks_log10 <- function(limits) {
 # Labels for log10 axes
 labels_log10 <- function(breaks) {
 	if (max(abs(log10(breaks)), na.rm = TRUE) >= 3) {
-		# 10^n notation
-		text <- paste0(10, "^", log10(breaks))
-		text[text == "10^0"] <- "1"
-		labels <- vector("expression", length(text))
-    for (i in seq_along(text)) {
-        labels[[i]] <- parse(text = text[[i]])
-    }
+		# 10^n notation except for 1
+		sapply(breaks, function(x) {
+			ifelse(x == 1, "1", paste0("10^", log10(x)))
+		}) |>
+		parse(text = _)
 	} else {
 		# Clean integer/decimal
-		labels <- scales::number(breaks, drop0trailing = TRUE)
+		scales::number(breaks, drop0trailing = TRUE)
 	}
-	labels
 }
 
 # Minor breaks for log10 axes

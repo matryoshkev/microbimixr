@@ -111,7 +111,24 @@ fig_smith_2010
 dev.new(width = 3.5, height = 2.25, units = "in")
 fitness_smith_2010 %>% plot_strain_fitness(mix_scale = "ratio")
 
-fitness_smith_2010 %>% plot_strain_fitness(mix_scale = "fraction")
+fitness_smith_2010 %>%
+	plot_strain_fitness(mix_scale = "fraction") +
+	theme(
+		legend.position = "top",
+		legend.title         = ggplot2::element_blank(),
+		legend.background    = ggplot2::element_blank(),
+		legend.margin = ggplot2::margin(),
+		# legend.box.margin = ggplot2::margin(),
+		# legend.box.spacing = unit(0, "in"),
+		# legend.box.just = "bottom",
+		# legend.spacing = unit(0, "in"),
+		legend.frame         = ggplot2::element_blank(),
+		# legend.direction     = "horizontal",
+		# legend.justification = c(0.5, 0.15),
+		# legend.position      = c(0.5, 1),
+		strip.text           = ggplot2::element_blank(),
+		strip.background     = ggplot2::element_blank()
+	)
 
 dev.new(width = 4.5, height = 2.25, units = "in")
 fitness_smith_2010 %>% plot_fitness_strain_total()
@@ -121,19 +138,36 @@ fitness_smith_2010 %>% plot_strain_fitness(mix_scale = "ratio")
 
 fitness_smith_2010 %>% plot_total_group_fitness()
 
+fitness_smith_2010 %>% plot_within_group_fitness(mix_scale = "ratio")
 
 # Plot elements ----------------------------------------------------------------
 
 fitness_smith_2010 |>
+	filter(!is.na(fitness_ratio_A_B)) |>
+	filter(is.finite(log10(initial_ratio_A_B))) |>
+	ggplot() +
+	aes(x = initial_ratio_A_B, y = fitness_ratio_A_B) +
+	scale_y_log10() +
+	# scale_y_fitness_ratio(
+	# 	strain_names = c(A = "evolved", B = "ancestor"),
+	# ) +
+	scale_x_log10() +
+	# scale_x_initial_ratio(
+	# 	strain_names = c(A = "evolved", B = "ancestor"),
+	# 	# oob = scales::censor
+	# 	# name = "NULL", position = "top"
+	# ) +
+	# geom_point_overlap(aes(fill = exptl_block), shape = 21, size = 2) +
+	geom_point_overlap(shape = 23, fill = "grey75", size = 2) +
+	theme_microbimixr()
+
+# Total group fitness
+fitness_smith_2010 |>
 	filter(!is.na(fitness_total)) |>
 	ggplot() +
-	aes(x = initial_ratio_A_B, y = log10(fitness_total)) +
-	scale_x_initial_ratio(
-		strain_names = c(A = "evolved", B = "ancestor"),
-		# name = "NULL",
-		position = "top"
-	) +
-	geom_point_overlap(aes(fill = exptl_block), shape = 21, size = 2)
-
-
+	aes(x = initial_fraction_A, y = fitness_total) +
+	# scale_y_log10() +
+	scale_y_fitness_total() +
+	scale_x_continuous() +
+	geom_point_overlap(shape = 23, fill = "grey75", size = 2)
 
