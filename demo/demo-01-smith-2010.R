@@ -138,6 +138,9 @@ fitness_smith_2010 %>% plot_strain_fitness(mix_scale = "ratio")
 
 fitness_smith_2010 %>% plot_total_group_fitness()
 
+fitness_smith_2010 %>% plot_total_group_fitness(ylim = c(1e-6, 1))
+
+
 fitness_smith_2010 %>% plot_within_group_fitness(mix_scale = "ratio")
 
 # Plot elements ----------------------------------------------------------------

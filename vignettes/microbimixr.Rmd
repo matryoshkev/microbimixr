@@ -23,9 +23,12 @@ calculate and plot fitness measures that are:
 
 * Robust and quantitatively comparable across different species and types of 
   interaction
-* Meaningful for both kin and multilevel selection theories of social evolution
+* Useful for both individual and group-centered approaches to social interaction
 * Well-suited to statistical analysis of effect sizes and confidence intervals
 
+<!-- 
+* Meaningful for both kin and multilevel selection theories of social evolution
+-->
 
 <!-- TEACH PEOPLE HOW TO USE THE PACKAGE -->
 

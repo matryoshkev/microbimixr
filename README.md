@@ -1,4 +1,4 @@
-microbimixr - Analyze microbial interactions in mix experiments
+microbimixr: analyze microbial mix experiments
 ================
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
@@ -7,27 +7,47 @@ microbimixr - Analyze microbial interactions in mix experiments
 [![R-CMD-check](https://github.com/matryoshkev/microbimixr/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/matryoshkev/microbimixr/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
+## Overview
+
 A common experimental design for studying microbial interactions is to
 mix together two different microbes (different bacterial genotypes, for
 example) then measure how their fitness and behavior depends on mix
 frequency. How do they behave differently together compared to on their
 own?
 
-`microbimixr` is an R package that provides tools to **calculate and
-plot the fitness effects of microbial interactions**, helping
-researchers get the most out of their data.
+<!--
+`microbimixr` is an R package that provides tools to **calculate and plot the fitness effects of microbial interactions**, helping researchers get the most out of their data. 
+-->
+
+microbimixr is an R package for analyzing microbial interactions in mix
+experiments. It helps researchers get the most out of their data by
+providing convenience functions to calculate and plot fitness measures
+that are:
+
+-   Robust and quantitatively comparable across different species and
+    different types of interaction
+-   Useful for both individual and group-centered approaches to social
+    interaction
+-   Well-suited to statistical analysis of effect sizes and confidence
+    intervals
+
+<!-- 
+* Meaningful for both kin and multilevel selection theories of social evolution 
+-->
 
 ## Calculate fitness effects
 
-`microbimixr` provides a convenient way to calculate best-practice
-fitness measures that are:
+Starting from a data frame of the initial and final abundances of two
+microbes, calculate best-practice fitness measures using
+`calculate_mix_fitness()`.
 
--   Robust and quantitatively comparable across different species and
-    types of interaction
--   Well-suited to statistical analysis of effect sizes and confidence
-    intervals
--   Meaningful for both kin and multilevel selection theories of social
-    evolution
+<!-- 
+`microbimixr` provides a convenient way to calculate best-practice fitness measures that are:
+
+* Robust and quantitatively comparable across different species and types of interaction
+* Well-suited to statistical analysis of effect sizes and confidence intervals
+* Meaningful for both kin and multilevel selection theories of social evolution
+-->
 
 ``` r
 library("microbimixr")
@@ -59,21 +79,57 @@ head(fitness_results)
 #> 6  3.189011e-02       36.78640777
 ```
 
-## Plot fitness effects
+`calculate_mix_fitness()` works with most types of microbial abundance
+data including strain density, total group density, and strain
+frequency.
 
-`microbimixr` provides convenient ways to plot calculated fitness
-effects. Here’s a quick diagnostic plot of the different fitness
-measures for this dataset:
+## Diagnostic overview
+
+<!-- 
+`microbimixr` provides convenient ways to plot fitness effects. Here's a quick diagnostic plot of the different fitness measures for this dataset: 
+-->
+
+To quickly see what fitness measures would be most useful for your
+dataset, use `plot_mix_fitness()`. It draws a combined figure with
+strain fitness, total group fitness, and relative within-group fitness
+plotted against two measures of mix frequency.
 
 ``` r
-plot_mix_fitness(fitness_results, mix_scale = "fraction")
+plot_mix_fitness(fitness_results)
 ```
 
 ![Diagnostic plot from microbimixr](./man/figures/README-smith-2010.png)
 
+## Plot specific fitness effects
+
+Once you know which fitness measures to focus on, you can use
+microbimixr to visualize them. The simplest way is to use its built-in
+plot functions. They use the ggplot2 package to make figures with
+default settings appropriate for fitness data and some basic graphical
+options.
+
+``` r
+fig_total <- plot_total_group_fitness(
+    fitness_smith_2010, 
+    xlab = "Initial fraction of evolved strain", 
+    ylim = c(1e-8, 1)
+)
+fig_within <- plot_within_group_fitness(
+    fitness_smith_2010, 
+    xlab = "Initial ratio evolved / ancestral",
+    ylab = "Within-group fitness ratio \n evolved / ancestral",
+    mix_scale = "ratio",
+    ylim = c(1e-4, 1e4)
+)
+fig_total + fig_within
+```
+
+![Plot specific fitness
+measures](./man/figures/README-plot-specific.png)
+
 ## Installation
 
-You can install the development version of `microbimixr` from
+Install the development version of microbimixr from
 [GitHub](https://github.com/) with:
 
 ``` r
