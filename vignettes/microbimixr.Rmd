@@ -143,7 +143,7 @@ To quickly see an overview of the various fitness effects in a dataset, use `plo
 -->
 It draws a combined figure with strain fitness, total group fitness, and relative within-group fitness plotted against two measures of mix frequency.
 
-```{r diagnostic-smith2010, fig.width = 6, fig.height = 4.5, fig.align = "center", out.width = "100%"}
+```{r diagnostic-smith2010, fig.width = 6.25, fig.height = 4.5, fig.align = "center", out.width = "100%"}
 plot_mix_fitness(fitness_smith_2010)
 ```
 
@@ -156,7 +156,7 @@ These plots help you see which fitness measures and mixing scales are more infor
 As a tool for data inspection, `plot_mix_fitness()` shows each data point individually instead of a statistical summary like the mean value with error bars. For complex datasets with many strain combinations or treatment conditions, it may be easier to inspect subsets of the data. 
 <!-- microbimixr functions work with the R pipe `|>`. -->
 
-```{r diagnostic-Yurtsev2013, fig.width = 6, fig.height = 4.5, fig.align = "center", out.width = "100%"}
+```{r diagnostic-Yurtsev2013, fig.width = 6.25, fig.height = 4.5, fig.align = "center", out.width = "100%"}
 fitness_Yurtsev_2013 |>
 subset(ampicillin == 100 & dilution == 100) |>
 plot_mix_fitness()

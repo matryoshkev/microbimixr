@@ -95,7 +95,7 @@ fitness_Fig3AB <- fitness_Fig3AB %>%
 # as long as we tell them what's what
 fitness_names_Yurtsev <- c(
 	initial_fraction_A = "initial_freq_AmpR",
-	initial_ratio_A_B = "initial_ratio_AmpRS",
+	# initial_ratio_A_B = "initial_ratio_AmpRS",
 	fitness_ratio_A_B = "fitness_ratio_AmpRS",
 	fitness_total = "fitness_total",
 	name_A = "AmpR",
@@ -118,6 +118,28 @@ fitness_Fig3AB %>%
 	aes(fill = factor(ampicillin)) +
 	scale_fill_brewer(name = "Ampicillin\n(\u03BCg/mL)", palette = "YlOrRd") +
 	theme_bw()
+
+# Using microbimixr plot elements
+dev.new(width = 5.5, height = 2.5, units = "in")
+fitness_Fig3AB |>
+	ggplot() +
+	aes(
+		x = initial_freq_AmpR,
+		y = fitness_ratio_AmpRS,
+		fill = factor(ampicillin)
+	) +
+	geom_point_overlap(shape = 21) +
+	scale_x_initial_fraction(name = "Initial frequency of resistant strain") +
+	scale_y_fitness_ratio(
+		name = "Within-group fitness ratio\nresistant / sensitive",
+		limits = c(1e-1, 1e4)
+	) +
+	scale_fill_brewer(name = "Ampicillin\n(\u03BCg/mL)", palette = "YlOrRd") +
+	facet_wrap(
+		~ dilution, labeller = as_labeller(function(x) paste0(x, "-fold dilution"))
+	) +
+	theme_bw()
+
 
 
 # Total-group fitness ---------------------------------------------------------

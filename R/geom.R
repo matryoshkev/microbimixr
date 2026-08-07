@@ -5,7 +5,7 @@
 #' This is a small modification to `geom_point()` from ggplot2 that makes data
 #' points easier to see when they overlap. `geom_point_overlap()` first draws
 #' points as normal then draws points again with no fill. It only has a visible
-#' effect effect on points with separate color and fill (shapes 21-25).
+#' effect on points with separate color and fill (shapes 21-25).
 #'
 #' @param ... Arguments passed to `geom_point()`.
 #'

@@ -1,22 +1,33 @@
 # Axes for ggplot2 =============================================================
 
-# X-axis: initial fraction strain A
+#' Position scale for initial strain frequency (linear)
+#'
+#' `scale_x_initial_fraction()` is an x-axis position scale for initial strain
+#' frequency (fraction or proportion of total) measured on a linear scale. It
+#' calls `ggplot2::scale_x_continuous()` with default settings appropriate for
+#' microbial mix experiments.
+#'
+#' @param name Name of the scale. Used as axis or legend title. Argument
+#'   passed to [ggplot2::scale_x_continuous()]. Use `NA` to automatically name
+#'   axis using `strain_A_name` argument.
+#' @param strain_A_name Character string used to name axis.
+#' @param limits Limits argument passed to [ggplot2::scale_x_continuous()].
+#' @param breaks Breaks argument passed to [ggplot2::scale_x_continuous()].
+#' @param minor_breaks Minor breaks argument passed to
+#'   [ggplot2::scale_x_continuous()].
+#' @param ... Other arguments passed to [ggplot2::scale_x_continuous()].
+#'
+#' @export
+#'
 scale_x_initial_fraction <- function(
-	strain_A_name = "strain A",
 	name = NA,
-	limits = NULL,
-	breaks = ggplot2::waiver(),
-	minor_breaks = ggplot2::waiver(),
+	strain_A_name = "strain A",
+	limits = c(0, 1),
+	breaks = seq(0, 1, by = 0.2),
+	minor_breaks = NULL,
 	...
 ) {
-	if (is.na(name)) {
-		name <- paste("Initial fraction", strain_A_name)
-	}
-	if (is.null(limits)) {
-		limits <- c(0, 1)
-		breaks <- seq(0, 1, by = 0.2)
-		minor_breaks <- NULL
-	}
+	if (is.na(name)) { name <- paste("Initial fraction", strain_A_name) }
 	ggplot2::scale_x_continuous(
 		name = name,
 		limits = limits,
@@ -26,11 +37,14 @@ scale_x_initial_fraction <- function(
 	)
 }
 
-# X-axis: initial ratio A/B (log10)
+# x-axis: initial ratio A/B (log10)
 scale_x_initial_ratio <- function(
 	strain_names = c(A = "strain A", B = "strain B"),
 	name = NA,
 	limits = NULL,
+	# breaks = NULL,
+	# labels = NULL,
+	# minor_breaks = NULL,
 	...
 ) {
 	if (is.na(name)) {
@@ -51,7 +65,7 @@ scale_x_initial_ratio <- function(
 	)
 }
 
-# Y-axis: fitness (strain A, strain B, total group)
+# y-axis: fitness (strain A, strain B, total group)
 scale_y_fitness <- function(
 	name = NA,
 	limits = NULL,
@@ -74,10 +88,13 @@ scale_y_fitness <- function(
 	)
 }
 
-# Y-axis: total-group fitness
+# y-axis: total-group fitness
 scale_y_fitness_total <- function(
 	name = NA,
 	limits = NULL,
+	# breaks = NULL,
+	# labels = NULL,
+	# minor_breaks = NULL,
 	...
 ) {
 	if (is.na(name)) {
@@ -93,11 +110,14 @@ scale_y_fitness_total <- function(
 	)
 }
 
-# Y-axis: within-group fitness ratio A/B
+# y-axis: within-group fitness ratio A/B
 scale_y_fitness_ratio <- function(
 	strain_names = c(A = "strain A", B = "strain B"),
 	name = NA,
 	limits = NULL,
+	# breaks = NULL,
+	# labels = NULL,
+	# minor_breaks = NULL,
 	...
 ) {
 	if (is.na(name)) {
@@ -113,6 +133,8 @@ scale_y_fitness_ratio <- function(
 		...
 	)
 }
+
+# Axis helpers =================================================================
 
 # Breaks for log10 axes
 breaks_log10 <- function(limits) {
