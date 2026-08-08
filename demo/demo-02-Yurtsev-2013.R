@@ -129,7 +129,11 @@ fitness_Fig3AB |>
 		fill = factor(ampicillin)
 	) +
 	geom_point_overlap(shape = 21) +
-	scale_x_initial_fraction(name = "Initial frequency of resistant strain") +
+	# scale_x_initial_fraction(name = "Initial frequency of resistant strain") +
+	scale_x_initial_ratio(
+		name = "Initial ratio resistant / sensitive",
+		# limits = c(0.01, 1.01),
+	) +
 	scale_y_fitness_ratio(
 		name = "Within-group fitness ratio\nresistant / sensitive",
 		limits = c(1e-1, 1e4)

@@ -4,17 +4,15 @@
 #'
 #' `scale_x_initial_fraction()` is an x-axis position scale for initial strain
 #' frequency (fraction or proportion of total) measured on a linear scale. It
-#' calls `ggplot2::scale_x_continuous()` with default settings appropriate for
+#' calls `ggplot2::scale_x_continuous()` with default settings suited to
 #' microbial mix experiments.
 #'
-#' @param name Name of the scale. Used as axis or legend title. Argument
-#'   passed to [ggplot2::scale_x_continuous()]. Use `NA` to automatically name
-#'   axis using `strain_A_name` argument.
-#' @param strain_A_name Character string used to name axis.
-#' @param limits Limits argument passed to [ggplot2::scale_x_continuous()].
-#' @param breaks Breaks argument passed to [ggplot2::scale_x_continuous()].
-#' @param minor_breaks Minor breaks argument passed to
-#'   [ggplot2::scale_x_continuous()].
+#' @param name Character vector (or expression) for axis title. Use `NA` to
+#'   automatically name axis using `strain_A_name` argument.
+#' @param strain_A_name Optional character string used to name axis.
+#' @param limits Axis limits.
+#' @param breaks Axis breaks.
+#' @param minor_breaks Axis minor breaks.
 #' @param ... Other arguments passed to [ggplot2::scale_x_continuous()].
 #'
 #' @export
@@ -37,30 +35,41 @@ scale_x_initial_fraction <- function(
 	)
 }
 
-# x-axis: initial ratio A/B (log10)
+#' Position scale for initial strain ratio
+#'
+#' `scale_x_initial_ratio()` is a logarithmic x-axis scale for the initial ratio
+#' of strain frequencies. It calls `ggplot2::scale_x_log10()` with default
+#' settings suited to microbial mix experiments.
+#'
+#' @param name Character vector (or expression) for axis title. Use `NA` to
+#'   automatically name axis using `strain_names` argument.
+#' @param strain_names Optional character vector used to name axis.
+#' @param limits Axis limits. Use `NULL` for automatic limits.
+#' @param breaks Axis breaks.
+#' @param minor_breaks Axis minor breaks. Default `NULL` is no minor breaks.
+#' @param ... Other arguments passed to [ggplot2::scale_x_log10()].
+#'
+#' @export
+#'
 scale_x_initial_ratio <- function(
-	strain_names = c(A = "strain A", B = "strain B"),
 	name = NA,
+	strain_names = c(A = "strain A", B = "strain B"),
 	limits = NULL,
-	# breaks = NULL,
-	# labels = NULL,
-	# minor_breaks = NULL,
+	breaks = breaks_log10,
+	labels = labels_log10,
+	minor_breaks = NULL,
 	...
 ) {
 	if (is.na(name)) {
 		strain_names <- as.list(strain_names)
 		name <- paste("Initial ratio", strain_names$A, "/", strain_names$B)
 	}
-	if (is.null(limits)) {
-		breaks <- 10^c(-12:12)
-		minor_breaks <- NULL
-	}
 	ggplot2::scale_x_log10(
 		name = name,
 		limits = limits,
-		breaks = breaks_log10,
-		labels = labels_log10,
-		minor_breaks = minor_breaks_log10,
+		breaks = breaks,
+		labels = labels,
+		minor_breaks = minor_breaks,
 		...
 	)
 }

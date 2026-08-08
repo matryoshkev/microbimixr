@@ -14,24 +14,22 @@ scale_x_initial_fraction(
 )
 }
 \arguments{
-\item{name}{The name of the scale. Used as the axis or legend title. Argument
-passed to \code{\link[ggplot2:scale_continuous]{ggplot2::scale_x_continuous()}}. Use \code{NA} to automatically name
-axis using the \code{strain_A_name} argument.}
+\item{name}{Character vector (or expression) for axis title. Use \code{NA} to
+automatically name axis using \code{strain_A_name} argument.}
 
-\item{strain_A_name}{Character string used to name axis.}
+\item{strain_A_name}{Optional character string used to name axis.}
 
-\item{limits}{Limits argument passed to \code{\link[ggplot2:scale_continuous]{ggplot2::scale_x_continuous()}}.}
+\item{limits}{Axis limits.}
 
-\item{breaks}{Breaks argument passed to \code{\link[ggplot2:scale_continuous]{ggplot2::scale_x_continuous()}}.}
+\item{breaks}{Axis breaks.}
 
-\item{minor_breaks}{Minor breaks argument passed to
-\code{\link[ggplot2:scale_continuous]{ggplot2::scale_x_continuous()}}.}
+\item{minor_breaks}{Axis minor breaks.}
 
 \item{...}{Other arguments passed to \code{\link[ggplot2:scale_continuous]{ggplot2::scale_x_continuous()}}.}
 }
 \description{
 \code{scale_x_initial_fraction()} is an x-axis position scale for initial strain
 frequency (fraction or proportion of total) measured on a linear scale. It
-calls \code{ggplot2::scale_x_continuous()} with default settings appropriate for
+calls \code{ggplot2::scale_x_continuous()} with default settings suited to
 microbial mix experiments.
 }
