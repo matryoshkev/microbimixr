@@ -5,7 +5,7 @@
 \title{Position scale for microbial fitness}
 \usage{
 scale_y_fitness(
-  name = "Wrightian fitness\\n (final no. / initial no.)",
+  name = NA,
   limits = NULL,
   breaks = breaks_log10,
   labels = labels_log10,
@@ -14,9 +14,11 @@ scale_y_fitness(
 )
 }
 \arguments{
-\item{name}{Character vector (or expression) for axis title.}
+\item{name}{Character vector (or expression) for axis title. Default \code{NA}
+automatically names axis.}
 
-\item{limits}{Axis limits. Use \code{NULL} for automatic limits.}
+\item{limits}{Axis limits. Use \code{NULL} for automatic limits that include 1 and
+span a minimum 10-fold range.}
 
 \item{breaks}{Axis breaks.}
 

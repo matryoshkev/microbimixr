@@ -173,8 +173,6 @@ plot_strain_fitness <- function(
 		times = c(strain_names$A, strain_names$B)
 	)
 
-	if (is.null(ylim)) { ylim <- limits_log10(data_to_plot$fitness) }
-
 	# Make plot
 	fig_output <-
 		ggplot2::ggplot(data_to_plot) +
@@ -194,12 +192,6 @@ plot_strain_fitness <- function(
 			xlab = xlab,
 			xlim = xlim
 		)
-
-		# Expand limits to include log-intercepts
-	if (is.null(xlim) & mix_scale == "ratio")
-		fig_output <- fig_output + ggplot2::expand_limits(x = 1)
-	if (is.null(ylim))
-		fig_output <- fig_output + ggplot2::expand_limits(y = 1)
 
 	# Return ggplot object
 	fig_output
@@ -269,7 +261,6 @@ plot_total_group_fitness <- function(
 	mix_scale <- rlang::arg_match(mix_scale, c("fraction", "ratio"))
 	if (missing(xlim)) { xlim <- NULL }
 	if (missing(ylim)) { ylim <- NULL }
-	if (is.null(ylim)) { ylim <- limits_log10(data[[var_names$fitness_total]]) }
 
 	# Construct plot
 	fig_output <-
@@ -290,14 +281,6 @@ plot_total_group_fitness <- function(
 			xlab = xlab,
 			xlim = xlim
 		)
-
-	# Expand limits to include log-intercepts
-	if (is.null(xlim) & mix_scale == "ratio") {
-		fig_output <- fig_output + ggplot2::expand_limits(x = 1)
-	}
-	if (is.null(ylim)) {
-		fig_output <- fig_output + ggplot2::expand_limits(y = 1)
-	}
 
 	# Return ggplot object
 	fig_output
@@ -368,9 +351,6 @@ plot_within_group_fitness <- function(
 	mix_scale <- rlang::arg_match(mix_scale, c("fraction", "ratio"))
 	if (missing(xlim)) { xlim <- NULL }
 	if (missing(ylim)) { ylim <- NULL }
-	if (is.null(ylim)) {
-		ylim <- limits_log10(data[[var_names$fitness_ratio_A_B]])
-	}
 
 	# Filter out single-strain data
 	if (mix_scale == "fraction") {
@@ -400,14 +380,6 @@ plot_within_group_fitness <- function(
 			xlab = xlab,
 			xlim = xlim
 		)
-
-	# Expand limits to include log-intercepts
-	if (is.null(xlim) & mix_scale == "ratio") {
-		fig_output <- fig_output + ggplot2::expand_limits(x = 1)
-	}
-	if (is.null(ylim)) {
-		fig_output <- fig_output + ggplot2::expand_limits(y = 1)
-	}
 
 	# Return ggplot object
 	fig_output
@@ -508,16 +480,12 @@ plot_fitness_strain_total <- function(
 		ggplot2::facet_wrap(~ my_facet, nrow = 1)
 
 	# Add x-axis mixing scale
-	fig_output <- fig_output |> add_mix_axis(
-		mix_scale = mix_scale,
-		var_names = var_names,
-		strain_names = strain_names
-	)
-
-	# Expand limits to include log-intercepts
-	fig_output <- fig_output +
-		ggplot2::expand_limits(x = 1) +
-		ggplot2::expand_limits(y = 1)
+	fig_output <- fig_output |>
+		add_mix_axis(
+			mix_scale = mix_scale,
+			var_names = var_names,
+			strain_names = strain_names
+		)
 
 	# Return ggplot object
 	fig_output

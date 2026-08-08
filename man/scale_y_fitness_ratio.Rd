@@ -15,12 +15,13 @@ scale_y_fitness_ratio(
 )
 }
 \arguments{
-\item{name}{Character vector (or expression) for axis title. Use \code{NA} to
-automatically name axis using \code{strain_names} argument.}
+\item{name}{Character vector (or expression) for axis title. Default \code{NA}
+automatically names axis using \code{strain_names} argument.}
 
 \item{strain_names}{Optional character vector used to name axis.}
 
-\item{limits}{Axis limits. Use \code{NULL} for automatic limits.}
+\item{limits}{Axis limits. Use \code{NULL} for automatic limits that include 1 and
+span a minimum 10-fold range.}
 
 \item{breaks}{Axis breaks.}
 

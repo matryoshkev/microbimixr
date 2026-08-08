@@ -138,10 +138,10 @@ fitness_smith_2010 %>% plot_strain_fitness(mix_scale = "ratio")
 
 fitness_smith_2010 %>% plot_total_group_fitness()
 
-fitness_smith_2010 %>% plot_total_group_fitness(ylim = c(1e-6, 1))
-
+fitness_smith_2010 %>% plot_total_group_fitness(ylim = c(1e-8, 0.1))
 
 fitness_smith_2010 %>% plot_within_group_fitness(mix_scale = "ratio")
+
 
 # Plot elements ----------------------------------------------------------------
 
@@ -169,8 +169,8 @@ fitness_smith_2010 |>
 	filter(!is.na(fitness_total)) |>
 	ggplot() +
 	aes(x = initial_fraction_A, y = fitness_total) +
-	# scale_y_log10() +
 	scale_y_fitness_total() +
-	scale_x_continuous() +
+	# scale_y_log10() +
+	scale_x_initial_fraction() +
 	geom_point_overlap(shape = 23, fill = "grey75", size = 2)
 

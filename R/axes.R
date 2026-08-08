@@ -44,7 +44,8 @@ scale_x_initial_fraction <- function(
 #' @param name Character vector (or expression) for axis title. Default `NA`
 #'   automatically names axis using `strain_names` argument.
 #' @param strain_names Optional character vector used to name axis.
-#' @param limits Axis limits. Use `NULL` for automatic limits.
+#' @param limits Axis limits. Use `NULL` for automatic limits that include 1 and
+#'   span a minimum 10-fold range.
 #' @param breaks Axis breaks.
 #' @param labels Labels for axis breaks.
 #' @param minor_breaks Axis minor breaks. Default `NULL` is no minor breaks.
@@ -65,6 +66,7 @@ scale_x_initial_ratio <- function(
 		strain_names <- as.list(strain_names)
 		name <- paste("Initial ratio", strain_names$A, "/", strain_names$B)
 	}
+	if (is.null(limits)) { limits <- expand_limits_log10 }
 	ggplot2::scale_x_log10(
 		name = name,
 		limits = limits,
@@ -83,7 +85,8 @@ scale_x_initial_ratio <- function(
 #'
 #' @param name Character vector (or expression) for axis title. Default `NA`
 #'   automatically names axis.
-#' @param limits Axis limits. Use `NULL` for automatic limits.
+#' @param limits Axis limits. Use `NULL` for automatic limits that include 1 and
+#'   span a minimum 10-fold range.
 #' @param breaks Axis breaks.
 #' @param labels Labels for axis breaks.
 #' @param minor_breaks Axis minor breaks.
@@ -100,6 +103,7 @@ scale_y_fitness <- function(
 	...
 ) {
 	if (is.na(name)) { name <- "Wrightian fitness\n (final no. / initial no.)" }
+	if (is.null(limits)) { limits <- expand_limits_log10 }
 	ggplot2::scale_y_log10(
 		name = name,
 		limits = limits,
@@ -118,7 +122,8 @@ scale_y_fitness <- function(
 #'
 #' @param name Character vector (or expression) for axis title. Default `NA`
 #'   automatically names axis.
-#' @param limits Axis limits. Use `NULL` for automatic limits.
+#' @param limits Axis limits. Use `NULL` for automatic limits that include 1 and
+#'   span a minimum 10-fold range.
 #' @param breaks Axis breaks.
 #' @param labels Labels for axis breaks.
 #' @param minor_breaks Axis minor breaks.
@@ -135,6 +140,7 @@ scale_y_fitness_total <- function(
 	...
 ) {
 	if (is.na(name)) { name <- "Total group fitness\n(final no. / initial no.)" }
+	if (is.null(limits)) { limits <- expand_limits_log10 }
 	ggplot2::scale_y_log10(
 		name = name,
 		limits = limits,
@@ -155,7 +161,8 @@ scale_y_fitness_total <- function(
 #' @param name Character vector (or expression) for axis title. Default `NA`
 #'   automatically names axis using `strain_names` argument.
 #' @param strain_names Optional character vector used to name axis.
-#' @param limits Axis limits. Use `NULL` for automatic limits.
+#' @param limits Axis limits. Use `NULL` for automatic limits that include 1 and
+#'   span a minimum 10-fold range.
 #' @param breaks Axis breaks.
 #' @param labels Labels for axis breaks.
 #' @param minor_breaks Axis minor breaks.
@@ -176,6 +183,7 @@ scale_y_fitness_ratio <- function(
 		strain_names <- as.list(strain_names)
 		name <- paste("Fitness ratio\n", strain_names$A, "/", strain_names$B)
 	}
+	if (is.null(limits)) { limits <- expand_limits_log10 }
 	ggplot2::scale_y_log10(
 		name = name,
 		limits = limits,
@@ -188,6 +196,21 @@ scale_y_fitness_ratio <- function(
 
 
 # Axis helpers =================================================================
+
+# Expand ggplot's automatic limits for logarithmic scales
+expand_limits_log10 <- function(limits) {
+	# Include 1
+	limits <- c(limits, 1)
+
+	# Minimum 10-fold range
+	log10_range <- range(log10(limits))
+	if (max(log10_range) - min(log10_range) < 1) {
+		midpoint <- mean(log10_range)
+		limits <- 10^c(midpoint - 0.5, midpoint + 0.5)
+	}
+
+	range(limits)
+}
 
 # Breaks for log10 axes
 breaks_log10 <- function(limits) {
@@ -241,15 +264,15 @@ minor_breaks_log10 <- function(limits) {
 }
 
 # Calculate limits for log10 axes from data
-limits_log10 <- function(values) {
-  values <- values[is.finite(values) & values > 0]
-  values <- c(values, 1)  # Always include 1
-	log10_range <- log10(range(values))
- 	midpoint <- mean(log10_range)
-	span <- log10_range[2] - log10_range[1]
-	span <- max(span, 1)  # Minimum 10-fold range
-	span <- span * 1.1  # 5% expansion to either side
-	min <- 10^(midpoint - span/2)
-	max <- 10^(midpoint + span/2)
-	c(min, max)
-}
+# limits_log10 <- function(values) {
+#   values <- values[is.finite(values) & values > 0]
+#   values <- c(values, 1)  # Always include 1
+# 	log10_range <- log10(range(values))
+#  	midpoint <- mean(log10_range)
+# 	span <- log10_range[2] - log10_range[1]
+# 	span <- max(span, 1)  # Minimum 10-fold range
+# 	span <- span * 1.1  # 5% expansion to either side
+# 	min <- 10^(midpoint - span/2)
+# 	max <- 10^(midpoint + span/2)
+# 	c(min, max)
+# }

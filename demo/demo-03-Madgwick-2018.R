@@ -32,6 +32,7 @@ fitness_NC105_NC63 <-
 	fitness_Madgwick %>%
 	filter(name_A == "NC105.1" & name_B == "NC63.2")
 
+dev.new(width = 6.25, height = 4.5, units = "in")
 fitness_NC105_NC63 %>% plot_mix_fitness()
 # Within-group relative fitness is more linear over log-ratio mix scale
 
@@ -39,22 +40,47 @@ fitness_NC105_NC63 %>% plot_mix_fitness()
 # Plot specific fitness measures -------------------------------------------
 
 dev.new(width = 5, height = 2.5)
-fitness_Madgwick %>%
-	filter(name_A == "NC105.1" & name_B == "NC63.2") %>%
+fitness_Madgwick |>
+	filter(name_A == "NC105.1" & name_B == "NC63.2") |>
 	plot_strain_fitness() +
 	ggplot2::facet_wrap(~ strain)
 
 dev.new(width = 3, height = 2.5)
-fitness_Madgwick %>%
-	filter(name_A == "NC105.1" & name_B == "NC63.2") %>%
+fitness_Madgwick |>
+	filter(name_A == "NC105.1" & name_B == "NC63.2") |>
 	plot_total_group_fitness()
 
 dev.new(width = 3, height = 2.5)
-fitness_NC105_NC63 %>%
+fitness_NC105_NC63 |>
 	plot_within_group_fitness(mix_scale = "ratio")
+
+dev.new(width = 6.25, height = 6.5)
+fitness_Madgwick |>
+	plot_within_group_fitness(mix_scale = "ratio") +
+	ggplot2::facet_grid(name_A ~ name_B)
 
 
 # Tmp for dev -------------------------------------------
+
+
+fitness_Madgwick |>
+	filter(name_A == "NC105.1" & name_B == "NC63.2") |>
+	select(fitness_A) |>
+	range(na.rm = TRUE) |>
+	expand_limits_log10()
+
+dev.new(width = 5, height = 2.5)
+fitness_Madgwick |>
+	filter(name_A == "NC105.1" & name_B == "NC63.2") |>
+	ggplot() +
+	aes(x = initial_fraction_A, y = fitness_A) +
+	geom_point_overlap(shape = 21) +
+	scale_x_initial_fraction() +
+	scale_y_fitness(limits = NULL)
+	# scale_y_fitness()
+
+
+
 
 # mgcv::gam(
 # 	fitness_total ~ s(initial_fraction_A, k = 3),
