@@ -41,8 +41,8 @@ scale_x_initial_fraction <- function(
 #' of strain frequencies. It calls `ggplot2::scale_x_log10()` with default
 #' settings suited to microbial mix experiments.
 #'
-#' @param name Character vector (or expression) for axis title. Use `NA` to
-#'   automatically name axis using `strain_names` argument.
+#' @param name Character vector (or expression) for axis title. Default `NA`
+#'   automatically names axis using `strain_names` argument.
 #' @param strain_names Optional character vector used to name axis.
 #' @param limits Axis limits. Use `NULL` for automatic limits.
 #' @param breaks Axis breaks.
@@ -81,7 +81,8 @@ scale_x_initial_ratio <- function(
 #' of strains and groups. It calls `ggplot2::scale_y_log10()` with default
 #' settings suited to Wrightian fitness data.
 #'
-#' @param name Character vector (or expression) for axis title.
+#' @param name Character vector (or expression) for axis title. Default `NA`
+#'   automatically names axis.
 #' @param limits Axis limits. Use `NULL` for automatic limits.
 #' @param breaks Axis breaks.
 #' @param labels Labels for axis breaks.
@@ -91,13 +92,14 @@ scale_x_initial_ratio <- function(
 #' @export
 #'
 scale_y_fitness <- function(
-	name = "Wrightian fitness\n (final no. / initial no.)",
+	name = NA,
 	limits = NULL,
 	breaks = breaks_log10,
 	labels = labels_log10,
 	minor_breaks = minor_breaks_log10,
 	...
 ) {
+	if (is.na(name)) { name <- "Wrightian fitness\n (final no. / initial no.)" }
 	ggplot2::scale_y_log10(
 		name = name,
 		limits = limits,
@@ -114,7 +116,8 @@ scale_y_fitness <- function(
 #' Wrightian fitness of microbial groups. It calls `ggplot2::scale_y_log10()`
 #' with default settings suited to Wrightian fitness data.
 #'
-#' @param name Character vector (or expression) for axis title.
+#' @param name Character vector (or expression) for axis title. Default `NA`
+#'   automatically names axis.
 #' @param limits Axis limits. Use `NULL` for automatic limits.
 #' @param breaks Axis breaks.
 #' @param labels Labels for axis breaks.
@@ -124,13 +127,14 @@ scale_y_fitness <- function(
 #' @export
 #'
 scale_y_fitness_total <- function(
-	name = "Total group fitness\n(final no. / initial no.)",
+	name = NA,
 	limits = NULL,
 	breaks = breaks_log10,
 	labels = labels_log10,
 	minor_breaks = minor_breaks_log10,
 	...
 ) {
+	if (is.na(name)) { name <- "Total group fitness\n(final no. / initial no.)" }
 	ggplot2::scale_y_log10(
 		name = name,
 		limits = limits,
@@ -148,8 +152,8 @@ scale_y_fitness_total <- function(
 #' ratio of Wrightian fitnesses. It calls `ggplot2::scale_y_log10()` with
 #' default settings suited to fitness-ratio data.
 #'
-#' @param name Character vector (or expression) for axis title. Use `NA` to
-#'   automatically name axis using `strain_names` argument.
+#' @param name Character vector (or expression) for axis title. Default `NA`
+#'   automatically names axis using `strain_names` argument.
 #' @param strain_names Optional character vector used to name axis.
 #' @param limits Axis limits. Use `NULL` for automatic limits.
 #' @param breaks Axis breaks.
