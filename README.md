@@ -51,7 +51,7 @@ microbes, calculate best-practice fitness measures using
 
 ``` r
 library("microbimixr")
-fitness_results <- calculate_mix_fitness(
+fitness_smith_2010 <- calculate_mix_fitness(
     data_smith_2010, 
     var_names = c(
         initial_number_A = "initial_cells_evolved",
@@ -62,7 +62,7 @@ fitness_results <- calculate_mix_fitness(
         name_B = "GJV10"
     )
 )
-head(fitness_results)
+head(fitness_smith_2010)
 #>     name_A name_B initial_fraction_A initial_ratio_A_B    fitness_A  fitness_B
 #> 1 GVB206.3  GJV10         1.00000000               Inf 1.200000e-07         NA
 #> 2 GVB206.3  GJV10         0.98901099       90.00000000 1.555556e-07 0.00000400
@@ -95,7 +95,7 @@ strain fitness, total group fitness, and relative within-group fitness
 plotted against two measures of mix frequency.
 
 ``` r
-plot_mix_fitness(fitness_results)
+plot_mix_fitness(fitness_smith_2010)
 ```
 
 ![Diagnostic plot from microbimixr](./man/figures/README-smith-2010.png)
@@ -104,22 +104,13 @@ plot_mix_fitness(fitness_results)
 
 Once you know which fitness measures to focus on, you can use
 microbimixr to visualize them. The simplest way is to use its built-in
-plot functions. They use the ggplot2 package to make figures with
-default settings appropriate for fitness data and some basic graphical
-options.
+plot functions. They make figures with default settings suited to
+fitness data and have some basic graphical options.
 
 ``` r
-fig_total <- plot_total_group_fitness(
-    fitness_smith_2010, 
-    xlab = "Initial fraction of evolved strain", 
-    ylim = c(1e-8, 1)
-)
+fig_total <- plot_total_group_fitness(fitness_smith_2010)
 fig_within <- plot_within_group_fitness(
-    fitness_smith_2010, 
-    xlab = "Initial ratio evolved / ancestral",
-    ylab = "Within-group fitness ratio \n evolved / ancestral",
-    mix_scale = "ratio",
-    ylim = c(1e-4, 1e4)
+    fitness_smith_2010, mix_scale = "ratio", ylim = c(1e-3, 1e3)
 )
 fig_total + fig_within
 ```
