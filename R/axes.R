@@ -46,6 +46,7 @@ scale_x_initial_fraction <- function(
 #' @param strain_names Optional character vector used to name axis.
 #' @param limits Axis limits. Use `NULL` for automatic limits.
 #' @param breaks Axis breaks.
+#' @param labels Labels for axis breaks.
 #' @param minor_breaks Axis minor breaks. Default `NULL` is no minor breaks.
 #' @param ... Other arguments passed to [ggplot2::scale_x_log10()].
 #'
@@ -74,59 +75,97 @@ scale_x_initial_ratio <- function(
 	)
 }
 
-# y-axis: fitness (strain A, strain B, total group)
+#' Position scale for microbial fitness
+#'
+#' `scale_y_fitness()` is a logarithmic y-axis scale for the Wrightian fitness
+#' of strains and groups. It calls `ggplot2::scale_y_log10()` with default
+#' settings suited to Wrightian fitness data.
+#'
+#' @param name Character vector (or expression) for axis title.
+#' @param limits Axis limits. Use `NULL` for automatic limits.
+#' @param breaks Axis breaks.
+#' @param labels Labels for axis breaks.
+#' @param minor_breaks Axis minor breaks.
+#' @param ... Other arguments passed to [ggplot2::scale_x_log10()].
+#'
+#' @export
+#'
 scale_y_fitness <- function(
-	name = NA,
+	name = "Wrightian fitness\n (final no. / initial no.)",
 	limits = NULL,
-	breaks = ggplot2::waiver(),
-	labels = ggplot2::waiver(),
-	minor_breaks = ggplot2::waiver(),
+	breaks = breaks_log10,
+	labels = labels_log10,
+	minor_breaks = minor_breaks_log10,
 	...
 ) {
-	if (is.na(name)) { name <- "Wrightian fitness\n (final no. / initial no.)" }
 	ggplot2::scale_y_log10(
 		name = name,
 		limits = limits,
-		breaks = breaks_log10,
-		labels = labels_log10,
-		minor_breaks = minor_breaks_log10,
-		# breaks = breaks,
-		# labels = labels,
-		# minor_breaks = minor_breaks,
+		breaks = breaks,
+		labels = labels,
+		minor_breaks = minor_breaks,
 		...
 	)
 }
 
-# y-axis: total-group fitness
+#' Position scale for fitness of microbial groups
+#'
+#' `scale_y_fitness_total()` is a logarithmic y-axis scale for the total
+#' Wrightian fitness of microbial groups. It calls `ggplot2::scale_y_log10()`
+#' with default settings suited to Wrightian fitness data.
+#'
+#' @param name Character vector (or expression) for axis title.
+#' @param limits Axis limits. Use `NULL` for automatic limits.
+#' @param breaks Axis breaks.
+#' @param labels Labels for axis breaks.
+#' @param minor_breaks Axis minor breaks.
+#' @param ... Other arguments passed to [ggplot2::scale_x_log10()].
+#'
+#' @export
+#'
 scale_y_fitness_total <- function(
-	name = NA,
+	name = "Total group fitness\n(final no. / initial no.)",
 	limits = NULL,
-	# breaks = NULL,
-	# labels = NULL,
-	# minor_breaks = NULL,
+	breaks = breaks_log10,
+	labels = labels_log10,
+	minor_breaks = minor_breaks_log10,
 	...
 ) {
-	if (is.na(name)) {
-		name <- "Total group fitness\n(final no. / initial no.)"
-	}
 	ggplot2::scale_y_log10(
 		name = name,
 		limits = limits,
-		breaks = breaks_log10,
-		labels = labels_log10,
-		minor_breaks = minor_breaks_log10,
+		breaks = breaks,
+		labels = labels,
+		minor_breaks = minor_breaks,
 		...
 	)
 }
 
-# y-axis: within-group fitness ratio A/B
+#' Position scale for within-group fitness ratio
+#'
+#' `scale_y_fitness_ratio()` is a logarithmic y-axis scale for the relative
+#' survival and reproductive success of microbes within groups measured as a
+#' ratio of Wrightian fitnesses. It calls `ggplot2::scale_y_log10()` with
+#' default settings suited to fitness-ratio data.
+#'
+#' @param name Character vector (or expression) for axis title. Use `NA` to
+#'   automatically name axis using `strain_names` argument.
+#' @param strain_names Optional character vector used to name axis.
+#' @param limits Axis limits. Use `NULL` for automatic limits.
+#' @param breaks Axis breaks.
+#' @param labels Labels for axis breaks.
+#' @param minor_breaks Axis minor breaks.
+#' @param ... Other arguments passed to [ggplot2::scale_x_log10()].
+#'
+#' @export
+#'
 scale_y_fitness_ratio <- function(
-	strain_names = c(A = "strain A", B = "strain B"),
 	name = NA,
+	strain_names = c(A = "strain A", B = "strain B"),
 	limits = NULL,
-	# breaks = NULL,
-	# labels = NULL,
-	# minor_breaks = NULL,
+	breaks = breaks_log10,
+	labels = labels_log10,
+	minor_breaks = minor_breaks_log10,
 	...
 ) {
 	if (is.na(name)) {
@@ -136,12 +175,13 @@ scale_y_fitness_ratio <- function(
 	ggplot2::scale_y_log10(
 		name = name,
 		limits = limits,
-		breaks = breaks_log10,
-		labels = labels_log10,
-		minor_breaks = minor_breaks_log10,
+		breaks = breaks,
+		labels = labels,
+		minor_breaks = minor_breaks,
 		...
 	)
 }
+
 
 # Axis helpers =================================================================
 
