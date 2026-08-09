@@ -9,11 +9,10 @@ microbimixr: analyze microbial mix experiments
 
 ## Overview
 
-A common experimental design for studying microbial interactions is to
-mix together two different microbes (different bacterial genotypes, for
-example) then measure how their fitness and behavior depends on mix
-frequency. How do they behave differently together compared to on their
-own?
+A common way to study microbial interactions is to mix together two
+different microbes (different bacteria strains, for example) then
+measure how their fitness depends on their frequency in the mix. How do
+they behave differently together compared to on their own?
 
 <!--
 `microbimixr` is an R package that provides tools to **calculate and plot the fitness effects of microbial interactions**, helping researchers get the most out of their data. 
@@ -26,8 +25,8 @@ that are:
 
 -   Robust and quantitatively comparable across different species and
     different types of interaction
--   Useful for both individual and group-centered approaches to social
-    interaction
+-   Useful for both individual and group-centered approaches to
+    microbial interactions
 -   Well-suited to statistical analysis of effect sizes and confidence
     intervals
 
@@ -83,7 +82,7 @@ head(fitness_smith_2010)
 data including strain density, total group density, and strain
 frequency.
 
-## Diagnostic overview
+## Compare fitness measures
 
 To quickly see what fitness measures would be most useful for your
 dataset, use `plot_mix_fitness()`. It draws a combined figure with
@@ -96,7 +95,7 @@ plot_mix_fitness(fitness_smith_2010)
 
 ![Diagnostic plot from microbimixr](./man/figures/README-smith-2010.png)
 
-## Plot fitness
+## Plot specific fitness measures
 
 Once you know which fitness measures to focus on, you can use
 microbimixr to visualize them. The simplest way is to use its built-in
@@ -111,19 +110,23 @@ fig_within <- plot_within_group_fitness(
 fig_total + fig_within
 ```
 
+<!-- ggsave("README-plot-functions.png", width = 5, height = 2.25) -->
+
 ![](./man/figures/README-plot-functions.png)
 
 You can also use the individual axes and other elements of microbimixr
 plots with the ggplot2 graphics package.
 
 ``` r
-ggplot(fitness_smith_2010) +
-    aes(x = initial_fraction_A, y = fitness_total) +
+ggplot(fitness_smith_2010, aes(x = initial_fraction_A, y = fitness_total)) +
     scale_x_initial_fraction(name = "Initial frequency of evolved strain") +
     scale_y_fitness_total(limits = c(1e-8, 1)) +
+    geom_smooth(method = "lm", se = FALSE, formula = y ~ poly(x, 2)) +
     geom_point_overlap(shape = 23, fill = "lightblue", color = "darkblue", size = 2) +
     theme_bw()
 ```
+
+<!-- ggsave("README-plot-elements.png", width = 3, height = 2.25) -->
 
 <img src="./man/figures/README-plot-elements.png" style="width:50.0%" />
 
