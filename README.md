@@ -85,10 +85,6 @@ frequency.
 
 ## Diagnostic overview
 
-<!-- 
-`microbimixr` provides convenient ways to plot fitness effects. Here's a quick diagnostic plot of the different fitness measures for this dataset: 
--->
-
 To quickly see what fitness measures would be most useful for your
 dataset, use `plot_mix_fitness()`. It draws a combined figure with
 strain fitness, total group fitness, and relative within-group fitness
@@ -100,7 +96,7 @@ plot_mix_fitness(fitness_smith_2010)
 
 ![Diagnostic plot from microbimixr](./man/figures/README-smith-2010.png)
 
-## Plot specific fitness effects
+## Plot fitness
 
 Once you know which fitness measures to focus on, you can use
 microbimixr to visualize them. The simplest way is to use its built-in
@@ -115,8 +111,21 @@ fig_within <- plot_within_group_fitness(
 fig_total + fig_within
 ```
 
-![Plot specific fitness
-measures](./man/figures/README-plot-specific.png)
+![](./man/figures/README-plot-functions.png)
+
+You can also use the individual axes and other elements of microbimixr
+plots with the ggplot2 graphics package.
+
+``` r
+ggplot(fitness_smith_2010) +
+    aes(x = initial_fraction_A, y = fitness_total) +
+    scale_x_initial_fraction(name = "Initial frequency of evolved strain") +
+    scale_y_fitness_total(limits = c(1e-8, 1)) +
+    geom_point_overlap(shape = 23, fill = "lightblue", color = "darkblue", size = 2) +
+    theme_bw()
+```
+
+<img src="./man/figures/README-plot-elements.png" style="width:50.0%" />
 
 ## Installation
 
