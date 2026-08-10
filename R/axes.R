@@ -46,9 +46,9 @@ scale_x_initial_fraction <- function(
 
 #' Position scale for initial strain ratio
 #'
-#' `scale_x_initial_ratio()` is a logarithmic x-axis scale for the initial ratio
-#' of strain frequencies. It calls `ggplot2::scale_x_log10()` with default
-#' settings suited to microbial mix experiments.
+#' `scale_x_initial_ratio()` is an x-axis scale for the initial ratio of strain
+#' frequencies. It calls `ggplot2::scale_x_log10()` with default settings suited
+#' to microbial mix experiments.
 #'
 #' @param name Character vector (or expression) for axis title.
 #'   Or `NA` to automatically name axis using `strain_names` (see Details).
@@ -108,9 +108,9 @@ scale_x_initial_ratio <- function(
 
 #' Position scale for microbial fitness
 #'
-#' `scale_y_fitness()` is a logarithmic y-axis scale for the fitness
-#' of microbial strains and groups. It calls `ggplot2::scale_y_log10()` with
-#' default settings suited to Wrightian fitness data.
+#' `scale_y_fitness()` is a y-axis scale for the fitness of microbial strains
+#' and groups. It calls `ggplot2::scale_y_log10()` with default settings suited
+#' to Wrightian fitness data.
 #'
 #' @inheritParams scale_x_initial_ratio
 #' @param name Character vector (or expression) for axis title. Or `NA`
@@ -122,7 +122,11 @@ scale_x_initial_ratio <- function(
 #'  `NA` for automatic breaks. Or `NULL` for no breaks.
 #'
 #' @details
-#' *Explain expected fitness quantity here.*
+#' `scale_y_fitness()` expects data that are absolute (unscaled) Wrightian
+#' fitness, like the values produced by [calculate_mix_fitness()].
+#' If the initial abundance of some microbe is \eqn{n} (measured as cfu/mL
+#' for example) and its final abundance is \eqn{n'}, then its Wrightian
+#' fitness measured over that entire time period is \eqn{w = n' / n}.
 #'
 #' @seealso [scale_y_fitness_total()], [scale_y_fitness_ratio()]
 #'
@@ -153,14 +157,18 @@ scale_y_fitness <- function(
 
 #' Position scale for fitness of microbial groups
 #'
-#' `scale_y_fitness_total()` is a logarithmic y-axis scale for the total
-#' fitness of microbial groups. It calls `ggplot2::scale_y_log10()` with default
-#' settings suited to Wrightian fitness data.
+#' `scale_y_fitness_total()` is a y-axis scale for the total fitness of
+#' microbial groups or subpopulations. It calls `ggplot2::scale_y_log10()` with
+#' default settings suited to Wrightian fitness data.
 #'
 #' @inheritParams scale_y_fitness
 #'
 #' @details
-#' *Explain expected fitness quantity here.*
+#' `scale_y_fitness_total()` expects data that are absolute (unscaled) Wrightian
+#' fitness, like the values produced by [calculate_mix_fitness()].
+#' If the initial abundance of a microbial group is \eqn{n} (measured as cfu/mL
+#' for example) and its final abundance is \eqn{n'}, then the group's Wrightian
+#' fitness measured over that entire time period is \eqn{w = n' / n}.
 #'
 #' @seealso [scale_y_fitness()], [scale_y_fitness_ratio()]
 #'
@@ -201,8 +209,8 @@ scale_y_fitness_total <- function(
 
 #' Position scale for within-group fitness ratio
 #'
-#' `scale_y_fitness_ratio()` is a logarithmic y-axis scale for the relative
-#' fitness of microbes within a group measured as a ratio of Wrightian
+#' `scale_y_fitness_ratio()` is a y-axis scale for the relative fitness of
+#' microbes within a group or subpopulation, measured as a ratio of Wrightian
 #' fitnesses. It calls `ggplot2::scale_y_log10()` with default settings suited
 #' to fitness-ratio data.
 #'
@@ -217,9 +225,26 @@ scale_y_fitness_total <- function(
 #'   abundance) and span a minimum 10-fold range.
 #'
 #' @details
-#' *Explain automatic axis name here.*
+#' `scale_y_fitness_ratio()` expects data that are the ratio of Wrightian
+#' fitnesses for two microbes in the same group or subpopulation, like the
+#' values produced by [calculate_mix_fitness()].
+#' If the initial abundances of microbes A and B are \eqn{n_A} and \eqn{n_B}
+#' (measured as cfu/mL for example) and their final abundances are \eqn{n'_A}
+#' and \eqn{n'_B}, then their absolute (unscaled) Wrightian fitnesses measured
+#' over that entire time period are
+#' \deqn{w_A = n'_A/n_A \\ w_B = n'_B/n_B}
+#' The within-group fitness ratio of A to B is \eqn{w_A / w_B}.
 #'
-#' *Explain expected fitness quantity here.*
+#' Because the abundances of microbes A and B are measured in the same group,
+#' the within-group fitness ratio can be equivalently measured from their
+#' relative frequencies.
+#' If the initial frequencies of A and B are \eqn{q_A} and \eqn{q_B}
+#' (measured as a proportion or fraction of the total group) and their final
+#' frequencies are \eqn{q'_A} and \eqn{q'_B},
+#' then the within-group fitness ratio of A to B is
+#' \deqn{w_A / w_B = \frac{q'_A / q'_B}{q_A / q_B}}
+#'
+#' *Explain automatic axis name here.*
 #'
 #' @seealso [scale_y_fitness()], [scale_y_fitness_total()]
 #'

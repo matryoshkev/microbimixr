@@ -47,9 +47,9 @@ for details.
 \item{...}{Other arguments passed to \code{\link[ggplot2:scale_continuous]{ggplot2::scale_x_log10()}}.}
 }
 \description{
-\code{scale_x_initial_ratio()} is a logarithmic x-axis scale for the initial ratio
-of strain frequencies. It calls \code{ggplot2::scale_x_log10()} with default
-settings suited to microbial mix experiments.
+\code{scale_x_initial_ratio()} is an x-axis scale for the initial ratio of strain
+frequencies. It calls \code{ggplot2::scale_x_log10()} with default settings suited
+to microbial mix experiments.
 }
 \details{
 \emph{Explain automatic axis name here.}

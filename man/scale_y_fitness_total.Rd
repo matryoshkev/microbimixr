@@ -42,12 +42,16 @@ for details.
 \item{...}{Other arguments passed to \code{\link[ggplot2:scale_continuous]{ggplot2::scale_x_log10()}}.}
 }
 \description{
-\code{scale_y_fitness_total()} is a logarithmic y-axis scale for the total
-fitness of microbial groups. It calls \code{ggplot2::scale_y_log10()} with default
-settings suited to Wrightian fitness data.
+\code{scale_y_fitness_total()} is a y-axis scale for the total fitness of
+microbial groups or subpopulations. It calls \code{ggplot2::scale_y_log10()} with
+default settings suited to Wrightian fitness data.
 }
 \details{
-\emph{Explain expected fitness quantity here.}
+\code{scale_y_fitness_total()} expects data that are absolute (unscaled) Wrightian
+fitness, like the values produced by \code{\link[=calculate_mix_fitness]{calculate_mix_fitness()}}.
+If the initial abundance of a microbial group is \eqn{n} (measured as cfu/mL
+for example) and its final abundance is \eqn{n'}, then the group's Wrightian
+fitness measured over that entire time period is \eqn{w = n' / n}.
 }
 \seealso{
 \code{\link[=scale_y_fitness]{scale_y_fitness()}}, \code{\link[=scale_y_fitness_ratio]{scale_y_fitness_ratio()}}

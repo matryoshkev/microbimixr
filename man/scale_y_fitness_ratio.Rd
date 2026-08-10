@@ -47,15 +47,32 @@ for details.
 \item{...}{Other arguments passed to \code{\link[ggplot2:scale_continuous]{ggplot2::scale_x_log10()}}.}
 }
 \description{
-\code{scale_y_fitness_ratio()} is a logarithmic y-axis scale for the relative
-fitness of microbes within a group measured as a ratio of Wrightian
+\code{scale_y_fitness_ratio()} is a y-axis scale for the relative fitness of
+microbes within a group or subpopulation, measured as a ratio of Wrightian
 fitnesses. It calls \code{ggplot2::scale_y_log10()} with default settings suited
 to fitness-ratio data.
 }
 \details{
-\emph{Explain automatic axis name here.}
+\code{scale_y_fitness_ratio()} expects data that are the ratio of Wrightian
+fitnesses for two microbes in the same group or subpopulation, like the
+values produced by \code{\link[=calculate_mix_fitness]{calculate_mix_fitness()}}.
+If the initial abundances of microbes A and B are \eqn{n_A} and \eqn{n_B}
+(measured as cfu/mL for example) and their final abundances are \eqn{n'_A}
+and \eqn{n'_B}, then their absolute (unscaled) Wrightian fitnesses measured
+over that entire time period are
+\deqn{w_A = n'_A/n_A \\ w_B = n'_B/n_B}
+The within-group fitness ratio of A to B is \eqn{w_A / w_B}.
 
-\emph{Explain expected fitness quantity here.}
+Because the abundances of microbes A and B are measured in the same group,
+the within-group fitness ratio can be equivalently measured from their
+relative frequencies.
+If the initial frequencies of A and B are \eqn{q_A} and \eqn{q_B}
+(measured as a proportion or fraction of the total group) and their final
+frequencies are \eqn{q'_A} and \eqn{q'_B},
+then the within-group fitness ratio of A to B is
+\deqn{w_A / w_B = \frac{q'_A / q'_B}{q_A / q_B}}
+
+\emph{Explain automatic axis name here.}
 }
 \seealso{
 \code{\link[=scale_y_fitness]{scale_y_fitness()}}, \code{\link[=scale_y_fitness_total]{scale_y_fitness_total()}}
