@@ -8,26 +8,41 @@ scale_x_initial_ratio(
   name = NA,
   strain_names = c(A = "strain A", B = "strain B"),
   limits = NULL,
-  breaks = breaks_log10,
-  labels = labels_log10,
+  breaks = NA,
+  labels = NA,
   minor_breaks = NULL,
   ...
 )
 }
 \arguments{
-\item{name}{Character vector (or expression) for axis title. Default \code{NA}
-automatically names axis using \code{strain_names} argument.}
+\item{name}{Character vector (or expression) for axis title.
+Or \code{NA} to automatically name axis using \code{strain_names} (see Details).
+Or \code{NULL} for no title.}
 
-\item{strain_names}{Optional character vector used to name axis.}
+\item{strain_names}{Character vector or list used to automatically name axis
+if \code{name = NA}. See Details.}
 
-\item{limits}{Axis limits. Use \code{NULL} for automatic limits that include 1 and
-span a minimum 10-fold range.}
+\item{limits}{Numeric vector of length two giving axis limits. Or \code{NULL} for
+automatic limits that include 1 for reference (equal 50:50 mix of strains)
+and span a minimum 10-fold range.}
 
-\item{breaks}{Axis breaks.}
+\item{breaks}{Numeric vector of positions for axis breaks. Or \code{NA} for
+automatic breaks. Or \code{NULL} for no breaks.}
 
-\item{labels}{Labels for axis breaks.}
+\item{labels}{One of:
+\itemize{
+\item Character vector giving labels for breaks (must be same length as
+\code{breaks})
+\item \code{NA} for automatic labels that use a simple number format when all breaks
+are between 0.01 and 100. For wider limits they use \eqn{10^x} format
+except for \eqn{1}.
+\item Expression vector (must be the same length as \code{breaks}). See ?plotmath
+for details.
+\item \code{NULL} for no labels
+}}
 
-\item{minor_breaks}{Axis minor breaks. Default \code{NULL} is no minor breaks.}
+\item{minor_breaks}{Numeric vector of positions for axis minor breaks. Or
+\code{NULL} for no minor breaks.}
 
 \item{...}{Other arguments passed to \code{\link[ggplot2:scale_continuous]{ggplot2::scale_x_log10()}}.}
 }
@@ -35,4 +50,10 @@ span a minimum 10-fold range.}
 \code{scale_x_initial_ratio()} is a logarithmic x-axis scale for the initial ratio
 of strain frequencies. It calls \code{ggplot2::scale_x_log10()} with default
 settings suited to microbial mix experiments.
+}
+\details{
+\emph{Explain automatic axis name here.}
+}
+\seealso{
+\code{\link[=scale_x_initial_fraction]{scale_x_initial_fraction()}}
 }

@@ -7,29 +7,48 @@
 scale_y_fitness(
   name = NA,
   limits = NULL,
-  breaks = breaks_log10,
-  labels = labels_log10,
-  minor_breaks = minor_breaks_log10,
+  breaks = NA,
+  labels = NA,
+  minor_breaks = NA,
   ...
 )
 }
 \arguments{
-\item{name}{Character vector (or expression) for axis title. Default \code{NA}
-automatically names axis.}
+\item{name}{Character vector (or expression) for axis title. Or \code{NA}
+to automatically name axis.}
 
-\item{limits}{Axis limits. Use \code{NULL} for automatic limits that include 1 and
-span a minimum 10-fold range.}
+\item{limits}{Numeric vector of length two giving axis limits. Or \code{NULL} for
+automatic limits that include 1 for reference (no change in abundance)
+and span a minimum 10-fold range.}
 
-\item{breaks}{Axis breaks.}
+\item{breaks}{Numeric vector of positions for axis breaks. Or \code{NA} for
+automatic breaks. Or \code{NULL} for no breaks.}
 
-\item{labels}{Labels for axis breaks.}
+\item{labels}{One of:
+\itemize{
+\item Character vector giving labels for breaks (must be same length as
+\code{breaks})
+\item \code{NA} for automatic labels that use a simple number format when all breaks
+are between 0.01 and 100. For wider limits they use \eqn{10^x} format
+except for \eqn{1}.
+\item Expression vector (must be the same length as \code{breaks}). See ?plotmath
+for details.
+\item \code{NULL} for no labels
+}}
 
-\item{minor_breaks}{Axis minor breaks.}
+\item{minor_breaks}{Numeric vector of positions for axis minor breaks. Or
+\code{NA} for automatic breaks. Or \code{NULL} for no breaks.}
 
 \item{...}{Other arguments passed to \code{\link[ggplot2:scale_continuous]{ggplot2::scale_x_log10()}}.}
 }
 \description{
-\code{scale_y_fitness()} is a logarithmic y-axis scale for the Wrightian fitness
-of strains and groups. It calls \code{ggplot2::scale_y_log10()} with default
-settings suited to Wrightian fitness data.
+\code{scale_y_fitness()} is a logarithmic y-axis scale for the fitness
+of microbial strains and groups. It calls \code{ggplot2::scale_y_log10()} with
+default settings suited to Wrightian fitness data.
+}
+\details{
+\emph{Explain expected fitness quantity here.}
+}
+\seealso{
+\code{\link[=scale_y_fitness_total]{scale_y_fitness_total()}}, \code{\link[=scale_y_fitness_ratio]{scale_y_fitness_ratio()}}
 }

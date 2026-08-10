@@ -7,13 +7,22 @@
 #' calls `ggplot2::scale_x_continuous()` with default settings suited to
 #' microbial mix experiments.
 #'
-#' @param name Character vector (or expression) for axis title. Use `NA` to
-#'   automatically name axis using `strain_A_name` argument.
-#' @param strain_A_name Optional character string used to name axis.
-#' @param limits Axis limits.
-#' @param breaks Axis breaks.
-#' @param minor_breaks Axis minor breaks.
+#' @param name Character vector (or expression) for axis title.
+#'   Or `NA` to automatically name axis using `strain_A_name` (see Details).
+#'   Or `NULL` for no title.
+#' @param strain_A_name Character string used to name axis if `name = NA`.
+#' @param limits Numeric vector of length two giving axis limits.
+#'   The default `c(0, 1)` shows the full range of possible mix frequencies.
+#' @param breaks Numeric vector of positions for axis breaks.
+#'   Or `NULL` for no breaks.
+#' @param minor_breaks Numeric vector of positions for axis minor breaks.
+#'   Or `NULL` for no minor breaks.
 #' @param ... Other arguments passed to [ggplot2::scale_x_continuous()].
+#'
+#' @details
+#' *Explain automatic axis name here.*
+#'
+#' @seealso [scale_x_initial_ratio()]
 #'
 #' @export
 #'
@@ -41,15 +50,33 @@ scale_x_initial_fraction <- function(
 #' of strain frequencies. It calls `ggplot2::scale_x_log10()` with default
 #' settings suited to microbial mix experiments.
 #'
-#' @param name Character vector (or expression) for axis title. Default `NA`
-#'   automatically names axis using `strain_names` argument.
-#' @param strain_names Optional character vector used to name axis.
-#' @param limits Axis limits. Use `NULL` for automatic limits that include 1 and
-#'   span a minimum 10-fold range.
-#' @param breaks Axis breaks.
-#' @param labels Labels for axis breaks.
-#' @param minor_breaks Axis minor breaks. Default `NULL` is no minor breaks.
+#' @param name Character vector (or expression) for axis title.
+#'   Or `NA` to automatically name axis using `strain_names` (see Details).
+#'   Or `NULL` for no title.
+#' @param strain_names Character vector or list used to automatically name axis
+#'   if `name = NA`. See Details.
+#' @param limits Numeric vector of length two giving axis limits. Or `NULL` for
+#'   automatic limits that include 1 for reference (equal 50:50 mix of strains)
+#'   and span a minimum 10-fold range.
+#' @param breaks Numeric vector of positions for axis breaks. Or `NA` for
+#'   automatic breaks. Or `NULL` for no breaks.
+#' @param labels One of:
+#'   * Character vector giving labels for breaks (must be same length as
+#'     `breaks`)
+#'   * `NA` for automatic labels that use a simple number format when all breaks
+#'     are between 0.01 and 100. For wider limits they use \eqn{10^x} format
+#'     except for \eqn{1}.
+#'   * Expression vector (must be the same length as `breaks`). See ?plotmath
+#'     for details.
+#'   * `NULL` for no labels
+#' @param minor_breaks Numeric vector of positions for axis minor breaks. Or
+#'   `NULL` for no minor breaks.
 #' @param ... Other arguments passed to [ggplot2::scale_x_log10()].
+#'
+#' @details
+#' *Explain automatic axis name here.*
+#'
+#' @seealso [scale_x_initial_fraction()]
 #'
 #' @export
 #'
@@ -57,8 +84,8 @@ scale_x_initial_ratio <- function(
 	name = NA,
 	strain_names = c(A = "strain A", B = "strain B"),
 	limits = NULL,
-	breaks = breaks_log10,
-	labels = labels_log10,
+	breaks = NA,
+	labels = NA,
 	minor_breaks = NULL,
 	...
 ) {
@@ -66,7 +93,9 @@ scale_x_initial_ratio <- function(
 		strain_names <- as.list(strain_names)
 		name <- paste("Initial ratio", strain_names$A, "/", strain_names$B)
 	}
-	if (is.null(limits)) { limits <- expand_limits_log10 }
+	if (is.null(limits)) {limits <- expand_limits_log10}
+	if (is.na(breaks)) {breaks <- breaks_log10}
+	if (is.na(labels)) {labels <- labels_log10}
 	ggplot2::scale_x_log10(
 		name = name,
 		limits = limits,
@@ -79,31 +108,39 @@ scale_x_initial_ratio <- function(
 
 #' Position scale for microbial fitness
 #'
-#' `scale_y_fitness()` is a logarithmic y-axis scale for the Wrightian fitness
-#' of strains and groups. It calls `ggplot2::scale_y_log10()` with default
-#' settings suited to Wrightian fitness data.
+#' `scale_y_fitness()` is a logarithmic y-axis scale for the fitness
+#' of microbial strains and groups. It calls `ggplot2::scale_y_log10()` with
+#' default settings suited to Wrightian fitness data.
 #'
-#' @param name Character vector (or expression) for axis title. Default `NA`
-#'   automatically names axis.
-#' @param limits Axis limits. Use `NULL` for automatic limits that include 1 and
-#'   span a minimum 10-fold range.
-#' @param breaks Axis breaks.
-#' @param labels Labels for axis breaks.
-#' @param minor_breaks Axis minor breaks.
-#' @param ... Other arguments passed to [ggplot2::scale_x_log10()].
+#' @inheritParams scale_x_initial_ratio
+#' @param name Character vector (or expression) for axis title. Or `NA`
+#'   to automatically name axis.
+#' @param limits Numeric vector of length two giving axis limits. Or `NULL` for
+#'   automatic limits that include 1 for reference (no change in abundance)
+#'   and span a minimum 10-fold range.
+#' @param minor_breaks Numeric vector of positions for axis minor breaks. Or
+#'  `NA` for automatic breaks. Or `NULL` for no breaks.
+#'
+#' @details
+#' *Explain expected fitness quantity here.*
+#'
+#' @seealso [scale_y_fitness_total()], [scale_y_fitness_ratio()]
 #'
 #' @export
 #'
 scale_y_fitness <- function(
 	name = NA,
 	limits = NULL,
-	breaks = breaks_log10,
-	labels = labels_log10,
-	minor_breaks = minor_breaks_log10,
+	breaks = NA,
+	labels = NA,
+	minor_breaks = NA,
 	...
 ) {
-	if (is.na(name)) { name <- "Wrightian fitness\n (final no. / initial no.)" }
-	if (is.null(limits)) { limits <- expand_limits_log10 }
+	if (is.na(name)) {name <- "Wrightian fitness\n (final no. / initial no.)"}
+	if (is.null(limits)) {limits <- expand_limits_log10}
+	if (is.na(breaks)) {breaks <- breaks_log10}
+	if (is.na(labels)) {labels <- labels_log10}
+	if (is.na(minor_breaks)) {minor_breaks <- minor_breaks_log10}
 	ggplot2::scale_y_log10(
 		name = name,
 		limits = limits,
@@ -117,30 +154,41 @@ scale_y_fitness <- function(
 #' Position scale for fitness of microbial groups
 #'
 #' `scale_y_fitness_total()` is a logarithmic y-axis scale for the total
-#' Wrightian fitness of microbial groups. It calls `ggplot2::scale_y_log10()`
-#' with default settings suited to Wrightian fitness data.
+#' fitness of microbial groups. It calls `ggplot2::scale_y_log10()` with default
+#' settings suited to Wrightian fitness data.
 #'
-#' @param name Character vector (or expression) for axis title. Default `NA`
-#'   automatically names axis.
-#' @param limits Axis limits. Use `NULL` for automatic limits that include 1 and
-#'   span a minimum 10-fold range.
-#' @param breaks Axis breaks.
-#' @param labels Labels for axis breaks.
-#' @param minor_breaks Axis minor breaks.
-#' @param ... Other arguments passed to [ggplot2::scale_x_log10()].
+#' @inheritParams scale_y_fitness
+#'
+#' @details
+#' *Explain expected fitness quantity here.*
+#'
+#' @seealso [scale_y_fitness()], [scale_y_fitness_ratio()]
 #'
 #' @export
 #'
 scale_y_fitness_total <- function(
 	name = NA,
 	limits = NULL,
-	breaks = breaks_log10,
-	labels = labels_log10,
-	minor_breaks = minor_breaks_log10,
+	breaks = NA,
+	labels = NA,
+	minor_breaks = NA,
 	...
 ) {
-	if (is.na(name)) { name <- "Total group fitness\n(final no. / initial no.)" }
-	if (is.null(limits)) { limits <- expand_limits_log10 }
+	if (is.na(name)) {name <- "Total group fitness\n(final no. / initial no.)"}
+	# TODO:
+	# scale_y_fitness(
+	# 	name = name,
+	# 	limits = limits,
+	# 	breaks = breaks,
+	# 	labels = labels,
+	# 	minor_breaks = minor_breaks,
+	# 	...
+	# )
+
+	if (is.null(limits)) {limits <- expand_limits_log10}
+	if (is.na(breaks)) {breaks <- breaks_log10}
+	if (is.na(labels)) {labels <- labels_log10}
+	if (is.na(minor_breaks)) {minor_breaks <- minor_breaks_log10}
 	ggplot2::scale_y_log10(
 		name = name,
 		limits = limits,
@@ -154,19 +202,26 @@ scale_y_fitness_total <- function(
 #' Position scale for within-group fitness ratio
 #'
 #' `scale_y_fitness_ratio()` is a logarithmic y-axis scale for the relative
-#' survival and reproductive success of microbes within groups measured as a
-#' ratio of Wrightian fitnesses. It calls `ggplot2::scale_y_log10()` with
-#' default settings suited to fitness-ratio data.
+#' fitness of microbes within a group measured as a ratio of Wrightian
+#' fitnesses. It calls `ggplot2::scale_y_log10()` with default settings suited
+#' to fitness-ratio data.
 #'
-#' @param name Character vector (or expression) for axis title. Default `NA`
-#'   automatically names axis using `strain_names` argument.
-#' @param strain_names Optional character vector used to name axis.
-#' @param limits Axis limits. Use `NULL` for automatic limits that include 1 and
-#'   span a minimum 10-fold range.
-#' @param breaks Axis breaks.
-#' @param labels Labels for axis breaks.
-#' @param minor_breaks Axis minor breaks.
-#' @param ... Other arguments passed to [ggplot2::scale_x_log10()].
+#' @inheritParams scale_y_fitness
+#' @param name Character vector (or expression) for axis title.
+#'   Or `NA` to automatically name axis using `strain_names` (see Details).
+#'   Or `NULL` for no title.
+#' @param strain_names Character vector or list used to automatically name axis
+#'   if `name = NA`. See Details.
+#' @param limits Numeric vector of length two giving axis limits. Or `NULL` for
+#'   automatic limits that include 1 for reference (no change in relative
+#'   abundance) and span a minimum 10-fold range.
+#'
+#' @details
+#' *Explain automatic axis name here.*
+#'
+#' *Explain expected fitness quantity here.*
+#'
+#' @seealso [scale_y_fitness()], [scale_y_fitness_total()]
 #'
 #' @export
 #'
@@ -174,16 +229,19 @@ scale_y_fitness_ratio <- function(
 	name = NA,
 	strain_names = c(A = "strain A", B = "strain B"),
 	limits = NULL,
-	breaks = breaks_log10,
-	labels = labels_log10,
-	minor_breaks = minor_breaks_log10,
+	breaks = NA,
+	labels = NA,
+	minor_breaks = NA,
 	...
 ) {
 	if (is.na(name)) {
 		strain_names <- as.list(strain_names)
 		name <- paste("Fitness ratio\n", strain_names$A, "/", strain_names$B)
 	}
-	if (is.null(limits)) { limits <- expand_limits_log10 }
+	if (is.null(limits)) {limits <- expand_limits_log10}
+	if (is.na(breaks)) {breaks <- breaks_log10}
+	if (is.na(labels)) {labels <- labels_log10}
+	if (is.na(minor_breaks)) {minor_breaks <- minor_breaks_log10}
 	ggplot2::scale_y_log10(
 		name = name,
 		limits = limits,
@@ -242,7 +300,7 @@ labels_log10 <- function(breaks) {
 		}) |>
 		parse(text = _)
 	} else {
-		# Clean integer/decimal
+		# Clean integer/decimal if all breaks between 0.01 and 100
 		scales::number(breaks, drop0trailing = TRUE)
 	}
 }

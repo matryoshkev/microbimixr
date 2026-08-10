@@ -14,16 +14,20 @@ scale_x_initial_fraction(
 )
 }
 \arguments{
-\item{name}{Character vector (or expression) for axis title. Use \code{NA} to
-automatically name axis using \code{strain_A_name} argument.}
+\item{name}{Character vector (or expression) for axis title.
+Or \code{NA} to automatically name axis using \code{strain_A_name} (see Details).
+Or \code{NULL} for no title.}
 
-\item{strain_A_name}{Optional character string used to name axis.}
+\item{strain_A_name}{Character string used to name axis if \code{name = NA}.}
 
-\item{limits}{Axis limits.}
+\item{limits}{Numeric vector of length two giving axis limits.
+The default \code{c(0, 1)} shows the full range of possible mix frequencies.}
 
-\item{breaks}{Axis breaks.}
+\item{breaks}{Numeric vector of positions for axis breaks.
+Or \code{NULL} for no breaks.}
 
-\item{minor_breaks}{Axis minor breaks.}
+\item{minor_breaks}{Numeric vector of positions for axis minor breaks.
+Or \code{NULL} for no minor breaks.}
 
 \item{...}{Other arguments passed to \code{\link[ggplot2:scale_continuous]{ggplot2::scale_x_continuous()}}.}
 }
@@ -32,4 +36,10 @@ automatically name axis using \code{strain_A_name} argument.}
 frequency (fraction or proportion of total) measured on a linear scale. It
 calls \code{ggplot2::scale_x_continuous()} with default settings suited to
 microbial mix experiments.
+}
+\details{
+\emph{Explain automatic axis name here.}
+}
+\seealso{
+\code{\link[=scale_x_initial_ratio]{scale_x_initial_ratio()}}
 }
