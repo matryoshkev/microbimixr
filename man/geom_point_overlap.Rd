@@ -17,8 +17,8 @@ effect on points with separate color and fill (shapes 21-25).
 }
 \examples{
 library(ggplot2)
-fig <- ggplot(data = airquality) + aes(x = Temp, y = Ozone)
-fig + geom_point(shape = 21, size = 2, fill = "grey", na.rm = TRUE)
-fig + geom_point_overlap(shape = 21, size = 2, fill = "grey", na.rm = TRUE)
+fig <- ggplot(data = airquality, mapping = aes(x = Temp, y = Ozone))
+fig + geom_point(shape = 21, size = 3, fill = "grey65", na.rm = TRUE)
+fig + geom_point_overlap(size = 3, na.rm = TRUE)
 
 }

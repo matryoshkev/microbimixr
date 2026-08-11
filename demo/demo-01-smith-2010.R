@@ -11,8 +11,8 @@ head(data_smith_2010)
 
 # Calculate fitness measures
 fitness_smith_2010 <-
-	data_smith_2010 %>%
-	tibble() %>%
+	data_smith_2010 |>
+	tibble() |>
 	calculate_mix_fitness(
 		var_names = c(
 			initial_number_A = "initial_cells_evolved",
@@ -42,7 +42,7 @@ plot_mix_fitness(fitness_smith_2010)
 # Plot within-group fitness
 dev.new(width = 2.5, height = 2.25, units = "in")
 fig_within_group <-
-	fitness_smith_2010 %>% plot_within_group_fitness(mix_scale = "ratio")
+	fitness_smith_2010 |> plot_within_group_fitness(mix_scale = "ratio")
 fig_within_group
 
 # Fit statistical model
@@ -111,7 +111,7 @@ fig_smith_2010
 dev.new(width = 3.5, height = 2.25, units = "in")
 fitness_smith_2010 %>% plot_strain_fitness(mix_scale = "ratio")
 
-fitness_smith_2010 %>%
+fitness_smith_2010 |>
 	plot_strain_fitness(mix_scale = "fraction") +
 	theme(
 		legend.position = "top",
@@ -131,16 +131,18 @@ fitness_smith_2010 %>%
 	)
 
 dev.new(width = 4.5, height = 2.25, units = "in")
-fitness_smith_2010 %>% plot_fitness_strain_total()
+fitness_smith_2010 |> plot_fitness_strain_total()
 
 dev.new(width = 3.5, height = 2.25, units = "in")
-fitness_smith_2010 %>% plot_strain_fitness(mix_scale = "ratio")
+fitness_smith_2010 |> plot_strain_fitness(mix_scale = "ratio")
 
-fitness_smith_2010 %>% plot_total_group_fitness()
+fitness_smith_2010 |> plot_total_group_fitness()
 
-fitness_smith_2010 %>% plot_total_group_fitness(ylim = c(1e-8, 0.1))
+fitness_smith_2010 |> plot_total_group_fitness(ylim = c(1e-8, 0.1))
 
-fitness_smith_2010 %>% plot_within_group_fitness(mix_scale = "ratio")
+fitness_smith_2010 |> plot_total_group_fitness() + aes(fill = exptl_block)
+
+fitness_smith_2010 |> plot_within_group_fitness(mix_scale = "ratio")
 
 
 # Plot elements ----------------------------------------------------------------

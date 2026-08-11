@@ -11,17 +11,57 @@
 #'
 #' @examples
 #' library(ggplot2)
-#' fig <- ggplot(data = airquality) + aes(x = Temp, y = Ozone)
-#' fig + geom_point(shape = 21, size = 2, fill = "grey", na.rm = TRUE)
-#' fig + geom_point_overlap(shape = 21, size = 2, fill = "grey", na.rm = TRUE)
+#' fig <- ggplot(data = airquality, mapping = aes(x = Temp, y = Ozone))
+#' fig + geom_point(shape = 21, size = 3, fill = "grey65", na.rm = TRUE)
+#' fig + geom_point_overlap(size = 3, na.rm = TRUE)
 #'
 #' @export
 #'
 geom_point_overlap <- function(...) {
-	args <- list(...)
-	args$fill <- NULL
+	front_args <- list(...)
+	front_args$fill <- NULL
 	list(
-		ggplot2::geom_point(...),
-		do.call(ggplot2::geom_point, c(args, list(fill = NA)))
+		geom_point_microbimixr(...),
+		do.call(geom_point_microbimixr, c(front_args, list(fill = NA)))
+	)
+	# There's probably a better way to do this
+}
+
+# Helpers ======================================================================
+
+# Make point geom for ggplot that defaults to filled-grey circles
+
+GeomPointMicrobimixr <- ggplot2::ggproto(
+	`_class` = "GeomPointMicrobimixr",
+	`_inherit` = ggplot2::GeomPoint,
+	default_aes = ggplot2::aes(
+		shape = 21,
+		color = "black",
+		size = 1.5,
+		fill = "grey65",
+		alpha = 1,
+		stroke = 0.5
+	)
+)
+
+geom_point_microbimixr <- function(
+	data = NULL,
+	mapping = NULL,
+	stat = "identity",
+	position = "identity",
+	...,
+	na.rm = FALSE,
+	show.legend = NA,
+	inherit.aes = TRUE
+) {
+	ggplot2::layer(
+		data = data,
+		mapping = mapping,
+		stat = stat,
+		geom = GeomPointMicrobimixr,
+		position = position,
+		show.legend = show.legend,
+		inherit.aes = inherit.aes,
+		params = list(na.rm = na.rm, ...)
 	)
 }

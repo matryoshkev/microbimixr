@@ -126,19 +126,28 @@ fitness_Fig3AB |>
 	aes(
 		x = initial_freq_AmpR,
 		y = fitness_ratio_AmpRS,
-		fill = factor(ampicillin)
+		fill = factor(ampicillin),
+		color = factor(ampicillin)
 	) +
-	geom_point_overlap(shape = 21) +
-	# scale_x_initial_fraction(name = "Initial frequency of resistant strain") +
-	scale_x_initial_ratio(
-		name = "Initial ratio resistant / sensitive",
-		# limits = c(0.01, 1.01),
-	) +
+	geom_point_overlap(shape = 21, size = 1.8) +
+	scale_x_initial_fraction(name = "Initial frequency of resistant strain") +
+	# scale_x_initial_ratio(
+	# 	name = "Initial ratio resistant / sensitive",
+	# 	# limits = c(0.01, 1.01),
+	# ) +
 	scale_y_fitness_ratio(
 		name = "Within-group fitness ratio\nresistant / sensitive",
 		limits = c(1e-1, 1e4)
 	) +
-	scale_fill_brewer(name = "Ampicillin\n(\u03BCg/mL)", palette = "YlOrRd") +
+	# scale_fill_brewer(name = "Ampicillin\n(\u03BCg/mL)", palette = "YlOrRd") +
+	scale_fill_viridis_d(
+		name = "Ampicillin\n(\u03BCg/mL)",
+		option = "magma", direction = -1, begin = 0.5, end = 1
+	) +
+	scale_color_viridis_d(
+		name = "Ampicillin\n(\u03BCg/mL)",
+		option = "magma", direction = -1, begin = 0, end = 0.8
+	) +
 	facet_wrap(
 		~ dilution, labeller = as_labeller(function(x) paste0(x, "-fold dilution"))
 	) +

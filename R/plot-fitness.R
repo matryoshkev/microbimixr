@@ -179,7 +179,7 @@ plot_strain_fitness <- function(
 		ggplot2::aes(y = .data$fitness, color = .data$strain, fill = .data$strain) +
 		theme_microbimixr() +
 		scale_y_fitness(name = ylab, limits = ylim) +
-		geom_point_overlap(shape = 21, na.rm = TRUE) +
+		geom_point_overlap(na.rm = TRUE) +
 		scale_color_strain() +
 		scale_fill_strain()
 
@@ -265,12 +265,10 @@ plot_total_group_fitness <- function(
 	# Construct plot
 	fig_output <-
 		ggplot2::ggplot(data) +
-		ggplot2::aes(y = .data[[var_names$fitness_total]], fill = TRUE) +
+		ggplot2::aes(y = .data[[var_names$fitness_total]]) +
 		theme_microbimixr() +
 		scale_y_fitness_total(name = ylab, limits = ylim) +
-		geom_point_overlap(
-			shape = 21, color = color_group(), fill = fill_group(), na.rm = TRUE
-		)
+		geom_point_overlap()
 
 	# Add x-axis mixing scale
 	fig_output <- fig_output |>
@@ -364,12 +362,10 @@ plot_within_group_fitness <- function(
 	# Construct plot
 	fig_output <-
 		ggplot2::ggplot(data) +
-		ggplot2::aes(y = .data[[var_names$fitness_ratio_A_B]], fill = TRUE) +
+		ggplot2::aes(y = .data[[var_names$fitness_ratio_A_B]]) +
 		theme_microbimixr() +
 		scale_y_fitness_ratio(strain_names, name = ylab, limits = ylim) +
-		geom_point_overlap(
-			shape = 21, color = color_group(), fill = fill_group(), na.rm = TRUE
-		)
+		geom_point_overlap()
 
 	# Add x-axis mixing scale
 	fig_output <- fig_output |>
@@ -474,7 +470,8 @@ plot_fitness_strain_total <- function(
 		theme_microbimixr() +
 		theme_plot_mix_fitness() +
 		scale_y_fitness(limits = ylim) +
-		geom_point_overlap(shape = 21, na.rm = TRUE) +
+		# geom_point_overlap(shape = 21, na.rm = TRUE) +
+		geom_point_overlap(na.rm = TRUE) +
 		scale_color_strain() +
 		scale_fill_strain() +
 		ggplot2::facet_wrap(~ my_facet, nrow = 1)
