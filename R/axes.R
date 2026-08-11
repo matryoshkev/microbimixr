@@ -183,21 +183,7 @@ scale_y_fitness_total <- function(
 	...
 ) {
 	if (is.na(name)) {name <- "Total group fitness\n(final no. / initial no.)"}
-	# TODO:
-	# scale_y_fitness(
-	# 	name = name,
-	# 	limits = limits,
-	# 	breaks = breaks,
-	# 	labels = labels,
-	# 	minor_breaks = minor_breaks,
-	# 	...
-	# )
-
-	if (is.null(limits)) {limits <- expand_limits_log10}
-	if (is.na(breaks)) {breaks <- breaks_log10}
-	if (is.na(labels)) {labels <- labels_log10}
-	if (is.na(minor_breaks)) {minor_breaks <- minor_breaks_log10}
-	ggplot2::scale_y_log10(
+	scale_y_fitness(
 		name = name,
 		limits = limits,
 		breaks = breaks,
