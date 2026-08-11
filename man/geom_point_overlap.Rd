@@ -7,13 +7,13 @@
 geom_point_overlap(...)
 }
 \arguments{
-\item{...}{Arguments passed to \code{geom_point()}.}
+\item{...}{Arguments passed to \code{\link[ggplot2:geom_point]{ggplot2::geom_point()}}.}
 }
 \description{
-This is a small modification to \code{geom_point()} from ggplot2 that makes data
-points easier to see when they overlap. \code{geom_point_overlap()} first draws
-points as normal then draws points again with no fill. It only has a visible
-effect on points with separate color and fill (shapes 21-25).
+\code{geom_point_overlap()} is a version of \code{geom_point()} from gggplot2 that is
+easier to see when points overlap.
+It first draws points as normal then draws points again with no fill.
+It only has a visible effect on point shapes 21-25.
 }
 \examples{
 library(ggplot2)
