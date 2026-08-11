@@ -10,7 +10,7 @@ geom_point_overlap(...)
 \item{...}{Arguments passed to \code{\link[ggplot2:geom_point]{ggplot2::geom_point()}}.}
 }
 \description{
-\code{geom_point_overlap()} is a version of \code{geom_point()} from gggplot2 that is
+\code{geom_point_overlap()} is a version of \code{geom_point()} from ggplot2 that is
 easier to see when points overlap.
 It first draws points as normal then draws points again with no fill.
 It only has a visible effect on point shapes 21-25.

@@ -2,7 +2,7 @@
 
 #' Points with better overlap readability
 #'
-#' `geom_point_overlap()` is a version of `geom_point()` from gggplot2 that is
+#' `geom_point_overlap()` is a version of `geom_point()` from ggplot2 that is
 #' easier to see when points overlap.
 #' It first draws points as normal then draws points again with no fill.
 #' It only has a visible effect on point shapes 21-25.
@@ -28,20 +28,7 @@ geom_point_overlap <- function(...) {
 
 # Helpers ======================================================================
 
-# Make point geom for ggplot that defaults to filled-grey circles
-
-GeomPointMicrobimixr <- ggplot2::ggproto(
-	`_class` = "GeomPointMicrobimixr",
-	`_inherit` = ggplot2::GeomPoint,
-	default_aes = ggplot2::aes(
-		shape = 21,
-		color = "black",
-		size = 1.5,
-		fill = "grey65",
-		alpha = 1,
-		stroke = 0.5
-	)
-)
+# Point geom for ggplot that defaults to filled-grey circles
 
 geom_point_microbimixr <- function(
 	data = NULL,
@@ -65,6 +52,21 @@ geom_point_microbimixr <- function(
 	)
 }
 
+GeomPointMicrobimixr <- ggplot2::ggproto(
+	`_class` = "GeomPointMicrobimixr",
+	`_inherit` = ggplot2::GeomPoint,
+	default_aes = ggplot2::aes(
+		shape = 21,
+		color = "black",
+		size = 1.5,
+		fill = "grey65",
+		alpha = 1,
+		stroke = 0.5
+	)
+)
+
+# Failed attempt at simpler implementation
+#
 # geom_point_overlap <- function(
 # 	data = NULL,
 # 	mapping = NULL,

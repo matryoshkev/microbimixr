@@ -98,9 +98,14 @@ You can also use the individual axes and other elements of microbimixr plots wit
 ``` r
 ggplot(fitness_smith_2010, aes(x = initial_fraction_A, y = fitness_total)) +
 	scale_x_initial_fraction(name = "Initial frequency of evolved strain") +
-	scale_y_fitness_total(limits = c(1e-8, 1)) +
+	scale_y_fitness_total(
+		name = "Sporulation efficiency\n(spores/cell)", 
+		limits = c(1e-8, 1)
+	) +
 	geom_smooth(method = "lm", se = FALSE, formula = y ~ poly(x, 2)) +
-	geom_point_overlap(shape = 23, fill = "lightblue", color = "darkblue", size = 2) +
+	geom_point_overlap(
+		shape = 23, fill = "lightblue", color = "darkblue", size = 2
+	) +
 	theme_bw()
 ```
 <!-- ggsave("README-plot-elements.png", width = 3, height = 2.25) -->
