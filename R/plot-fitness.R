@@ -170,7 +170,7 @@ plot_strain_fitness <- function(
 		varying = c(var_names$fitness_A, var_names$fitness_B),
 		v.names = "fitness",
 		timevar = "strain",
-		times = c(strain_names$A, strain_names$B)
+		times = c(strain_names$name_A, strain_names$name_B)
 	)
 
 	# Make plot
@@ -364,7 +364,9 @@ plot_within_group_fitness <- function(
 		ggplot2::ggplot(data) +
 		ggplot2::aes(y = .data[[var_names$fitness_ratio_A_B]]) +
 		theme_microbimixr() +
-		scale_y_fitness_ratio(strain_names, name = ylab, limits = ylim) +
+		scale_y_fitness_ratio(
+			 name = ylab, strain_names = strain_names, limits = ylim
+		) +
 		geom_point_overlap()
 
 	# Add x-axis mixing scale
@@ -379,50 +381,6 @@ plot_within_group_fitness <- function(
 
 	# Return ggplot object
 	fig_output
-}
-
-
-# Helper functions =============================================================
-
-# Default names for fitness and mixing variables
-fitness_vars_default <- function() {
-	c(
-		name_A = "name_A",
-		name_B = "name_B",
-		initial_fraction_A = "initial_fraction_A",
-		initial_ratio_A_B = "initial_ratio_A_B",
-		fitness = "fitness",
-		fitness_A = "fitness_A",
-		fitness_B = "fitness_B",
-		fitness_total = "fitness_total",
-		fitness_ratio_A_B = "fitness_ratio_A_B"
-	)
-}
-
-# Add x-axis mixing scale to ggplot object
-add_mix_axis <- function(
-	fig_input,
-	mix_scale,
-	var_names,
-	strain_names,
-	xlab = NA,
-	xlim = NULL
-) {
-	fig_input + switch(
-		mix_scale,
-		fraction = list(
-			ggplot2::aes(.data[[var_names$initial_fraction_A]]),
-			scale_x_initial_fraction(
-				name = xlab, strain_A_name = strain_names$A, limits = xlim
-			)
-		),
-		ratio = list(
-			ggplot2::aes(.data[[var_names$initial_ratio_A_B]]),
-			scale_x_initial_ratio(
-				name = xlab, strain_names = strain_names, limits = xlim
-			)
-		)
-	)
 }
 
 # Plot strain and total-group fitness (for plot_mix_fitness())
@@ -451,11 +409,11 @@ plot_fitness_strain_total <- function(
 		),
 		v.names = "fitness",
 		timevar = "strain",
-		times = c(strain_names$A, strain_names$B, name_total)
+		times = c(strain_names$name_A, strain_names$name_B, name_total)
 	)
 	data_for_plot$strain <- factor(
 		data_for_plot$strain,
-		levels = c(strain_names$A, strain_names$B, name_total)
+		levels = c(strain_names$name_A, strain_names$name_B, name_total)
 	)
 	data_for_plot$my_facet <- data_for_plot$strain == name_total
 
@@ -470,7 +428,6 @@ plot_fitness_strain_total <- function(
 		theme_microbimixr() +
 		theme_plot_mix_fitness() +
 		scale_y_fitness(limits = ylim) +
-		# geom_point_overlap(shape = 21, na.rm = TRUE) +
 		geom_point_overlap(na.rm = TRUE) +
 		scale_color_strain() +
 		scale_fill_strain() +
@@ -488,17 +445,26 @@ plot_fitness_strain_total <- function(
 	fig_output
 }
 
-# Get strain names from fitness vars or data
-get_strain_names <- function(data, var_names) {
-	name_A <- var_names[["name_A"]]
-	name_B <- var_names[["name_B"]]
-	if (utils::hasName(data, name_A)) { name_A <- data[[name_A]][[1]] }
-	if (utils::hasName(data, name_B)) { name_B <- data[[name_B]][[1]] }
-	list(A = name_A, B = name_B)
+# Helper functions =============================================================
+
+# Default names for fitness and mixing variables
+fitness_vars_default <- function() {
+	c(
+		name_A = "name_A",
+		name_B = "name_B",
+		initial_fraction_A = "initial_fraction_A",
+		initial_ratio_A_B = "initial_ratio_A_B",
+		fitness = "fitness",
+		fitness_A = "fitness_A",
+		fitness_B = "fitness_B",
+		fitness_total = "fitness_total",
+		fitness_ratio_A_B = "fitness_ratio_A_B"
+	)
 }
 
-# Get y-axis limits for fitness & fitness_ratio
-#   so log10(fitness) and log10(fitness_ratio) are visually comparable
+# Get shared y-axis limits for fitness & fitness_ratio
+#   So log10(fitness) and log10(fitness_ratio) are visually comparable
+#   Used by plot_mix_fitness()
 get_ylim_mix_fitness <- function(data, var_names) {
 	var_names <- as.list(var_names)
 
@@ -534,6 +500,41 @@ get_ylim_mix_fitness <- function(data, var_names) {
 	)
 
 	list(fitness = ylim_fitness, fitness_ratio = ylim_fitness_ratio)
+}
+
+# Get strain names from fitness vars or data
+get_strain_names <- function(data, var_names) {
+	name_A <- var_names[["name_A"]]
+	name_B <- var_names[["name_B"]]
+	if (utils::hasName(data, name_A)) { name_A <- data[[name_A]][[1]] }
+	if (utils::hasName(data, name_B)) { name_B <- data[[name_B]][[1]] }
+	list(name_A = name_A, name_B = name_B)
+}
+
+# Add x-axis mixing scale to ggplot object
+add_mix_axis <- function(
+	fig_input,
+	mix_scale,
+	var_names,
+	strain_names,
+	xlab = NA,
+	xlim = NULL
+) {
+	fig_input + switch(
+		mix_scale,
+		fraction = list(
+			ggplot2::aes(.data[[var_names$initial_fraction_A]]),
+			scale_x_initial_fraction(
+				name = xlab, strain_names = strain_names, limits = xlim
+			)
+		),
+		ratio = list(
+			ggplot2::aes(.data[[var_names$initial_ratio_A_B]]),
+			scale_x_initial_ratio(
+				name = xlab, strain_names = strain_names, limits = xlim
+			)
+		)
+	)
 }
 
 # Format data to plot strain and/or total-group fitness

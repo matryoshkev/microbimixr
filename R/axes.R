@@ -10,7 +10,8 @@
 #' @param name Character vector (or expression) for axis title.
 #'   Or `NA` to automatically name axis using `strain_A_name` (see Details).
 #'   Or `NULL` for no title.
-#' @param strain_A_name Character string used to name axis if `name = NA`.
+#' @param strain_names Character vector or list used to automatically name axis
+#'   if `name = NA`. See Details.
 #' @param limits Numeric vector of length two giving axis limits.
 #'   The default `c(0, 1)` shows the full range of possible mix frequencies.
 #' @param breaks Numeric vector of positions for axis breaks.
@@ -28,13 +29,16 @@
 #'
 scale_x_initial_fraction <- function(
 	name = NA,
-	strain_A_name = "strain A",
+	strain_names = c(name_A = "strain A", name_B = "strain B"),
 	limits = c(0, 1),
 	breaks = seq(0, 1, by = 0.2),
 	minor_breaks = NULL,
 	...
 ) {
-	if (is.na(name)) { name <- paste("Initial fraction", strain_A_name) }
+	if (is.na(name)) {
+		strain_names <- as.list(strain_names)
+		name <- paste("Initial fraction", strain_names$name_A)
+	}
 	ggplot2::scale_x_continuous(
 		name = name,
 		limits = limits,
@@ -82,7 +86,7 @@ scale_x_initial_fraction <- function(
 #'
 scale_x_initial_ratio <- function(
 	name = NA,
-	strain_names = c(A = "strain A", B = "strain B"),
+	strain_names = c(name_A = "strain A", name_B = "strain B"),
 	limits = NULL,
 	breaks = NA,
 	labels = NA,
@@ -91,7 +95,8 @@ scale_x_initial_ratio <- function(
 ) {
 	if (is.na(name)) {
 		strain_names <- as.list(strain_names)
-		name <- paste("Initial ratio", strain_names$A, "/", strain_names$B)
+		name <-
+			paste("Initial ratio", strain_names$name_A, "/", strain_names$name_B)
 	}
 	if (is.null(limits)) {limits <- expand_limits_log10}
 	if (is.na(breaks)) {breaks <- breaks_log10}
@@ -238,7 +243,7 @@ scale_y_fitness_total <- function(
 #'
 scale_y_fitness_ratio <- function(
 	name = NA,
-	strain_names = c(A = "strain A", B = "strain B"),
+	strain_names = c(name_A = "strain A", name_B = "strain B"),
 	limits = NULL,
 	breaks = NA,
 	labels = NA,
@@ -247,7 +252,8 @@ scale_y_fitness_ratio <- function(
 ) {
 	if (is.na(name)) {
 		strain_names <- as.list(strain_names)
-		name <- paste("Fitness ratio\n", strain_names$A, "/", strain_names$B)
+		name <-
+			paste("Initial ratio", strain_names$name_A, "/", strain_names$name_B)
 	}
 	if (is.null(limits)) {limits <- expand_limits_log10}
 	if (is.na(breaks)) {breaks <- breaks_log10}

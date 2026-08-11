@@ -6,7 +6,7 @@
 \usage{
 scale_x_initial_fraction(
   name = NA,
-  strain_A_name = "strain A",
+  strain_names = c(name_A = "strain A", name_B = "strain B"),
   limits = c(0, 1),
   breaks = seq(0, 1, by = 0.2),
   minor_breaks = NULL,
@@ -18,7 +18,8 @@ scale_x_initial_fraction(
 Or \code{NA} to automatically name axis using \code{strain_A_name} (see Details).
 Or \code{NULL} for no title.}
 
-\item{strain_A_name}{Character string used to name axis if \code{name = NA}.}
+\item{strain_names}{Character vector or list used to automatically name axis
+if \code{name = NA}. See Details.}
 
 \item{limits}{Numeric vector of length two giving axis limits.
 The default \code{c(0, 1)} shows the full range of possible mix frequencies.}

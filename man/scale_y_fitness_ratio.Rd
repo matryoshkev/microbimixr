@@ -6,7 +6,7 @@
 \usage{
 scale_y_fitness_ratio(
   name = NA,
-  strain_names = c(A = "strain A", B = "strain B"),
+  strain_names = c(name_A = "strain A", name_B = "strain B"),
   limits = NULL,
   breaks = NA,
   labels = NA,
