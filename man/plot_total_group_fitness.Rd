@@ -39,7 +39,7 @@ A ggplot object that can be further modified using the ggplot2 package
 function of initial strain frequency
 }
 \details{
-Expects Wrightian fitness measures like those returned by
+Expects Wrightian fitness data like those returned by
 \code{\link[=calculate_mix_fitness]{calculate_mix_fitness()}}.
 
 \code{var_names} must be a named vector or list that includes the following
@@ -55,19 +55,19 @@ elements (shown here with default values):
 }\if{html}{\out{</div>}}
 }
 \examples{
-# Using data from smith et al (2010)
-fitness_smith_2010 <- calculate_mix_fitness(
-  data_smith_2010,
-  var_names = c(
-    initial_number_A = "initial_cells_evolved",
-    initial_number_B = "initial_cells_ancestral",
-    final_number_A = "final_spores_evolved",
-    final_number_B = "final_spores_ancestral",
-    name_A = "GVB206.3",
-    name_B = "GJV10"
-  )
+fitness_myxo <- calculate_mix_fitness(data_smith_2010, var_names_smith_2010)
+plot_total_group_fitness(fitness_myxo)
+
+# Using ratio scale for mix frequencies
+plot_total_group_fitness(fitness_myxo, mix_scale = "ratio")
+
+# More plot options
+plot_total_group_fitness(
+  fitness_myxo,
+  ylim = c(1e-8, 1),
+  xlab = "Initial frequency of evolved strain",
+  ylab = "Sporulation efficiency\n(spores / cell)"
 )
-plot_total_group_fitness(fitness_smith_2010)
 
 }
 \seealso{
