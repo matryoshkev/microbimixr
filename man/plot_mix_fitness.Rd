@@ -15,6 +15,9 @@ extensions like \code{tibble}.}
 variables in \code{data}. If \code{NULL}, defaults to column names returned by
 \code{\link[=calculate_mix_fitness]{calculate_mix_fitness()}}. See Details.}
 }
+\value{
+A ggplot object
+}
 \description{
 \code{plot_mix_fitness()} shows a diagnostic overview of various fitness effects
 in a dataset. Draws a combined plot of strain, total group, and relative

@@ -16,11 +16,11 @@ scale_y_fitness_ratio(
 }
 \arguments{
 \item{name}{Character vector (or expression) for axis title.
-Or \code{NA} to automatically name axis using \code{strain_names} (see Details).
+Or \code{NA} to automatically name axis using \code{strain_names}.
 Or \code{NULL} for no title.}
 
 \item{strain_names}{Character vector or list used to automatically name axis
-if \code{name = NA}. See Details.}
+if \code{name = NA}}
 
 \item{limits}{Numeric vector of length two giving axis limits. Or \code{NULL} for
 automatic limits that include 1 for reference (no change in relative
@@ -44,7 +44,10 @@ for details.
 \item{minor_breaks}{Numeric vector of positions for axis minor breaks. Or
 \code{NA} for automatic breaks. Or \code{NULL} for no breaks.}
 
-\item{...}{Other arguments passed to \code{\link[ggplot2:scale_continuous]{ggplot2::scale_x_log10()}}.}
+\item{...}{Other arguments passed to \code{\link[ggplot2:scale_continuous]{ggplot2::scale_x_log10()}}}
+}
+\value{
+Y-axis position scale for use with the ggplot2 package
 }
 \description{
 \code{scale_y_fitness_ratio()} is a y-axis scale for the relative fitness of
@@ -71,8 +74,6 @@ If the initial frequencies of A and B are \eqn{q_A} and \eqn{q_B}
 frequencies are \eqn{q'_A} and \eqn{q'_B},
 then the within-group fitness ratio of A to B is
 \deqn{w_A / w_B = \frac{q'_A / q'_B}{q_A / q_B}}
-
-\emph{Explain automatic axis name here.}
 }
 \seealso{
 \code{\link[=scale_y_fitness]{scale_y_fitness()}}, \code{\link[=scale_y_fitness_total]{scale_y_fitness_total()}}

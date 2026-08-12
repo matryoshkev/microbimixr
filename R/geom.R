@@ -7,7 +7,9 @@
 #' It first draws points as normal then draws points again with no fill.
 #' It only has a visible effect on point shapes 21-25.
 #'
-#' @param ... Arguments passed to [ggplot2::geom_point()].
+#' @param ... Arguments passed to [ggplot2::geom_point()]
+#'
+#' @returns A geom layer for use with the ggplot2 package
 #'
 #' @examples
 #' library(ggplot2)

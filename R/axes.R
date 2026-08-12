@@ -8,20 +8,20 @@
 #' microbial mix experiments.
 #'
 #' @param name Character vector (or expression) for axis title.
-#'   Or `NA` to automatically name axis using `strain_A_name` (see Details).
+#'   Or `NA` to automatically name axis using `strain_A_name`.
 #'   Or `NULL` for no title.
 #' @param strain_names Character vector or list used to automatically name axis
-#'   if `name = NA`. See Details.
+#'   if `name = NA`.
 #' @param limits Numeric vector of length two giving axis limits.
 #'   The default `c(0, 1)` shows the full range of possible mix frequencies.
 #' @param breaks Numeric vector of positions for axis breaks.
 #'   Or `NULL` for no breaks.
 #' @param minor_breaks Numeric vector of positions for axis minor breaks.
 #'   Or `NULL` for no minor breaks.
-#' @param ... Other arguments passed to [ggplot2::scale_x_continuous()].
+#' @param ... Other arguments passed to [ggplot2::scale_x_continuous()]
 #'
-#' @details
-#' *Explain automatic axis name here.*
+#' @returns
+#' X-axis position scale for use with the ggplot2 package
 #'
 #' @seealso [scale_x_initial_ratio()]
 #'
@@ -55,10 +55,10 @@ scale_x_initial_fraction <- function(
 #' to microbial mix experiments.
 #'
 #' @param name Character vector (or expression) for axis title.
-#'   Or `NA` to automatically name axis using `strain_names` (see Details).
+#'   Or `NA` to automatically name axis using `strain_names`.
 #'   Or `NULL` for no title.
 #' @param strain_names Character vector or list used to automatically name axis
-#'   if `name = NA`. See Details.
+#'   if `name = NA`
 #' @param limits Numeric vector of length two giving axis limits. Or `NULL` for
 #'   automatic limits that include 1 for reference (equal 50:50 mix of strains)
 #'   and span a minimum 10-fold range.
@@ -75,10 +75,10 @@ scale_x_initial_fraction <- function(
 #'   * `NULL` for no labels
 #' @param minor_breaks Numeric vector of positions for axis minor breaks. Or
 #'   `NULL` for no minor breaks.
-#' @param ... Other arguments passed to [ggplot2::scale_x_log10()].
+#' @param ... Other arguments passed to [ggplot2::scale_x_log10()]
 #'
-#' @details
-#' *Explain automatic axis name here.*
+#' @returns
+#' X-axis position scale for use with the ggplot2 package
 #'
 #' @seealso [scale_x_initial_fraction()]
 #'
@@ -133,6 +133,9 @@ scale_x_initial_ratio <- function(
 #' for example) and its final abundance is \eqn{n'}, then its Wrightian
 #' fitness measured over that entire time period is \eqn{w = n' / n}.
 #'
+#' @returns
+#' Y-axis position scale for use with the ggplot2 package
+#'
 #' @seealso [scale_y_fitness_total()], [scale_y_fitness_ratio()]
 #'
 #' @export
@@ -175,6 +178,9 @@ scale_y_fitness <- function(
 #' for example) and its final abundance is \eqn{n'}, then the group's Wrightian
 #' fitness measured over that entire time period is \eqn{w = n' / n}.
 #'
+#' @returns
+#' Y-axis position scale for use with the ggplot2 package
+#'
 #' @seealso [scale_y_fitness()], [scale_y_fitness_ratio()]
 #'
 #' @export
@@ -207,10 +213,10 @@ scale_y_fitness_total <- function(
 #'
 #' @inheritParams scale_y_fitness
 #' @param name Character vector (or expression) for axis title.
-#'   Or `NA` to automatically name axis using `strain_names` (see Details).
+#'   Or `NA` to automatically name axis using `strain_names`.
 #'   Or `NULL` for no title.
 #' @param strain_names Character vector or list used to automatically name axis
-#'   if `name = NA`. See Details.
+#'   if `name = NA`
 #' @param limits Numeric vector of length two giving axis limits. Or `NULL` for
 #'   automatic limits that include 1 for reference (no change in relative
 #'   abundance) and span a minimum 10-fold range.
@@ -235,7 +241,8 @@ scale_y_fitness_total <- function(
 #' then the within-group fitness ratio of A to B is
 #' \deqn{w_A / w_B = \frac{q'_A / q'_B}{q_A / q_B}}
 #'
-#' *Explain automatic axis name here.*
+#' @returns
+#' Y-axis position scale for use with the ggplot2 package
 #'
 #' @seealso [scale_y_fitness()], [scale_y_fitness_total()]
 #'

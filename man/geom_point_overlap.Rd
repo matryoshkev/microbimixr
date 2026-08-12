@@ -7,7 +7,10 @@
 geom_point_overlap(...)
 }
 \arguments{
-\item{...}{Arguments passed to \code{\link[ggplot2:geom_point]{ggplot2::geom_point()}}.}
+\item{...}{Arguments passed to \code{\link[ggplot2:geom_point]{ggplot2::geom_point()}}}
+}
+\value{
+A geom layer for use with the ggplot2 package
 }
 \description{
 \code{geom_point_overlap()} is a version of \code{geom_point()} from ggplot2 that is

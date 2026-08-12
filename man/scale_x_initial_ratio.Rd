@@ -16,11 +16,11 @@ scale_x_initial_ratio(
 }
 \arguments{
 \item{name}{Character vector (or expression) for axis title.
-Or \code{NA} to automatically name axis using \code{strain_names} (see Details).
+Or \code{NA} to automatically name axis using \code{strain_names}.
 Or \code{NULL} for no title.}
 
 \item{strain_names}{Character vector or list used to automatically name axis
-if \code{name = NA}. See Details.}
+if \code{name = NA}}
 
 \item{limits}{Numeric vector of length two giving axis limits. Or \code{NULL} for
 automatic limits that include 1 for reference (equal 50:50 mix of strains)
@@ -44,15 +44,15 @@ for details.
 \item{minor_breaks}{Numeric vector of positions for axis minor breaks. Or
 \code{NULL} for no minor breaks.}
 
-\item{...}{Other arguments passed to \code{\link[ggplot2:scale_continuous]{ggplot2::scale_x_log10()}}.}
+\item{...}{Other arguments passed to \code{\link[ggplot2:scale_continuous]{ggplot2::scale_x_log10()}}}
+}
+\value{
+X-axis position scale for use with the ggplot2 package
 }
 \description{
 \code{scale_x_initial_ratio()} is an x-axis scale for the initial ratio of strain
 frequencies. It calls \code{ggplot2::scale_x_log10()} with default settings suited
 to microbial mix experiments.
-}
-\details{
-\emph{Explain automatic axis name here.}
 }
 \seealso{
 \code{\link[=scale_x_initial_fraction]{scale_x_initial_fraction()}}

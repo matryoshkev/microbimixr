@@ -39,7 +39,10 @@ for details.
 \item{minor_breaks}{Numeric vector of positions for axis minor breaks. Or
 \code{NA} for automatic breaks. Or \code{NULL} for no breaks.}
 
-\item{...}{Other arguments passed to \code{\link[ggplot2:scale_continuous]{ggplot2::scale_x_log10()}}.}
+\item{...}{Other arguments passed to \code{\link[ggplot2:scale_continuous]{ggplot2::scale_x_log10()}}}
+}
+\value{
+Y-axis position scale for use with the ggplot2 package
 }
 \description{
 \code{scale_y_fitness_total()} is a y-axis scale for the total fitness of

@@ -32,6 +32,8 @@
 #' )
 #' ```
 #'
+#' @returns A ggplot object
+#'
 #' @seealso [calculate_mix_fitness()]
 #'
 #' @examples
@@ -122,7 +124,8 @@ plot_mix_fitness <- function(
 #' )
 #' ```
 #'
-#' @return `ggplot` object that can be modified further
+#' @returns
+#' A ggplot object that can be further modified using the ggplot2 package
 #'
 #' @seealso [plot_total_group_fitness()], [plot_within_group_fitness()]
 #'
@@ -222,7 +225,8 @@ plot_strain_fitness <- function(
 #' )
 #' ```
 #'
-#' @return `ggplot` object that can be modified further
+#' @returns
+#' A ggplot object that can be further modified using the ggplot2 package
 #'
 #' @seealso [plot_within_group_fitness()], [plot_strain_fitness()]
 #'
@@ -310,7 +314,8 @@ plot_total_group_fitness <- function(
 #' )
 #' ```
 #'
-#' @return `ggplot` object that can be modified further
+#' @returns
+#' A ggplot object that can be further modified using the ggplot2 package
 #'
 #' @seealso [plot_total_group_fitness()], [plot_strain_fitness()]
 #'

@@ -33,7 +33,7 @@ to strain B (on \eqn{\log_{10}} scale) from \code{initial_ratio_A_B} variable.}
 \item{xlim, ylim}{Optional axis limits to replace default}
 }
 \value{
-\code{ggplot} object that can be modified further
+A ggplot object that can be further modified using the ggplot2 package
 }
 \description{
 \code{plot_strain_fitness()} draws a plot of absolute fitness for each of two
