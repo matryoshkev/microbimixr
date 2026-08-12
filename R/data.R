@@ -21,6 +21,24 @@
 #'
 "data_smith_2010"
 
+#' Variable mapping for _Myxococcus_ data
+#'
+#' Describes how the variables in [`data_smith_2010`] map to
+#' microbial abundance measures used by [calculate_mix_fitness()].
+#'
+#' @format
+#' `var_names_smith_2010` is a character vector with 6 elements:
+#' \describe{
+#'   \item{initial_number_A}{"initial_cells_evolved"}
+#'   \item{initial_number_B}{"initial_cells_ancestral"}
+#'   \item{final_number_A}{"final_spores_evolved"}
+#'   \item{final_number_B}{ "final_spores_ancestral"}
+#'   \item{name_A}{"GVB206.3"}
+#'   \item{name_B}{"GJV10}
+#' }
+#'
+"var_names_smith_2010"
+
 #' Social exploitation of antibiotic resistance by _E. coli_
 #'
 #' This data describes the growth of bacterial populations over a single
