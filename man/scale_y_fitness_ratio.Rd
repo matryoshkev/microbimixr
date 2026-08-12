@@ -75,6 +75,25 @@ frequencies are \eqn{q'_A} and \eqn{q'_B},
 then the within-group fitness ratio of A to B is
 \deqn{w_A / w_B = \frac{q'_A / q'_B}{q_A / q_B}}
 }
+\examples{
+library("ggplot2")
+fitness_myxo <- calculate_mix_fitness(data_smith_2010, var_names_smith_2010)
+fig <- fitness_myxo |>
+  subset(is.finite(fitness_ratio_A_B)) |>
+  ggplot(aes(initial_ratio_A_B, fitness_ratio_A_B)) +
+  geom_point_overlap() +
+  scale_x_log10()
+
+fig + scale_y_log10()
+fig + scale_y_fitness_ratio(strain_names = var_names_smith_2010)
+
+# Axis options
+fig + scale_y_fitness_ratio(
+  name = "Relative sporulation success\nevolved / ancestral",
+  limits = c(0.01, 100)
+)
+
+}
 \seealso{
 \code{\link[=scale_y_fitness]{scale_y_fitness()}}, \code{\link[=scale_y_fitness_total]{scale_y_fitness_total()}}
 }

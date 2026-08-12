@@ -25,6 +25,20 @@
 #'
 #' @seealso [scale_x_initial_ratio()]
 #'
+#' @examples
+#' library("ggplot2")
+#' fitness_myxo <- calculate_mix_fitness(data_smith_2010, var_names_smith_2010)
+#' fig <- fitness_myxo |>
+#'   ggplot(aes(initial_fraction_A, fitness_total)) +
+#'   geom_point_overlap() +
+#'   scale_y_log10()
+#'
+#' fig
+#' fig + scale_x_initial_fraction(strain_names = var_names_smith_2010)
+#'
+#' # Manually label axis
+#' fig + scale_x_initial_fraction(name = "Initial frequency of evolved strain")
+#'
 #' @export
 #'
 scale_x_initial_fraction <- function(
@@ -82,6 +96,22 @@ scale_x_initial_fraction <- function(
 #'
 #' @seealso [scale_x_initial_fraction()]
 #'
+#' @examples
+#' library("ggplot2")
+#' fitness_myxo <- calculate_mix_fitness(data_smith_2010, var_names_smith_2010)
+#' fig <- fitness_myxo |>
+#'   subset(is.finite(fitness_ratio_A_B)) |>
+#'   ggplot(aes(initial_ratio_A_B, fitness_ratio_A_B)) +
+#'   geom_point_overlap() +
+#'   scale_y_log10()
+#' fig
+#'
+#' # Automatically label axis
+#' fig + scale_x_initial_ratio(strain_names = var_names_smith_2010)
+#'
+#' # Manually label axis
+#' fig + scale_x_initial_ratio(name = "Initial ratio evolved / ancestral")
+#'
 #' @export
 #'
 scale_x_initial_ratio <- function(
@@ -138,6 +168,20 @@ scale_x_initial_ratio <- function(
 #'
 #' @seealso [scale_y_fitness_total()], [scale_y_fitness_ratio()]
 #'
+#' @examples
+#' library("ggplot2")
+#' fitness_myxo <- calculate_mix_fitness(data_smith_2010, var_names_smith_2010)
+#' fig <- fitness_myxo |>
+#'   subset(is.finite(fitness_A)) |>
+#'   ggplot(aes(initial_fraction_A, fitness_A)) +
+#'   geom_point_overlap()
+#'
+#' fig + scale_y_log10()
+#' fig + scale_y_fitness()
+#'
+#' # Axis options
+#' fig + scale_y_fitness(name = "Sporulation efficiency\n(spores/cell)")
+#'
 #' @export
 #'
 scale_y_fitness <- function(
@@ -182,6 +226,22 @@ scale_y_fitness <- function(
 #' Y-axis position scale for use with the ggplot2 package
 #'
 #' @seealso [scale_y_fitness()], [scale_y_fitness_ratio()]
+#'
+#' @examples
+#' library("ggplot2")
+#' fitness_myxo <- calculate_mix_fitness(data_smith_2010, var_names_smith_2010)
+#' fig <- fitness_myxo |>
+#'   ggplot(aes(initial_fraction_A, fitness_total)) +
+#'   geom_point_overlap()
+#'
+#' fig + scale_y_log10()
+#' fig + scale_y_fitness_total()
+#'
+#' # Axis options
+#' fig + scale_y_fitness_total(
+#'   name = "Sporulation efficiency\n(spores/cell)",
+#'   limits = c(1e-8, 1)
+#' )
 #'
 #' @export
 #'
@@ -246,6 +306,24 @@ scale_y_fitness_total <- function(
 #'
 #' @seealso [scale_y_fitness()], [scale_y_fitness_total()]
 #'
+#' @examples
+#' library("ggplot2")
+#' fitness_myxo <- calculate_mix_fitness(data_smith_2010, var_names_smith_2010)
+#' fig <- fitness_myxo |>
+#'   subset(is.finite(fitness_ratio_A_B)) |>
+#'   ggplot(aes(initial_ratio_A_B, fitness_ratio_A_B)) +
+#'   geom_point_overlap() +
+#'   scale_x_log10()
+#'
+#' fig + scale_y_log10()
+#' fig + scale_y_fitness_ratio(strain_names = var_names_smith_2010)
+#'
+#' # Axis options
+#' fig + scale_y_fitness_ratio(
+#'   name = "Relative sporulation success\nevolved / ancestral",
+#'   limits = c(0.01, 100)
+#' )
+#'
 #' @export
 #'
 scale_y_fitness_ratio <- function(
@@ -259,8 +337,9 @@ scale_y_fitness_ratio <- function(
 ) {
 	if (is.na(name)) {
 		strain_names <- as.list(strain_names)
-		name <-
-			paste("Initial ratio", strain_names$name_A, "/", strain_names$name_B)
+		name <- paste(
+			"Fitness ratio\n", strain_names$name_A, "/", strain_names$name_B
+		)
 	}
 	if (is.null(limits)) {limits <- expand_limits_log10}
 	if (is.na(breaks)) {breaks <- breaks_log10}

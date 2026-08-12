@@ -56,6 +56,21 @@ If the initial abundance of some microbe is \eqn{n} (measured as cfu/mL
 for example) and its final abundance is \eqn{n'}, then its Wrightian
 fitness measured over that entire time period is \eqn{w = n' / n}.
 }
+\examples{
+library("ggplot2")
+fitness_myxo <- calculate_mix_fitness(data_smith_2010, var_names_smith_2010)
+fig <- fitness_myxo |>
+  subset(is.finite(fitness_A)) |>
+  ggplot(aes(initial_fraction_A, fitness_A)) +
+  geom_point_overlap()
+
+fig + scale_y_log10()
+fig + scale_y_fitness()
+
+# Axis options
+fig + scale_y_fitness(name = "Sporulation efficiency\n(spores/cell)")
+
+}
 \seealso{
 \code{\link[=scale_y_fitness_total]{scale_y_fitness_total()}}, \code{\link[=scale_y_fitness_ratio]{scale_y_fitness_ratio()}}
 }

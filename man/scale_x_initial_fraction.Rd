@@ -41,6 +41,21 @@ frequency (fraction or proportion of total) measured on a linear scale. It
 calls \code{ggplot2::scale_x_continuous()} with default settings suited to
 microbial mix experiments.
 }
+\examples{
+library("ggplot2")
+fitness_myxo <- calculate_mix_fitness(data_smith_2010, var_names_smith_2010)
+fig <- fitness_myxo |>
+  ggplot(aes(initial_fraction_A, fitness_total)) +
+  geom_point_overlap() +
+  scale_y_log10()
+
+fig
+fig + scale_x_initial_fraction(strain_names = var_names_smith_2010)
+
+# Manually label axis
+fig + scale_x_initial_fraction(name = "Initial frequency of evolved strain")
+
+}
 \seealso{
 \code{\link[=scale_x_initial_ratio]{scale_x_initial_ratio()}}
 }
