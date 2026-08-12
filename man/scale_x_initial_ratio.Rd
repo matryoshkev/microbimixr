@@ -2,7 +2,7 @@
 % Please edit documentation in R/axes.R
 \name{scale_x_initial_ratio}
 \alias{scale_x_initial_ratio}
-\title{Position scale for initial strain ratio}
+\title{X-axis for initial strain ratio}
 \usage{
 scale_x_initial_ratio(
   name = NA,

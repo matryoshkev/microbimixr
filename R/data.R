@@ -1,5 +1,4 @@
-#' Data from smith, Van Dyken, and Zee (2010): Experimentally-evolved
-#' _Myxococcus_ cheaters
+#' Developmental cheating by evolved _Myxococcus_ bacteria
 #'
 #' This data describes the sporulation success of _Myxococcus xanthus_
 #' bacteria in mixed-genotype fruiting bodies. GVB206.3 is an experimentally
@@ -22,10 +21,9 @@
 #'
 "data_smith_2010"
 
-#' Data from Yurtsev et al. (2013): _E. coli_ cheating of resistance to
-#' beta-lactam antibiotics
+#' Social exploitation of antibiotic resistance by _E. coli_
 #'
-#' This data set describes the growth of bacterial populations over a single
+#' This data describes the growth of bacterial populations over a single
 #' cycle in a variety of environments (different ampicillin concentrations)
 #' from a variety of initial starting conditions (changing both the total
 #' initial cell density and the relative abundance of resistant and sensitive
@@ -55,8 +53,7 @@
 #'
 "data_Yurtsev_2013"
 
-#' Data from Madgwick et al. (2018): Cooperation and cheating among
-#' _Dictyostelium_ amoebae
+#' Cooperation and cheating among _Dictyostelium_ amoebae
 #'
 #' This data describes the sporulation success of _Dictyostelium discoideum_
 #' amoebae in mixed-genotype fruiting bodies.

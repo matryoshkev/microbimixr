@@ -2,7 +2,7 @@
 % Please edit documentation in R/axes.R
 \name{scale_x_initial_fraction}
 \alias{scale_x_initial_fraction}
-\title{Position scale for initial strain frequency (linear)}
+\title{X-axis for initial strain frequency}
 \usage{
 scale_x_initial_fraction(
   name = NA,

@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot-fitness.R
 \name{plot_within_group_fitness}
 \alias{plot_within_group_fitness}
-\title{Plot within-group fitness ratio}
+\title{Plot within-group ratio of strain fitnesses}
 \usage{
 plot_within_group_fitness(
   data,

@@ -2,7 +2,7 @@
 % Please edit documentation in R/axes.R
 \name{scale_y_fitness}
 \alias{scale_y_fitness}
-\title{Position scale for microbial fitness}
+\title{Y-axis for strain fitnesses}
 \usage{
 scale_y_fitness(
   name = NA,

@@ -1,6 +1,6 @@
 # Geoms for ggplot2 ============================================================
 
-#' Points with better overlap readability
+#' Points with improved overlap readability
 #'
 #' `geom_point_overlap()` is a version of `geom_point()` from ggplot2 that is
 #' easier to see when points overlap.

@@ -1,9 +1,9 @@
 # Plot fitness measures ========================================================
 
-#' Plot strain and multilevel fitness
+#' Draw plots to compare fitness measures
 #'
-#' `plot_mix_fitness()` shows a diagnostic overview of various fitness effects in
-#' a dataset. Draws a combined plot of strain, total group, and relative
+#' `plot_mix_fitness()` shows a diagnostic overview of various fitness effects
+#' in a dataset. Draws a combined plot of strain, total group, and relative
 #' within-group fitness against two measures of mix frequency.
 #'
 #' @param data Data frame of fitness values. Wide format: each row must contain
@@ -87,7 +87,7 @@ plot_mix_fitness <- function(
 	suppressWarnings(print(fig_output))
 }
 
-#' Plot strain fitness
+#' Plot fitness for each strain separately
 #'
 #' `plot_strain_fitness()` draws a plot of absolute fitness for each of two
 #' microbe strains as a function of their initial frequency
@@ -197,7 +197,7 @@ plot_strain_fitness <- function(
 	fig_output
 }
 
-#' Plot total group fitness
+#' Plot total fitness of group or subpopulation
 #'
 #' `plot_total_group_fitness()` draws a plot of total-group fitness as a
 #' function of initial strain frequency
@@ -284,7 +284,7 @@ plot_total_group_fitness <- function(
 	fig_output
 }
 
-#' Plot within-group fitness ratio
+#' Plot within-group ratio of strain fitnesses
 #'
 #' `plot_within_group_fitness()` draws a plot of the relative within-group
 #' fitness of strains A and B as a function of their initial frequency
@@ -383,7 +383,11 @@ plot_within_group_fitness <- function(
 	fig_output
 }
 
-# Plot strain and total-group fitness (for plot_mix_fitness())
+
+# Helper functions =============================================================
+
+# Plot strain and total-group fitness
+# Used by plot_mix_fitness() (not exported)
 plot_fitness_strain_total <- function(
 	data,
 	var_names = fitness_vars_default(),
@@ -444,8 +448,6 @@ plot_fitness_strain_total <- function(
 	# Return ggplot object
 	fig_output
 }
-
-# Helper functions =============================================================
 
 # Default names for fitness and mixing variables
 fitness_vars_default <- function() {

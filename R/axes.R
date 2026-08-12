@@ -1,6 +1,6 @@
 # Axes for ggplot2 =============================================================
 
-#' Position scale for initial strain frequency (linear)
+#' X-axis for initial strain frequency
 #'
 #' `scale_x_initial_fraction()` is an x-axis position scale for initial strain
 #' frequency (fraction or proportion of total) measured on a linear scale. It
@@ -48,7 +48,7 @@ scale_x_initial_fraction <- function(
 	)
 }
 
-#' Position scale for initial strain ratio
+#' X-axis for initial strain ratio
 #'
 #' `scale_x_initial_ratio()` is an x-axis scale for the initial ratio of strain
 #' frequencies. It calls `ggplot2::scale_x_log10()` with default settings suited
@@ -111,7 +111,7 @@ scale_x_initial_ratio <- function(
 	)
 }
 
-#' Position scale for microbial fitness
+#' Y-axis for strain fitnesses
 #'
 #' `scale_y_fitness()` is a y-axis scale for the fitness of microbial strains
 #' and groups. It calls `ggplot2::scale_y_log10()` with default settings suited
@@ -160,7 +160,7 @@ scale_y_fitness <- function(
 	)
 }
 
-#' Position scale for fitness of microbial groups
+#' Y-axis for fitness of groups or subpopulations
 #'
 #' `scale_y_fitness_total()` is a y-axis scale for the total fitness of
 #' microbial groups or subpopulations. It calls `ggplot2::scale_y_log10()` with
@@ -198,7 +198,7 @@ scale_y_fitness_total <- function(
 	)
 }
 
-#' Position scale for within-group fitness ratio
+#' Y-axis for within-group ratio of strain fitnesses
 #'
 #' `scale_y_fitness_ratio()` is a y-axis scale for the relative fitness of
 #' microbes within a group or subpopulation, measured as a ratio of Wrightian

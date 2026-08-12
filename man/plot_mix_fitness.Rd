@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot-fitness.R
 \name{plot_mix_fitness}
 \alias{plot_mix_fitness}
-\title{Plot strain and multilevel fitness}
+\title{Draw plots to compare fitness measures}
 \usage{
 plot_mix_fitness(data, var_names = NULL)
 }
@@ -16,8 +16,8 @@ variables in \code{data}. If \code{NULL}, defaults to column names returned by
 \code{\link[=calculate_mix_fitness]{calculate_mix_fitness()}}. See Details.}
 }
 \description{
-\code{plot_mix_fitness()} shows a diagnostic overview of various fitness effects in
-a dataset. Draws a combined plot of strain, total group, and relative
+\code{plot_mix_fitness()} shows a diagnostic overview of various fitness effects
+in a dataset. Draws a combined plot of strain, total group, and relative
 within-group fitness against two measures of mix frequency.
 }
 \details{

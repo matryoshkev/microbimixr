@@ -3,8 +3,7 @@
 \docType{data}
 \name{data_Madgwick_2018}
 \alias{data_Madgwick_2018}
-\title{Data from Madgwick et al. (2018): Cooperation and cheating among
-\emph{Dictyostelium} amoebae}
+\title{Cooperation and cheating among \emph{Dictyostelium} amoebae}
 \format{
 \code{data_Madgwick_2018} is a data frame with 1226 rows and 7 columns:
 \describe{

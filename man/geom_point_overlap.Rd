@@ -2,7 +2,7 @@
 % Please edit documentation in R/geom.R
 \name{geom_point_overlap}
 \alias{geom_point_overlap}
-\title{Points with better overlap readability}
+\title{Points with improved overlap readability}
 \usage{
 geom_point_overlap(...)
 }

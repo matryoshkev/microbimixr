@@ -3,8 +3,7 @@
 \docType{data}
 \name{data_smith_2010}
 \alias{data_smith_2010}
-\title{Data from smith, Van Dyken, and Zee (2010): Experimentally-evolved
-\emph{Myxococcus} cheaters}
+\title{Developmental cheating by evolved \emph{Myxococcus} bacteria}
 \format{
 \code{data_smith_2010} is a data frame with 28 rows and 5 columns:
 \describe{

@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot-fitness.R
 \name{plot_total_group_fitness}
 \alias{plot_total_group_fitness}
-\title{Plot total group fitness}
+\title{Plot total fitness of group or subpopulation}
 \usage{
 plot_total_group_fitness(
   data,

@@ -2,7 +2,7 @@
 % Please edit documentation in R/axes.R
 \name{scale_y_fitness_total}
 \alias{scale_y_fitness_total}
-\title{Position scale for fitness of microbial groups}
+\title{Y-axis for fitness of groups or subpopulations}
 \usage{
 scale_y_fitness_total(
   name = NA,

@@ -3,8 +3,7 @@
 \docType{data}
 \name{data_Yurtsev_2013}
 \alias{data_Yurtsev_2013}
-\title{Data from Yurtsev et al. (2013): \emph{E. coli} cheating of resistance to
-beta-lactam antibiotics}
+\title{Social exploitation of antibiotic resistance by \emph{E. coli}}
 \format{
 \code{data_Yurtsev_2013} is a data frame with 2304 rows and 8 columns:
 \describe{
@@ -25,7 +24,7 @@ beta-lactam antibiotics}
 data_Yurtsev_2013
 }
 \description{
-This data set describes the growth of bacterial populations over a single
+This data describes the growth of bacterial populations over a single
 cycle in a variety of environments (different ampicillin concentrations)
 from a variety of initial starting conditions (changing both the total
 initial cell density and the relative abundance of resistant and sensitive

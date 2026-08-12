@@ -2,7 +2,7 @@
 % Please edit documentation in R/axes.R
 \name{scale_y_fitness_ratio}
 \alias{scale_y_fitness_ratio}
-\title{Position scale for within-group fitness ratio}
+\title{Y-axis for within-group ratio of strain fitnesses}
 \usage{
 scale_y_fitness_ratio(
   name = NA,
