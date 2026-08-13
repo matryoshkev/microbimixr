@@ -117,7 +117,7 @@ Install the development version of microbimixr from [GitHub](https://github.com/
 
 ``` r
 # install.packages("devtools")
-devtools::install_github("matryoshkev/microbimixr")
+devtools::install_github("matryoshkev/microbimixr", build_vignettes = TRUE)
 ```
 
 ## Further reading
