@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot-fitness.R
 \name{plot_strain_fitness}
 \alias{plot_strain_fitness}
-\title{Plot fitness for each strain separately}
+\title{Plot fitness of each strain separately}
 \usage{
 plot_strain_fitness(
   data,

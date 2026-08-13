@@ -89,7 +89,7 @@ plot_mix_fitness <- function(
 	suppressWarnings(print(fig_output))
 }
 
-#' Plot fitness for each strain separately
+#' Plot fitness of each strain separately
 #'
 #' `plot_strain_fitness()` draws a plot of absolute fitness for each of two
 #' microbe strains as a function of their initial frequency
@@ -196,7 +196,7 @@ plot_strain_fitness <- function(
 	fig_output
 }
 
-#' Plot total fitness of group or subpopulation
+#' Plot fitness of total group or subpopulation
 #'
 #' `plot_total_group_fitness()` draws a plot of total-group fitness as a
 #' function of initial strain frequency
