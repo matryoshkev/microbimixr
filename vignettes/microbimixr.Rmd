@@ -177,13 +177,11 @@ Once you know which fitness measures to focus on, you can visualize them with mi
 microbimixr offers several functions for plotting specific fitness measures as a function of their initial frequency 
 -->
 
-Once you know which fitness measures to focus on, you can use microbimixr to visualize them. There are two ways to do this. The first and simplest way is to
-use microbimixr's built-in plot functions: 
+Once you know which fitness measures to focus on, you can use microbimixr to visualize them. The simplest way is to use its built-in plot functions:
 
 * `plot_strain_fitness()`: Plot fitness of each strain separately
 * `plot_total_group_fitness()` : Plot fitness of total group or subpopulation
 * `plot_within_group_fitness()` : Plot within-group ratio of strain fitnesses
-<!-- Plot relative within-group fitness of two strains -->
 
 These functions let you reproduce the individual parts of the diagnostic plots. They're an easy way to plot fitness data with reasonable default settings. 
 <!-- They work best with simple mix experiments with two strains and no other treatment variables.  -->
@@ -192,7 +190,7 @@ These functions let you reproduce the individual parts of the diagnostic plots. 
 plot_total_group_fitness(fitness_smith_2010)
 ```
 
-They include some basic plotting options:
+They also include some basic plotting options:
 
 ```{r plot-options-smith2010, fig.width = 5.5, fig.height = 2.25, fig.align = "center", out.width = "100%"}
 fig_total <- plot_total_group_fitness(
@@ -219,7 +217,7 @@ The `plot_*_fitness()` functions return ggplot2 objects, so you can extend and m
 
 ## Plot fitness with ggplot2
 
-The fitness-plotting functions in microbimixr make figures using the graphics package ggplot2. For more-complex figures with different experimental conditions or multiple strain combinations, it may be better to make plots with ggplot2 directly. But you can still use axes and other parts of microbimixr plots in your own figures. These include:
+The fitness-plotting functions use graphics package ggplot2. You can also use microbimixr's various axes and other plot components when you make ggplot2 figures on your own. These include:
 
 * Mixing axes `scale_x_initial_fraction()` and `scale_x_initial_ratio()`
 * Fitness axes `scale_y_fitness()`, `scale_y_fitness_total()`, and `scale_y_fitness_ratio()`
@@ -237,6 +235,27 @@ fitness_smith_2010 |>
 	theme_bw()
 ```
 
+The plot elements are especially useful for more-complex figures with different experimental conditions or multiple strain combinations.
+
+```{r elements-Yurtsev, fig.width = 6.25, fig.height = 2.25, out.width = "100%", align = "center"}
+names_Yurtsev <- c(name_A = "resistant", name_B = "sensitive")
+name_amp <- "Ampicillin\n(\u03BCg/mL)"
+fitness_Yurtsev_2013 |>
+	subset(
+		ampicillin %in% c(0, 15, 50, 100) & dilution %in% c(200, 400, 800) &
+		fitness_ratio_A_B > 0 & is.finite(fitness_ratio_A_B)
+	) |>
+	ggplot(mapping = aes(
+		x = initial_fraction_A, y = fitness_ratio_A_B, 
+		fill = factor(ampicillin), color = factor(ampicillin))
+	) +
+	geom_point_overlap(na.rm = TRUE) +
+	scale_x_initial_fraction(strain_names = names_Yurtsev) +
+	scale_y_fitness_ratio(strain_names = names_Yurtsev, limits = c(1e-1, 1e4)) +
+	scale_fill_viridis_d(name = name_amp, option = "magma", direction = -1, begin = 0.5, end = 1) +
+	scale_color_viridis_d(name = name_amp, option = "magma", direction = -1, begin = 0, end = 0.8) +
+	facet_wrap(~ dilution, labeller = as_labeller(function(x) paste0(x, "-fold dilution"))) 
+```
 
 
 ## References
