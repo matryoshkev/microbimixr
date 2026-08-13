@@ -72,7 +72,7 @@
 #'
 #' @examples
 #' # Data with cell counts for each strain
-#' calculate_mix_fitness(
+#' fitness_smith_2010 <- calculate_mix_fitness(
 #'   data_smith_2010,
 #'   var_names = c(
 #'     initial_number_A = "initial_cells_evolved",
@@ -84,9 +84,10 @@
 #'   ),
 #'   keep = "exptl_block"
 #' )
+#' head(fitness_smith_2010)
 #'
 #' # Data with total density and strain frequency
-#' calculate_mix_fitness(
+#' fitness_Yurtsev_2013 <- calculate_mix_fitness(
 #'   data_Yurtsev_2013,
 #'   var_names = c(
 #'     initial_number_total = "OD_initial",
@@ -100,6 +101,7 @@
 #' )
 #' # Warns of nonbiological values in data: some resistant fractions < 0
 #' # Artifact of subtracting background during flow cytometry?
+#' head(fitness_Yurtsev_2013)
 #'
 #' @export
 #'
