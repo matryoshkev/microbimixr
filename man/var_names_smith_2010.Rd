@@ -6,14 +6,16 @@
 \title{Variable mapping for \emph{Myxococcus} data}
 \format{
 \code{var_names_smith_2010} is a character vector with 6 elements:
-\describe{
-\item{initial_number_A}{"initial_cells_evolved"}
-\item{initial_number_B}{"initial_cells_ancestral"}
-\item{final_number_A}{"final_spores_evolved"}
-\item{final_number_B}{ "final_spores_ancestral"}
-\item{name_A}{"GVB206.3"}
-\item{name_B}{"GJV10}
-}
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{c(
+  initial_number_A = "initial_cells_evolved",
+  initial_number_B = "initial_cells_ancestral",
+  final_number_A = "final_spores_evolved",
+  final_number_B = "final_spores_ancestral",
+  name_A = "GVB206.3",
+  name_B = "GJV10
+)
+}\if{html}{\out{</div>}}
 }
 \usage{
 var_names_smith_2010
