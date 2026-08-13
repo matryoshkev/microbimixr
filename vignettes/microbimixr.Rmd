@@ -57,10 +57,9 @@ This dataset from Yurtsev *et al.* (2013) describes the results of mix experimen
 ```{r data-Yurtsev2013}
 head(data_Yurtsev_2013)
 ```
-* Explain how made to take tidy data, best archiveable form
 
 
-## Calculating fitness
+## Calculate fitness
 
 There are lots of quantities you can calculate to measure microbial survival and reproductive success that work well enough for a particular biological system and research question. But only a few fitness measures are robust enough to be quantitatively meaningful across different species and different types of interaction. microbimixr makes it easy to calculate them. 
 
@@ -109,7 +108,7 @@ Note the warning messages here. `calculate_mix_fitness()` will warn you if any o
 -->
 
 
-## Fitness math
+## Fitness math: what and why
 
 `calculate_mix_fitness()` calculates four fitness outcomes from the input data:
 
@@ -134,7 +133,7 @@ These fitness measures are robust across microbial species and types of interact
 Microbial interactions may be more relevant or more linear over one scale than the other, so microbimixr includes both by default. `initial_fraction_A` is calculated as $n_A / (n_A + n_B)$ and runs from 0 to 1. `initial_ratio_A_B` is calculated as $n_A / n_B$. It runs from negative infinity to positive infinity and is best analyzed over $\log_{10}$ scales. 
 
 
-## Diagnostic plots
+## Compare fitness measures
 
 To quickly see which fitness measures are most useful for analyzing your dataset, use `plot_mix_fitness()`. 
 <!-- 
@@ -143,7 +142,7 @@ To quickly see an overview of the various fitness effects in a dataset, use `plo
 -->
 It draws a combined figure with strain fitness, total group fitness, and relative within-group fitness plotted against two measures of mix frequency.
 
-```{r diagnostic-smith2010, fig.width = 6.25, fig.height = 4.5, fig.align = "center", out.width = "100%"}
+```{r compare-smith, fig.width = 6.25, fig.height = 4.5, fig.align = "center", out.width = "100%"}
 plot_mix_fitness(fitness_smith_2010)
 ```
 
@@ -154,22 +153,23 @@ These plots help you see which fitness measures and mixing scales are more infor
 -->
 
 As a tool for data inspection, `plot_mix_fitness()` shows each data point individually instead of a statistical summary like the mean value with error bars. For complex datasets with many strain combinations or treatment conditions, it may be easier to inspect subsets of the data. 
-<!-- microbimixr functions work with the R pipe `|>`. -->
 
-```{r diagnostic-Yurtsev2013, fig.width = 6.25, fig.height = 4.5, fig.align = "center", out.width = "100%"}
+```{r compare-Yurtsev, fig.width = 6.25, fig.height = 4.5, fig.align = "center", out.width = "100%"}
 fitness_Yurtsev_2013 |>
 subset(ampicillin == 100 & dilution == 100) |>
 plot_mix_fitness()
 ```
 
-For this interaction between antibiotic-resistant and sensitive *E. coli* strains, total group fitness is just a constant determined by experimental conditions (how much the culture was diluted when passaged). So the within-group fitness ratio would by itself be a succinct measure of the interesting effects. 
+This example also shows that microbimixr functions work with the R pipe `|>`. 
+
+For the interaction between antibiotic-resistant and sensitive *E. coli* strains shown above, total group fitness is just a constant determined by experimental conditions---how much the culture was diluted when passaged. So the within-group fitness ratio would by itself be a succinct measure of the interesting effects. 
 
 <!--
 microbimixr's plotting functions can use fitness datasets that aren't made by `calculate_mix_fitness()`, but you may need to specify what the columns mean using the `var_names` option. 
 -->
 
 
-## Plot specific fitness measures
+## Plot fitness with microbimixr functions
 
 <!-- 
 Once you know which fitness measures to focus on, you can visualize them with microbimixr's built-in plotting functions: 
@@ -180,53 +180,57 @@ microbimixr offers several functions for plotting specific fitness measures as a
 Once you know which fitness measures to focus on, you can use microbimixr to visualize them. There are two ways to do this. The first and simplest way is to
 use microbimixr's built-in plot functions: 
 
-* `plot_strain_fitness()`: Plot absolute fitness for each of two strains
-* `plot_total_group_fitness()` : Plot total-group fitness
-* `plot_within_group_fitness()` : Plot relative within-group fitness of two strains
+* `plot_strain_fitness()`: Plot fitness of each strain separately
+* `plot_total_group_fitness()` : Plot fitness of total group or subpopulation
+* `plot_within_group_fitness()` : Plot within-group ratio of strain fitnesses
+<!-- Plot relative within-group fitness of two strains -->
 
-These functions let you reproduce the individual parts of the diagnostic plots. They use the ggplot2 graphics package to plot fitness data with reasonable default settings and some basic graphical options. They work best with simple mix experiments with two strains and no other treatment variables. 
+These functions let you reproduce the individual parts of the diagnostic plots. They're an easy way to plot fitness data with reasonable default settings. 
+<!-- They work best with simple mix experiments with two strains and no other treatment variables.  -->
 
-```{r plot-total-smith2010, fig.width = 2.75, fig.height = 2.25, fig.align = "center", out.width = "50%"}
+```{r plot-smith2010, fig.width = 2.25, fig.height = 1.75, fig.align = "center", out.width = "50%"}
 plot_total_group_fitness(fitness_smith_2010)
 ```
 
-The default mixing scale for the `plot_*_fitness()` is the initial proportion of strain A. To instead use the ratio of strain A to strain B (on a log~10~ scale), use the `mix_scale = "ratio"` option: 
+They include some basic plotting options:
 
-```{r plot-within-smith2010, fig.width = 2.75, fig.height = 2.25, fig.align = "center", out.width = "50%"}
-plot_within_group_fitness(fitness_smith_2010, mix_scale = "ratio")
+```{r plot-options-smith2010, fig.width = 5.5, fig.height = 2.25, fig.align = "center", out.width = "100%"}
+fig_total <- plot_total_group_fitness(
+	fitness_smith_2010,
+	xlab = "Initial frequency of evolved strain",
+	ylab = "Total sporulation efficiency\n(spores/cell)"
+)
+fig_within <- plot_within_group_fitness(
+	fitness_smith_2010, 
+	mix_scale = "ratio",
+	xlab = "Initial ratio evolved / ancestral",
+	ylab = "Relative efficiency\nevolved / ancestral",
+	ylim = c(0.01, 100)
+)
+fig_total + fig_within + plot_annotation(tag_levels = "A")
 ```
 
-* Demonstrate functions and options?
-* Describe default setting choices: scales, etc
+This example also shows how to use the patchwork package to combine subplots with `+`. 
 
 <!--
 The `plot_*_fitness()` functions return ggplot2 objects, so you can extend and modify them by adding or replacing scales, themes, and so on. 
 -->
 
 
-## Custom plot elements for ggplot2
+## Plot fitness with ggplot2
 
-For more-complex figures with different experimental conditions or multiple strain combinations, it's best to construct plots directly with ggplot2. But you can still use axes and other parts of the diagnostic plots in your own figures. These include:
+The fitness-plotting functions in microbimixr make figures using the graphics package ggplot2. For more-complex figures with different experimental conditions or multiple strain combinations, it may be better to make plots with ggplot2 directly. But you can still use axes and other parts of microbimixr plots in your own figures. These include:
 
 * Mixing axes `scale_x_initial_fraction()` and `scale_x_initial_ratio()`
 * Fitness axes `scale_y_fitness()`, `scale_y_fitness_total()`, and `scale_y_fitness_ratio()`
 * Data points `geom_point_overlap()` that easier to read when they overlap
 
-These are custom plot elements for ggplot2 that have default settings appropriate for microbial mix experiments. 
-
-<!--
-As your results and figures become more complex, you may find it simpler to just make them with ggplot2 directly, from the ground up. 
--->
-
+These functions return custom plot elements for ggplot2 that have default settings appropriate for microbial mix experiments. 
 
 ```
 code_example_here
 ```
-
 * Panels/colors for mix expts under different conditions (Gore data)
-* Panels/color for different strain combination (Madgwick data)
-* microbimixr included patchwork package for combining subplots
-* Plot data with fitted statistical models
 
 
 ## References
