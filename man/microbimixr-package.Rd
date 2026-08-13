@@ -16,6 +16,7 @@ data and quantitatively compare results across systems.
 Useful links:
 \itemize{
   \item \url{https://github.com/matryoshkev/microbimixr}
+  \item \url{https://matryoshkev.github.io/microbimixr/}
   \item Report bugs at \url{https://github.com/matryoshkev/microbimixr/issues}
 }
 
