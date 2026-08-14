@@ -1,9 +1,10 @@
 # Points with improved overlap readability
 
-`geom_point_overlap()` is a version of `geom_point()` from ggplot2 that
-is easier to see when points overlap. It first draws points as normal
-then draws points again with no fill. It only has a visible effect on
-point shapes 21-25.
+`geom_point_overlap()` is a version of
+[`geom_point()`](https://ggplot2.tidyverse.org/reference/geom_point.html)
+from ggplot2 that is easier to see when points overlap. It first draws
+points as normal then draws points again with no fill. It only has a
+visible effect on point shapes 21-25.
 
 ## Usage
 
