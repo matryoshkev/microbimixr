@@ -30,11 +30,9 @@ calculate and plot fitness measures that are:
 * Meaningful for both kin and multilevel selection theories of social evolution
 -->
 
-<!-- TEACH PEOPLE HOW TO USE THE PACKAGE -->
-
 The basic workflow for microbimixr is: 
 
-1. Make an input data frame containing the experimental observations used to calculate fitness
+1. Start from a data frame of observed microbial abundances
 2. Calculate fitness measures with `calculate_mix_fitness()`
 3. Inspect a diagnostic plot of fitness measures with `plot_mix_fitness()`
 4. Plot measures of interest with `plot_strain_fitness()`, 
@@ -42,21 +40,23 @@ The basic workflow for microbimixr is:
 5. Fit statistical models of your choosing and plot them with the data
 
 
-## Input data
+## Starting data
 
-The input format for microbimixr is a data frame where each row describes microbial abundance at the beginning and end of a mix experiment. The experimentally observed quantities could be any combination of strain abundance (number or density), strain frequency (fraction of total), or total group abundance---anything sufficient to define the absolute abundance of both strains in the experiment. Each row should contain data for a single observational unit: a single experimental replicate with one strain combination, one mix frequency, one combination of experimental treatments, etc.  
+The starting point for microbimixr is a data frame that has the observed abundance of each microbe at the beginning of the experiments and at the end. The data could be any combination of strain abundance (like cell counts or cell densities), strain frequency (the fraction of the total), or total group abundance (all strains added together)---anything that's enough to define the absolute abundance of each strain. Each row of the data frame should have all the data for a single observational unit: one experimental replicate with one strain combination, one mix frequency, one combination of experimental treatments, and so on.
 
-For example, let's look at some datasets included with microbimixr. This dataset from smith *et al.* (2010) is an experiment mixing a wild-type strain of *Myxococcus* bacteria with an experimentally-evolved cheater strain. The observed quantities are the number of cells from each strain before and after they form multicellular fruiting bodies. 
+For example, we can look at some datasets included in the package. This is from a small experiment mixing a wild-type strain of *Myxococcus* bacteria with an experimentally-evolved cheater strain and letting them make multicellular fruiting bodies together (smith _et al._&nbsp;2010). The abundance quantities here are the number of cells from each strain before and after development. 
 
 ```{r data-smith2010}
 head(data_smith_2010)
 ```
 
-This dataset from Yurtsev *et al.* (2013) describes the results of mix experiments with an antibiotic-sensitive strain of *Escherichia coli* and an antibiotic-resistant strain that detoxifies its local environment. The observed quantities here are total cell density (from OD~600~) and the fraction of cells belonging to each strain (from flow cytometry). The dataset also includes several experimental treatments with different antibiotic concentrations and different amounts of culture growth. 
+Here's another example. This is from an experiment that grew an antibiotic-sensitive strain of *E.&nbsp;coli* together with an antibiotic-resistant strain that detoxifies its local environment (Yurtsev *et al.*&nbsp;2013). The abundance quantities are total cell density (in units of OD~600~) and the fraction of cells that are the resistant strain (from flow cytometry). The data include several experimental treatments with different concentrations of antibiotic (`ampicillin`) and different amounts of culture growth (`dilution`). 
 
 ```{r data-Yurtsev2013}
 head(data_Yurtsev_2013)
 ```
+
+microbimixr works with most types of microbial abundance data. 
 
 
 ## Calculate fitness
