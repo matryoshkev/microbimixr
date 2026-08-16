@@ -14,30 +14,39 @@ library(ggplot2)
 library(patchwork)
 ```
 
-A common experimental design in microbiology is to mix together two different 
-microbes (different genotypes of bacteria, for example) then measure how their 
-behavior depends on mix frequency. How do they act differently together than when they're on their own? How does mixing affect their survival and reproductive success (their fitness)?
+A common way to study interactions among microbes is to do mix experiments. You mix together different microbes (different strains of bacteria, for example), and then you see how their behavior depends on mix frequency. How do they act differently together than on their own? How does mixing affect their survival and reproduction---their fitness?
 
-microbimixr is an R package for analyzing microbial mix experiments. It helps researchers get the most out of their data by providing convenience functions to 
-calculate and plot fitness measures that are: 
+microbimixr is an R package that helps you analyze mix experiments. It helps you get the most out of your data by making it easy to:
+
+* Calculate best-practice fitness measures
+* Identify which measures are best for your dataset and question
+* Make publication-quality figures showing interaction effects
+
+The basic workflow is: 
+
+1. Start from a data frame of observed microbial abundances
+2. Calculate fitness measures with `calculate_mix_fitness()`
+3. Figure out which fitness measures to use with `plot_mix_fitness()`
+4. Plot the fitness data using microbimixr's built-in functions or its custom add-ins for ggplot2
+5. Fit statistical models and plot them with your data
+
+<!--
+ A common experimental design in microbiology is to mix together two different microbes (different genotypes of bacteria, for example) then measure how their behavior depends on mix frequency. How do they act differently together than when they're on their own? How does mixing affect their survival and reproductive success (their fitness)? 
+
+It helps researchers get the most out of their data by providing convenience functions to calculate and plot fitness measures that are: 
 
 * Robust and quantitatively comparable across different species and types of 
   interaction
 * Useful for both individual and group-centered approaches to social interaction
 * Well-suited to statistical analysis of effect sizes and confidence intervals
-
-<!-- 
 * Meaningful for both kin and multilevel selection theories of social evolution
--->
 
-The basic workflow for microbimixr is: 
-
-1. Start from a data frame of observed microbial abundances
-2. Calculate fitness measures with `calculate_mix_fitness()`
 3. Inspect a diagnostic plot of fitness measures with `plot_mix_fitness()`
 4. Plot measures of interest with `plot_strain_fitness()`, 
   `plot_total_group_fitness()`, and/or `plot_within_group_fitness()`
-5. Fit statistical models of your choosing and plot them with the data
+5. Fit statistical models of your choosing and plot them with the fitness data
+-->
+
 
 
 ## Starting data
@@ -62,6 +71,16 @@ microbimixr works with most types of microbial abundance data.
 ## Calculate fitness
 
 There are lots of quantities you can calculate to measure microbial survival and reproductive success that work well enough for a particular biological system and research question. But only a few fitness measures are robust enough to be quantitatively meaningful across different species and different types of interaction. microbimixr makes it easy to calculate them. 
+
+<!-- 
+* Robust and quantitatively comparable across different species and types of 
+  interaction
+* Useful for both individual and group-centered approaches to social interaction
+* Well-suited to statistical analysis of effect sizes and confidence intervals
+
+* Meaningful for both kin and multilevel selection theories of social evolution
+-->
+
 
 The microbimixr function to calculate fitness is `calculate_mix_fitness()`. It accepts an input data frame of microbial abundances and a character vector describing what the data columns are. It returns a data frame with several calculated measures of fitness and two measures of mix frequency. For example: 
 
