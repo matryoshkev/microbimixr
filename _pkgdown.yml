@@ -2,3 +2,28 @@ url: https://matryoshkev.github.io/microbimixr/
 template:
   bootstrap: 5
 
+reference:
+- title: Calculate and compare fitness measures
+  contents:
+  - calculate_mix_fitness
+  - plot_mix_fitness
+- title: Plot fitness with microbimixr functions
+  contents:
+  - plot_strain_fitness
+  - plot_total_group_fitness
+  - plot_within_group_fitness
+- title: Plot fitness with ggplot2
+  desc: Use axes and other plot components separately
+  contents:
+  - geom_point_overlap
+  - scale_x_initial_fraction
+  - scale_x_initial_ratio
+  - scale_y_fitness
+  - scale_y_fitness_ratio
+  - scale_y_fitness_total
+- title: Example datasets
+  contents:
+  - data_Madgwick_2018
+  - data_smith_2010
+  - data_Yurtsev_2013
+  - var_names_smith_2010
