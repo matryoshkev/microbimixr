@@ -47,12 +47,12 @@
 </nav><div class="container template-home">
 <div class="row">
   <main id="main" class="col-md-9"><div class="section level1">
-<div class="page-header"><h1 id="microbimixr-analyze-microbial-interactions-in-mix-experiments">microbimixr: Analyze microbial interactions in mix experiments<a class="anchor" aria-label="anchor" href="#microbimixr-analyze-microbial-interactions-in-mix-experiments"></a>
+<div class="page-header"><h1 id="microbimixr">microbimixr<a class="anchor" aria-label="anchor" href="#microbimixr"></a>
 </h1></div>
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 <!-- badges: start -->
 
-<p>A common experimental design is to mix together two microbes (different strains of bacteria, for example) then measure how their fitness depends on mix frequency. How do they act differently together than on their own? microbimixr is an R package for analyzing microbial interactions in mix experiments. It helps researchers get the most out of their data by providing tools to:</p>
+<p>microbimixr is an R package for analyzing microbial interactions in mix experiments. A common experimental design is to mix together two microbes (different strains of bacteria, for example) then measure how their survival and reproduction depend on mix frequency. How do they act differently together than on their own? microbimixr helps researchers get the most out of the data from these experiments by providing tools to:</p>
 <ul>
 <li>Calculate best-practice fitness measures</li>
 <li>Identify which measures to use with a specific dataset</li>
@@ -66,6 +66,7 @@
 <li>Robust and quantitatively comparable across different species and different types of interaction</li>
 <li>Useful for both individual and group-centered approaches to social behavior</li>
 <li>Well-suited to statistical analysis of effect sizes and confidence intervals</li>
+<li>Directly comparable to theoretical models of microbial evolution</li>
 </ul>
 <p>Starting from a data frame with the initial and final abundance of each microbe, calculate fitness effects with <code><a href="reference/calculate_mix_fitness.html">calculate_mix_fitness()</a></code>:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
@@ -97,7 +98,7 @@
 <span><span class="co">#&gt; 5  1.680000e-02        3.00000000</span></span>
 <span><span class="co">#&gt; 6  3.189011e-02       36.78640777</span></span></code></pre></div>
 <!-- `calculate_mix_fitness()` works with most types of microbial abundance data including strain density, total group density, and strain frequency.  -->
-<p><code><a href="reference/calculate_mix_fitness.html">calculate_mix_fitness()</a></code> works with most types of microbial abundance data including cell or virion count, cell or virion density, and genotype frequency.</p>
+<p>microbimixr works with most types of microbial abundance data including cell count, cell density, and strain frequency.</p>
 </div>
 <div class="section level2">
 <h2 id="compare-fitness-measures">Compare fitness measures<a class="anchor" aria-label="anchor" href="#compare-fitness-measures"></a>
@@ -107,6 +108,7 @@
 <code class="sourceCode R"><span><span class="fu"><a href="reference/plot_mix_fitness.html">plot_mix_fitness</a></span><span class="op">(</span><span class="va">fitness_myxo</span><span class="op">)</span></span></code></pre></div>
 <!-- ggsave("README-compare-measures.png", width = 6.25, height = 4.5) -->
 <p><img src="./reference/figures/README-compare-measures.png"></p>
+<p>This interaction between two genotypes of <em>Myxococcus</em> bacteria would be easiest to interpret in terms of total-group fitness as a function of initial genotype frequency and the within-group fitness ratio as a function of initial genotype ratio. These fitness effects are nearly linear (on log scales) and would be easiest to fit statistical models to.</p>
 </div>
 <div class="section level2">
 <h2 id="visualize-interaction-effects">Visualize interaction effects<a class="anchor" aria-label="anchor" href="#visualize-interaction-effects"></a>
@@ -130,7 +132,7 @@ fig_total + fig_within
 <span><span class="fu"><a href="https://patchwork.data-imaginist.com/reference/plot_annotation.html" class="external-link">plot_annotation</a></span><span class="op">(</span>tag_levels <span class="op">=</span> <span class="st">"A"</span><span class="op">)</span></span></code></pre></div>
 <!-- ggsave("README-plot-functions.png", width = 5, height = 2.25) -->
 <p><img src="./reference/figures/README-plot-functions.png"></p>
-<p>You can also use the individual axes and other elements of microbimixr plots with ggplot2:</p>
+<p>You can also use the individual axes and other components of microbimixr plots with ggplot2:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://ggplot2.tidyverse.org" class="external-link">"ggplot2"</a></span><span class="op">)</span></span>
 <span><span class="va">fitness_myxo</span> <span class="op">|&gt;</span></span>
