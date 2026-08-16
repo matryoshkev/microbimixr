@@ -12,7 +12,7 @@ to:
 - Identify which measures to use with a specific dataset
 - Make publication-quality figures showing interaction effects
 
-## Calculate fitness effects
+## Calculate fitness measures
 
 There are many ways to quantify microbial survival and reproduction.
 microbimixr makes it easy to calculate fitness measures that are:

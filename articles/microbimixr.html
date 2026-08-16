@@ -59,60 +59,66 @@
 
     
     
-<p>A common experimental design in microbiology is to mix together two
-different microbes (different genotypes of bacteria, for example) then
-measure how their behavior depends on mix frequency. How do they act
-differently together than when they’re on their own? How does mixing
-affect their survival and reproductive success (their fitness)?</p>
-<p>microbimixr is an R package for analyzing microbial mix experiments.
-It helps researchers get the most out of their data by providing
-convenience functions to calculate and plot fitness measures that
-are:</p>
+<p>A common way to study interactions among microbes is to do mix
+experiments. You mix together different microbes (different strains of
+bacteria, for example), and then you see how their behavior depends on
+mix frequency. How do they act differently together than on their own?
+How does mixing affect their survival and reproduction—their
+fitness?</p>
+<p>microbimixr is an R package that helps you analyze mix experiments.
+It helps you get the most out of your data by making it easy to:</p>
 <ul>
-<li>Robust and quantitatively comparable across different species and
-types of interaction</li>
-<li>Useful for both individual and group-centered approaches to social
-interaction</li>
-<li>Well-suited to statistical analysis of effect sizes and confidence
-intervals</li>
+<li>Calculate best-practice fitness measures</li>
+<li>Identify which measures are best for your dataset and question</li>
+<li>Make publication-quality figures showing interaction effects</li>
 </ul>
-<!-- 
-* Meaningful for both kin and multilevel selection theories of social evolution
---><!-- TEACH PEOPLE HOW TO USE THE PACKAGE --><p>The basic workflow for microbimixr is:</p>
+<p>The basic workflow is:</p>
 <ol style="list-style-type: decimal">
-<li>Make an input data frame containing the experimental observations
-used to calculate fitness</li>
+<li>Start from a data frame of observed microbial abundances</li>
 <li>Calculate fitness measures with
 <code><a href="../reference/calculate_mix_fitness.html">calculate_mix_fitness()</a></code>
 </li>
-<li>Inspect a diagnostic plot of fitness measures with
+<li>Figure out which fitness measures to use with
 <code><a href="../reference/plot_mix_fitness.html">plot_mix_fitness()</a></code>
 </li>
-<li>Plot measures of interest with <code><a href="../reference/plot_strain_fitness.html">plot_strain_fitness()</a></code>,
-<code><a href="../reference/plot_total_group_fitness.html">plot_total_group_fitness()</a></code>, and/or
-<code><a href="../reference/plot_within_group_fitness.html">plot_within_group_fitness()</a></code>
-</li>
-<li>Fit statistical models of your choosing and plot them with the
-data</li>
+<li>Plot the fitness data using microbimixr’s built-in functions or its
+custom add-ins for ggplot2</li>
+<li>Fit statistical models and plot them with your data</li>
 </ol>
-<div class="section level2">
-<h2 id="input-data">Input data<a class="anchor" aria-label="anchor" href="#input-data"></a>
+<!--
+ A common experimental design in microbiology is to mix together two different microbes (different genotypes of bacteria, for example) then measure how their behavior depends on mix frequency. How do they act differently together than when they're on their own? How does mixing affect their survival and reproductive success (their fitness)? 
+
+It helps researchers get the most out of their data by providing convenience functions to calculate and plot fitness measures that are: 
+
+* Robust and quantitatively comparable across different species and types of 
+  interaction
+* Useful for both individual and group-centered approaches to social interaction
+* Well-suited to statistical analysis of effect sizes and confidence intervals
+* Meaningful for both kin and multilevel selection theories of social evolution
+
+3. Inspect a diagnostic plot of fitness measures with `plot_mix_fitness()`
+4. Plot measures of interest with `plot_strain_fitness()`, 
+  `plot_total_group_fitness()`, and/or `plot_within_group_fitness()`
+5. Fit statistical models of your choosing and plot them with the fitness data
+--><div class="section level2">
+<h2 id="starting-data">Starting data<a class="anchor" aria-label="anchor" href="#starting-data"></a>
 </h2>
-<p>The input format for microbimixr is a data frame where each row
-describes microbial abundance at the beginning and end of a mix
-experiment. The experimentally observed quantities could be any
-combination of strain abundance (number or density), strain frequency
-(fraction of total), or total group abundance—anything sufficient to
-define the absolute abundance of both strains in the experiment. Each
-row should contain data for a single observational unit: a single
-experimental replicate with one strain combination, one mix frequency,
-one combination of experimental treatments, etc.</p>
-<p>For example, let’s look at some datasets included with microbimixr.
-This dataset from smith <em>et al.</em> (2010) is an experiment mixing a
-wild-type strain of <em>Myxococcus</em> bacteria with an
-experimentally-evolved cheater strain. The observed quantities are the
-number of cells from each strain before and after they form
-multicellular fruiting bodies.</p>
+<p>The starting point for microbimixr is a data frame that has the
+observed abundance of each microbe at the beginning of the experiments
+and at the end. The data could be any combination of strain abundance
+(like cell counts or cell densities), strain frequency (the fraction of
+the total), or total group abundance (all strains added
+together)—anything that’s enough to define the absolute abundance of
+each strain. Each row of the data frame should have all the data for a
+single observational unit: one experimental replicate with one strain
+combination, one mix frequency, one combination of experimental
+treatments, and so on.</p>
+<p>For example, we can look at some datasets included in the package.
+This is from a small experiment mixing a wild-type strain of
+<em>Myxococcus</em> bacteria with an experimentally-evolved cheater
+strain and letting them make multicellular fruiting bodies together
+(smith <em>et al.</em> 2010). The abundance quantities here are the
+number of cells from each strain before and after development.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">data_smith_2010</span><span class="op">)</span></span>
 <span><span class="co">#&gt;   exptl_block initial_cells_evolved initial_cells_ancestral</span></span>
@@ -129,14 +135,15 @@ multicellular fruiting bodies.</p>
 <span><span class="co">#&gt; 4               107000                 390000</span></span>
 <span><span class="co">#&gt; 5              2100000                6300000</span></span>
 <span><span class="co">#&gt; 6              4210000               10300000</span></span></code></pre></div>
-<p>This dataset from Yurtsev <em>et al.</em> (2013) describes the
-results of mix experiments with an antibiotic-sensitive strain of
-<em>Escherichia coli</em> and an antibiotic-resistant strain that
-detoxifies its local environment. The observed quantities here are total
-cell density (from OD<sub>600</sub>) and the fraction of cells belonging
-to each strain (from flow cytometry). The dataset also includes several
-experimental treatments with different antibiotic concentrations and
-different amounts of culture growth.</p>
+<p>Here’s another example. This is from an experiment that grew an
+antibiotic-sensitive strain of <em>E. coli</em> together with an
+antibiotic-resistant strain that detoxifies its local environment
+(Yurtsev <em>et al.</em> 2013). The abundance quantities are total cell
+density (in units of OD<sub>600</sub>) and the fraction of cells that
+are the resistant strain (from flow cytometry). The data include several
+experimental treatments with different concentrations of antibiotic
+(<code>ampicillin</code>) and different amounts of culture growth
+(<code>dilution</code>).</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">data_Yurtsev_2013</span><span class="op">)</span></span>
 <span><span class="co">#&gt;   ampicillin dilution replicate culture_id OD_initial</span></span>
@@ -153,6 +160,7 @@ different amounts of culture growth.</p>
 <span><span class="co">#&gt; 4               0.1360970434 1.735172             0.0795238821</span></span>
 <span><span class="co">#&gt; 5               0.1909207725 1.769998             0.1141049001</span></span>
 <span><span class="co">#&gt; 6               0.2346178261 1.479329             0.1382856545</span></span></code></pre></div>
+<p>microbimixr works with most types of microbial abundance data.</p>
 </div>
 <div class="section level2">
 <h2 id="calculate-fitness">Calculate fitness<a class="anchor" aria-label="anchor" href="#calculate-fitness"></a>
@@ -163,6 +171,14 @@ biological system and research question. But only a few fitness measures
 are robust enough to be quantitatively meaningful across different
 species and different types of interaction. microbimixr makes it easy to
 calculate them.</p>
+<!-- 
+* Robust and quantitatively comparable across different species and types of 
+  interaction
+* Useful for both individual and group-centered approaches to social interaction
+* Well-suited to statistical analysis of effect sizes and confidence intervals
+
+* Meaningful for both kin and multilevel selection theories of social evolution
+-->
 <p>The microbimixr function to calculate fitness is
 <code><a href="../reference/calculate_mix_fitness.html">calculate_mix_fitness()</a></code>. It accepts an input data frame of
 microbial abundances and a character vector describing what the data

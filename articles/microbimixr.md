@@ -1,54 +1,47 @@
 # Analyzing microbial interactions with microbimixr
 
-A common experimental design in microbiology is to mix together two
-different microbes (different genotypes of bacteria, for example) then
-measure how their behavior depends on mix frequency. How do they act
-differently together than when they’re on their own? How does mixing
-affect their survival and reproductive success (their fitness)?
+A common way to study interactions among microbes is to do mix
+experiments. You mix together different microbes (different strains of
+bacteria, for example), and then you see how their behavior depends on
+mix frequency. How do they act differently together than on their own?
+How does mixing affect their survival and reproduction—their fitness?
 
-microbimixr is an R package for analyzing microbial mix experiments. It
-helps researchers get the most out of their data by providing
-convenience functions to calculate and plot fitness measures that are:
+microbimixr is an R package that helps you analyze mix experiments. It
+helps you get the most out of your data by making it easy to:
 
-- Robust and quantitatively comparable across different species and
-  types of interaction
-- Useful for both individual and group-centered approaches to social
-  interaction
-- Well-suited to statistical analysis of effect sizes and confidence
-  intervals
+- Calculate best-practice fitness measures
+- Identify which measures are best for your dataset and question
+- Make publication-quality figures showing interaction effects
 
-The basic workflow for microbimixr is:
+The basic workflow is:
 
-1.  Make an input data frame containing the experimental observations
-    used to calculate fitness
+1.  Start from a data frame of observed microbial abundances
 2.  Calculate fitness measures with
     [`calculate_mix_fitness()`](https://matryoshkev.github.io/microbimixr/reference/calculate_mix_fitness.md)
-3.  Inspect a diagnostic plot of fitness measures with
+3.  Figure out which fitness measures to use with
     [`plot_mix_fitness()`](https://matryoshkev.github.io/microbimixr/reference/plot_mix_fitness.md)
-4.  Plot measures of interest with
-    [`plot_strain_fitness()`](https://matryoshkev.github.io/microbimixr/reference/plot_strain_fitness.md),
-    [`plot_total_group_fitness()`](https://matryoshkev.github.io/microbimixr/reference/plot_total_group_fitness.md),
-    and/or
-    [`plot_within_group_fitness()`](https://matryoshkev.github.io/microbimixr/reference/plot_within_group_fitness.md)
-5.  Fit statistical models of your choosing and plot them with the data
+4.  Plot the fitness data using microbimixr’s built-in functions or its
+    custom add-ins for ggplot2
+5.  Fit statistical models and plot them with your data
 
-## Input data
+## Starting data
 
-The input format for microbimixr is a data frame where each row
-describes microbial abundance at the beginning and end of a mix
-experiment. The experimentally observed quantities could be any
-combination of strain abundance (number or density), strain frequency
-(fraction of total), or total group abundance—anything sufficient to
-define the absolute abundance of both strains in the experiment. Each
-row should contain data for a single observational unit: a single
+The starting point for microbimixr is a data frame that has the observed
+abundance of each microbe at the beginning of the experiments and at the
+end. The data could be any combination of strain abundance (like cell
+counts or cell densities), strain frequency (the fraction of the total),
+or total group abundance (all strains added together)—anything that’s
+enough to define the absolute abundance of each strain. Each row of the
+data frame should have all the data for a single observational unit: one
 experimental replicate with one strain combination, one mix frequency,
-one combination of experimental treatments, etc.
+one combination of experimental treatments, and so on.
 
-For example, let’s look at some datasets included with microbimixr. This
-dataset from smith *et al.* (2010) is an experiment mixing a wild-type
-strain of *Myxococcus* bacteria with an experimentally-evolved cheater
-strain. The observed quantities are the number of cells from each strain
-before and after they form multicellular fruiting bodies.
+For example, we can look at some datasets included in the package. This
+is from a small experiment mixing a wild-type strain of *Myxococcus*
+bacteria with an experimentally-evolved cheater strain and letting them
+make multicellular fruiting bodies together (smith *et al.* 2010). The
+abundance quantities here are the number of cells from each strain
+before and after development.
 
 ``` r
 
@@ -69,14 +62,14 @@ head(data_smith_2010)
 #> 6              4210000               10300000
 ```
 
-This dataset from Yurtsev *et al.* (2013) describes the results of mix
-experiments with an antibiotic-sensitive strain of *Escherichia coli*
-and an antibiotic-resistant strain that detoxifies its local
-environment. The observed quantities here are total cell density (from
-OD₆₀₀) and the fraction of cells belonging to each strain (from flow
-cytometry). The dataset also includes several experimental treatments
-with different antibiotic concentrations and different amounts of
-culture growth.
+Here’s another example. This is from an experiment that grew an
+antibiotic-sensitive strain of *E. coli* together with an
+antibiotic-resistant strain that detoxifies its local environment
+(Yurtsev *et al.* 2013). The abundance quantities are total cell density
+(in units of OD₆₀₀) and the fraction of cells that are the resistant
+strain (from flow cytometry). The data include several experimental
+treatments with different concentrations of antibiotic (`ampicillin`)
+and different amounts of culture growth (`dilution`).
 
 ``` r
 
@@ -96,6 +89,8 @@ head(data_Yurtsev_2013)
 #> 5               0.1909207725 1.769998             0.1141049001
 #> 6               0.2346178261 1.479329             0.1382856545
 ```
+
+microbimixr works with most types of microbial abundance data.
 
 ## Calculate fitness
 
