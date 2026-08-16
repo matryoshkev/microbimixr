@@ -1,4 +1,4 @@
-microbimixr: Analyze microbial interactions in mix experiments
+microbimixr
 ================
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
@@ -7,12 +7,13 @@ microbimixr: Analyze microbial interactions in mix experiments
 [![R-CMD-check](https://github.com/matryoshkev/microbimixr/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/matryoshkev/microbimixr/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
-A common experimental design is to mix together two microbes (different
-strains of bacteria, for example) then measure how their fitness depends
-on mix frequency. How do they act differently together than on their
-own? microbimixr is an R package for analyzing microbial interactions in
-mix experiments. It helps researchers get the most out of their data by
-providing tools to:
+microbimixr is an R package for analyzing microbial interactions in mix
+experiments. A common experimental design is to mix together two
+microbes (different strains of bacteria, for example) then measure how
+their survival and reproduction depend on mix frequency. How do they act
+differently together than on their own? microbimixr helps researchers
+get the most out of the data from these experiments by providing tools
+to:
 
 -   Calculate best-practice fitness measures
 -   Identify which measures to use with a specific dataset
@@ -29,6 +30,7 @@ microbimixr makes it easy to calculate fitness measures that are:
     behavior
 -   Well-suited to statistical analysis of effect sizes and confidence
     intervals
+-   Directly comparable to theoretical models of microbial evolution
 
 Starting from a data frame with the initial and final abundance of each
 microbe, calculate fitness effects with `calculate_mix_fitness()`:
@@ -65,9 +67,8 @@ head(fitness_myxo)
 
 <!-- `calculate_mix_fitness()` works with most types of microbial abundance data including strain density, total group density, and strain frequency.  -->
 
-`calculate_mix_fitness()` works with most types of microbial abundance
-data including cell or virion count, cell or virion density, and
-genotype frequency.
+microbimixr works with most types of microbial abundance data including
+cell count, cell density, and strain frequency.
 
 ## Compare fitness measures
 
@@ -83,6 +84,13 @@ plot_mix_fitness(fitness_myxo)
 <!-- ggsave("README-compare-measures.png", width = 6.25, height = 4.5) -->
 
 ![](./man/figures/README-compare-measures.png)
+
+This interaction between two genotypes of *Myxococcus* bacteria would be
+easiest to interpret in terms of total-group fitness as a function of
+initial genotype frequency and the within-group fitness ratio as a
+function of initial genotype ratio. These fitness effects are nearly
+linear (on log scales) and would be easiest to fit statistical models
+to.
 
 ## Visualize interaction effects
 
@@ -112,7 +120,7 @@ plot_annotation(tag_levels = "A")
 
 ![](./man/figures/README-plot-functions.png)
 
-You can also use the individual axes and other elements of microbimixr
+You can also use the individual axes and other components of microbimixr
 plots with ggplot2:
 
 ``` r
