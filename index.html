@@ -11,8 +11,8 @@
 <script src="deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Analyze Microbial Interactions in Mix Experiments">
-<meta name="description" content="Calculate and plot fitness measures that help maximize the inferences that can be drawn from a dataset, enable quantitative comparisons across different microbial systems, and are meaningful for both kin and multilevel selection theories of social evolution.">
-<meta property="og:description" content="Calculate and plot fitness measures that help maximize the inferences that can be drawn from a dataset, enable quantitative comparisons across different microbial systems, and are meaningful for both kin and multilevel selection theories of social evolution.">
+<meta name="description" content="A common experimental design is to mix together two microbes (different strains of bacteria, for example) then measure how their survival and reproduction depend on mix frequency. How do they act differently together than on their own? microbimixr helps researchers get the most out of the data from these experiments by providing tools to calculate best-practice fitness measures, identify which measures are best for a specific dataset and research question, and make publication-quality figures showing interaction effects.">
+<meta property="og:description" content="A common experimental design is to mix together two microbes (different strains of bacteria, for example) then measure how their survival and reproduction depend on mix frequency. How do they act differently together than on their own? microbimixr helps researchers get the most out of the data from these experiments by providing tools to calculate best-practice fitness measures, identify which measures are best for a specific dataset and research question, and make publication-quality figures showing interaction effects.">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -70,7 +70,7 @@
 </ul>
 <p>Starting from a data frame with the initial and final abundance of each microbe, calculate fitness effects with <code><a href="reference/calculate_mix_fitness.html">calculate_mix_fitness()</a></code>:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://github.com/matryoshkev/microbimixr" class="external-link">"microbimixr"</a></span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://matryoshkev.github.io/microbimixr/">"microbimixr"</a></span><span class="op">)</span></span>
 <span><span class="va">fitness_myxo</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/calculate_mix_fitness.html">calculate_mix_fitness</a></span><span class="op">(</span></span>
 <span>    <span class="va">data_smith_2010</span>, </span>
 <span>    var_names <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
@@ -210,7 +210,7 @@ In that case, don't forget to commit and push the resulting figure files, so the
 <div class="developers">
 <h2 data-toc-skip>Developers</h2>
 <ul class="list-unstyled">
-<li>jeff smith <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/0000-0001-8445-586X" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a>  </li>
+<li>jeff smith <br><small class="roles"> Author, maintainer, copyright holder </small> <a href="https://orcid.org/0000-0001-8445-586X" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a>  </li>
 </ul>
 </div>
 
