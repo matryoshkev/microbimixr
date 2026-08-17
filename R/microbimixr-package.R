@@ -1,10 +1,13 @@
-#' microbimixr: Analyze Microbial Mix Experiments
+#' microbimixr: Analyze Microbial Interactions in Mix Experiments
 #'
-#' Tools to analyze microbial interactions in mix experiments,
-#' which measure how fitness and behavior change with the local frequency of
-#' different microbe types. 'microbimixr' provides tools to calculate and
-#' visualize fitness measures that help researchers get the most out of their
-#' data and quantitatively compare results across systems.
+#' A common experimental design is to mix together two microbes (different
+#' strains of bacteria, for example) then measure how their survival and
+#' reproduction depend on mix frequency. How do they act differently together
+#' than on their own? 'microbimixr' helps researchers get the most out of the
+#' data from these experiments by providing tools to:
+#' * Calculate best-practice fitness measures
+#' * Identify which measures are best for a specific dataset and research question
+#' * Make publication-quality figures showing interaction effects
 #'
 #' @importFrom rlang .data
 #' @keywords internal

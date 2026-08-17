@@ -4,25 +4,30 @@
 \name{microbimixr-package}
 \alias{microbimixr}
 \alias{microbimixr-package}
-\title{microbimixr: Analyze Microbial Mix Experiments}
+\title{microbimixr: Analyze Microbial Interactions in Mix Experiments}
 \description{
-Tools to analyze microbial interactions in mix experiments,
-which measure how fitness and behavior change with the local frequency of
-different microbe types. 'microbimixr' provides tools to calculate and
-visualize fitness measures that help researchers get the most out of their
-data and quantitatively compare results across systems.
+A common experimental design is to mix together two microbes (different
+strains of bacteria, for example) then measure how their survival and
+reproduction depend on mix frequency. How do they act differently together
+than on their own? 'microbimixr' helps researchers get the most out of the
+data from these experiments by providing tools to:
+\itemize{
+\item Calculate best-practice fitness measures
+\item Identify which measures are best for a specific dataset and research question
+\item Make publication-quality figures showing interaction effects
+}
 }
 \seealso{
 Useful links:
 \itemize{
-  \item \url{https://github.com/matryoshkev/microbimixr}
   \item \url{https://matryoshkev.github.io/microbimixr/}
+  \item \url{https://github.com/matryoshkev/microbimixr}
   \item Report bugs at \url{https://github.com/matryoshkev/microbimixr/issues}
 }
 
 }
 \author{
-\strong{Maintainer}: jeff smith \email{matryoshkev@gmail.com} (\href{https://orcid.org/0000-0001-8445-586X}{ORCID})
+\strong{Maintainer}: jeff smith \email{matryoshkev@gmail.com} (\href{https://orcid.org/0000-0001-8445-586X}{ORCID}) [copyright holder]
 
 }
 \keyword{internal}

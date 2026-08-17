@@ -5,18 +5,22 @@ Authors@R:
     person(
     	"jeff", "smith", 
     	email = "matryoshkev@gmail.com", 
-    	role = c("aut", "cre"),
+    	role = c("aut", "cre", "cph"),
     	comment = c(ORCID = "0000-0001-8445-586X")
     )
-Description: Calculate and plot fitness measures that help maximize the 
-    inferences that can be drawn from a dataset, enable quantitative comparisons 
-    across different microbial systems, and are meaningful for both kin and 
-    multilevel selection theories of social evolution. 
+Description: A common experimental design is to mix together two microbes 
+    (different strains of bacteria, for example) then measure how their survival 
+    and reproduction depend on mix frequency. How do they act differently 
+    together than on their own? 'microbimixr' helps researchers get the most out 
+    of the data from these experiments by providing tools to calculate 
+    best-practice fitness measures, identify which measures are best for a 
+    specific dataset and research question, and make publication-quality figures 
+    showing interaction effects.
 License: GPL (>= 3)
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3
-URL: https://github.com/matryoshkev/microbimixr, https://matryoshkev.github.io/microbimixr/
+URL: https://matryoshkev.github.io/microbimixr/, https://github.com/matryoshkev/microbimixr
 BugReports: https://github.com/matryoshkev/microbimixr/issues
 LazyData: true
 Depends: 
