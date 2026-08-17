@@ -2,15 +2,16 @@
 
 A common way to study interactions among microbes is to do mix
 experiments. You mix together different microbes (different strains of
-bacteria, for example), and then you see how their behavior depends on
-mix frequency. How do they act differently together than on their own?
-How does mixing affect their survival and reproduction—their fitness?
+bacteria, for example) and then see how their behavior depends on mix
+frequency. How do they act differently together than on their own? How
+does mixing affect their survival and reproduction—their fitness?
 
 microbimixr is an R package that helps you analyze mix experiments. It
 helps you get the most out of your data by making it easy to:
 
 - Calculate best-practice fitness measures
-- Identify which measures are best for your dataset and question
+- Identify which measures are best for your dataset and research
+  question
 - Make publication-quality figures showing interaction effects
 
 The basic workflow is:
@@ -18,10 +19,10 @@ The basic workflow is:
 1.  Start from a data frame of observed microbial abundances
 2.  Calculate fitness measures with
     [`calculate_mix_fitness()`](https://matryoshkev.github.io/microbimixr/reference/calculate_mix_fitness.md)
-3.  Figure out which fitness measures to use with
+3.  Figure out which fitness and frequency measures to use with
     [`plot_mix_fitness()`](https://matryoshkev.github.io/microbimixr/reference/plot_mix_fitness.md)
-4.  Plot the fitness data using microbimixr’s built-in functions or its
-    custom add-ins for ggplot2
+4.  Plot the fitness data with microbimixr’s built-in functions or its
+    add-ins for ggplot2
 5.  Fit statistical models and plot them with your data
 
 ## Starting data
@@ -36,8 +37,8 @@ data frame should have all the data for a single observational unit: one
 experimental replicate with one strain combination, one mix frequency,
 one combination of experimental treatments, and so on.
 
-For example, we can look at some datasets included in the package. This
-is from a small experiment mixing a wild-type strain of *Myxococcus*
+Here’s an example with a dataset that’s included in the package. This is
+from a small experiment mixing a wild-type strain of *Myxococcus*
 bacteria with an experimentally-evolved cheater strain and letting them
 make multicellular fruiting bodies together (smith *et al.* 2010). The
 abundance quantities here are the number of cells from each strain
@@ -95,22 +96,22 @@ microbimixr works with most types of microbial abundance data.
 ## Calculate fitness
 
 There are lots of quantities you can calculate to measure microbial
-survival and reproductive success that work well enough for a particular
-biological system and research question. But only a few fitness measures
-are robust enough to be quantitatively meaningful across different
-species and different types of interaction. microbimixr makes it easy to
-calculate them.
+survival and reproduction. Many of them work well enough for a
+particular system and particular research question. But only a few are
+robust enough to be quantitatively meaningful across different species
+and different types of interaction (smith & Inglis 2021). microbimixr
+makes it easy to calculate the good ones.
 
-The microbimixr function to calculate fitness is
+The function to calculate fitness is
 [`calculate_mix_fitness()`](https://matryoshkev.github.io/microbimixr/reference/calculate_mix_fitness.md).
-It accepts an input data frame of microbial abundances and a character
-vector describing what the data columns are. It returns a data frame
-with several calculated measures of fitness and two measures of mix
-frequency. For example:
+It takes an input data frame of microbial abundances and a character
+vector describing what the columns in the data are. Then it returns a
+data frame with several measures of fitness and two measures of mix
+frequency. Here’s an example:
 
 ``` r
 
-fitness_smith_2010 <- calculate_mix_fitness(
+fitness_myxo <- calculate_mix_fitness(
     data = data_smith_2010, 
     var_names = c(
         initial_number_A = "initial_cells_evolved",
@@ -121,7 +122,7 @@ fitness_smith_2010 <- calculate_mix_fitness(
         name_B = "GJV10"
     )
 )
-head(fitness_smith_2010)
+head(fitness_myxo)
 #>     name_A name_B initial_fraction_A initial_ratio_A_B    fitness_A  fitness_B
 #> 1 GVB206.3  GJV10         1.00000000               Inf 1.200000e-07         NA
 #> 2 GVB206.3  GJV10         0.98901099       90.00000000 1.555556e-07 0.00000400
@@ -138,14 +139,18 @@ head(fitness_smith_2010)
 #> 6  3.189011e-02       36.78640777
 ```
 
-To include data columns in the fitness output that describe experimental
-treatments, experimental block, and so on, use the `keep` argument. For
-the Yurtsev data, for example, we want to keep antibiotic concentration
-and culture dilution:
+The `var_names` argument tells the function what kinds of data you have
+and which strain is which. In the output, `initial_fraction_A` and
+`initial_ratio_A_B` are two measures of mix frequency. `fitness_A` and
+`fitness_B` are the absolute fitness of each strain. `fitness_total` is
+the fitness of the total group or subpopulation. And `fitness_ratio_A_B`
+is the relative fitness of A to B within the same group.
+
+Here’s an example with the *E. coli* data:
 
 ``` r
 
-fitness_Yurtsev_2013 <- calculate_mix_fitness(
+fitness_ecoli <- calculate_mix_fitness(
     data_Yurtsev_2013, 
     var_names = c(
         initial_number_total = "OD_initial",
@@ -161,7 +166,8 @@ fitness_Yurtsev_2013 <- calculate_mix_fitness(
 #> biologically meaningful
 #> Warning: Some fraction_resistant_final values not in range [0, 1]: Not
 #> biologically meaningful
-head(fitness_Yurtsev_2013)
+
+head(fitness_ecoli)
 #>   name_A name_B ampicillin dilution initial_fraction_A initial_ratio_A_B
 #> 1   AmpR   AmpS          0      100      -0.0003784523     -0.0003783091
 #> 2   AmpR   AmpS          0      100       0.0473674563      0.0497226938
@@ -178,70 +184,69 @@ head(fitness_Yurtsev_2013)
 #> 6  54.90398  104.8752      93.15104         0.5235174
 ```
 
-Note the warning messages here.
+Notice the warning messages here.
 [`calculate_mix_fitness()`](https://matryoshkev.github.io/microbimixr/reference/calculate_mix_fitness.md)
-will warn you if any of the data are not biologically meaningful. There
-cannot be a negative number of cells, for example, and fractions are
-bounded at zero and one. Some of the Yurtsev data include negative
-fractions—likely a minor artifact of correcting for background
+will warn you if any of the data aren’t biologically meaningful. There
+can’t be a negative number of cells, for example, and fractions are
+bounded at zero and one. Some of the *E. coli* data include negative
+fractions—probably a minor artifact of correcting for background
 fluorescence in flow cytometry.
 
-## Fitness math: what and why
+This example also shows how you can use the `keep` argument to include
+columns in the fitness results for experimental treatments, experimental
+block, and so on.
 
-[`calculate_mix_fitness()`](https://matryoshkev.github.io/microbimixr/reference/calculate_mix_fitness.md)
-calculates four fitness outcomes from the input data:
+### Fitness math
 
-- `fitness_A` : Fitness of strain A
-- `fitness_B` : Fitness of strain B
-- `fitness_total` : Total-group fitness (strains A and B combined)
-- `fitness_ratio_A_B` : Within-group relative fitness measured as
-  `fitness_A / fitness_B`
+The actual fitness calculations are very simple. If the initial
+abundance of each strain (measured as the number or density of cells or
+virions) is $`n_A`$ and $`n_B`$, and their final abundances are $`n'_A`$
+and $`n'_B`$, then
 
-Some interaction effects are easier to visualize, analyze, and interpret
-with strain-focused fitness outcomes (`fitness_A` and `fitness_B`),
-while others are better suited to group-focused outcomes
-(`fitness_total` and `fitness_ratio_A_B`). So microbimixr includes both
-approaches by default.
+``` math
+\begin{aligned}
+    \texttt{fitness_A} &= \; n'_A / n_A = w_A \\
+    \texttt{fitness_B} &= \; n'_B / n_B = w_B \\
+    \texttt{fitness_total} &= \; (n'_A + n'_B) / (n_A + n_B) \\
+    \texttt{fitness_ratio_A_B} &= \; w_A / w_B
+\end{aligned}
+```
 
-The actual calculations are very simple. If the initial abundance of
-strain A (measured as the number or density of cells or virions) is
-$`n_A`$ and its final abundance is $`n'_A`$, then its fitness is
-$`w_A = n'_A/n_A`$. Similarly, the fitness of strain B is
-$`w_B = n'_B/n_B`$. Total group fitness is
-$`W = (n'_A + n'_B)/(n_A + n_B)`$ and the within-group fitness ratio is
-$`w_A/w_B`$.
-
-These values are unscaled Wrightian fitness measured over the entire
+These quantities are unscaled Wrightian fitness measured over the entire
 time period between the initial and final abundances. They measure fold
-change in absolute abundance. For example: if a bacterial strain’s cell
-density increases 100-fold, its fitness will be $`w = 100`$. If it
+change in absolute abundance. So if a bacterial strain’s cell density
+increases 100-fold, for example, its fitness will be $`w = 100`$. If it
 decreases to 10% of its initial density, its fitness will be
-$`w = 0.1`$.
+$`w = 0.1`$. They’re usually best visualized and analyzed over
+$`\log_{10}`$ scales.
 
-These fitness measures are robust across microbial species and types of
-interaction, make fitness effects quantitatively comparable across
-systems, and can be meaningfully incorporated into theoretical models of
-microbial social evolution (smith & Inglis 2021). They are usually best
-visualized and analyzed over $`\log_{10}`$ scales.
+These fitness measures are robust across different species and types of
+interaction (smith & Inglis 2021). They let you quantitatively compare
+fitness effects across systems. They’re good for statistical analyses of
+effect sizes and confidence intervals. And they’re directly comparable
+to fitness terms in theoretical models of microbial evolution.
 
-[`calculate_mix_fitness()`](https://matryoshkev.github.io/microbimixr/reference/calculate_mix_fitness.md)
-also calculates two measures of mixing frequency:
+The two measures of mix frequency are:
 
-- `initial_fraction_A` : Initial frequency of strain A measured as the
-  fraction of all cells or virions
-- `initial_ratio_A_B` : Initial ratio of strain A to strain B
+``` math
+\begin{aligned}
+    \texttt{initial_fraction_A} &= \; n_A / (n_A + n_B) \\
+    \texttt{initial_ratio_A_B} &= \; n_A / n_B
+\end{aligned}
+```
 
-Microbial interactions may be more relevant or more linear over one
-scale than the other, so microbimixr includes both by default.
-`initial_fraction_A` is calculated as $`n_A / (n_A + n_B)`$ and runs
-from 0 to 1. `initial_ratio_A_B` is calculated as $`n_A / n_B`$. It runs
-from negative infinity to positive infinity and is best analyzed over
+`initial_fraction_A` runs from 0 to 1. `initial_ratio_A_B` runs from
+negative infinity to positive infinity and is best analyzed over
 $`\log_{10}`$ scales.
 
 ## Compare fitness measures
 
-To quickly see which fitness measures are most useful for analyzing your
-dataset, use
+Some microbial interaction are easier to visualize, analyze, and
+interpret with strain-focused fitness outcomes. Others are easier with
+group-focused outcomes (smith & Inglis 2021). And effects can be more
+relevant or more linear over one frequency scale than the other.
+
+To see which measures are most useful for analyzing your dataset, use
 [`plot_mix_fitness()`](https://matryoshkev.github.io/microbimixr/reference/plot_mix_fitness.md).
 It draws a combined figure with strain fitness, total group fitness, and
 relative within-group fitness plotted against two measures of mix
@@ -249,26 +254,22 @@ frequency.
 
 ``` r
 
-plot_mix_fitness(fitness_smith_2010)
+plot_mix_fitness(fitness_myxo)
 ```
 
-![](microbimixr_files/figure-html/compare-smith-1.png)
+![](microbimixr_files/figure-html/compare-myxo-1.png)
 
 These plots help you see which fitness measures and mixing scales are
 more informative or easier to analyze. For example, within-group
 competition among these *Myxo* strains is negatively frequency-dependent
-and a linear function of log mixing ratio.
+and is a linear function of log mixing ratio.
 
-As a tool for data inspection,
-[`plot_mix_fitness()`](https://matryoshkev.github.io/microbimixr/reference/plot_mix_fitness.md)
-shows each data point individually instead of a statistical summary like
-the mean value with error bars. For complex datasets with many strain
-combinations or treatment conditions, it may be easier to inspect
-subsets of the data.
+For complex datasets with many strain combinations or treatment
+conditions, it may be easier to inspect subsets of the data.
 
 ``` r
 
-fitness_Yurtsev_2013 |>
+fitness_ecoli |>
 subset(ampicillin == 100 & dilution == 100) |>
 plot_mix_fitness()
 ```
@@ -303,7 +304,7 @@ settings.
 
 ``` r
 
-plot_total_group_fitness(fitness_smith_2010)
+plot_total_group_fitness(fitness_myxo)
 ```
 
 ![](microbimixr_files/figure-html/plot-smith2010-1.png)
@@ -313,12 +314,12 @@ They also include some basic plotting options:
 ``` r
 
 fig_total <- plot_total_group_fitness(
-    fitness_smith_2010,
+    fitness_myxo,
     xlab = "Initial frequency of evolved strain",
     ylab = "Total sporulation efficiency\n(spores/cell)"
 )
 fig_within <- plot_within_group_fitness(
-    fitness_smith_2010, 
+    fitness_myxo, 
     mix_scale = "ratio",
     xlab = "Initial ratio evolved / ancestral",
     ylab = "Relative efficiency\nevolved / ancestral",
@@ -356,7 +357,7 @@ default settings appropriate for microbial mix experiments.
 
 ``` r
 
-fitness_smith_2010 |>
+fitness_myxo |>
     ggplot(aes(x = initial_fraction_A, y = fitness_total)) +
     scale_x_initial_fraction(name = "Initial frequency of evolved strain") +
     scale_y_fitness_total(name = "Sporulation efficiency\n(spores/cell)", limits = c(1e-8, 1)) +
@@ -374,7 +375,7 @@ different experimental conditions or multiple strain combinations.
 
 names_Yurtsev <- c(name_A = "resistant", name_B = "sensitive")
 name_amp <- "Ampicillin\n(\u03BCg/mL)"
-fitness_Yurtsev_2013 |>
+fitness_ecoli |>
     subset(
         ampicillin %in% c(0, 15, 50, 100) & dilution %in% c(200, 400, 800) &
         fitness_ratio_A_B > 0 & is.finite(fitness_ratio_A_B)

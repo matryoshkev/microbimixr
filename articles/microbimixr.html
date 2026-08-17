@@ -61,15 +61,15 @@
     
 <p>A common way to study interactions among microbes is to do mix
 experiments. You mix together different microbes (different strains of
-bacteria, for example), and then you see how their behavior depends on
-mix frequency. How do they act differently together than on their own?
-How does mixing affect their survival and reproduction—their
-fitness?</p>
+bacteria, for example) and then see how their behavior depends on mix
+frequency. How do they act differently together than on their own? How
+does mixing affect their survival and reproduction—their fitness?</p>
 <p>microbimixr is an R package that helps you analyze mix experiments.
 It helps you get the most out of your data by making it easy to:</p>
 <ul>
 <li>Calculate best-practice fitness measures</li>
-<li>Identify which measures are best for your dataset and question</li>
+<li>Identify which measures are best for your dataset and research
+question</li>
 <li>Make publication-quality figures showing interaction effects</li>
 </ul>
 <p>The basic workflow is:</p>
@@ -78,29 +78,14 @@ It helps you get the most out of your data by making it easy to:</p>
 <li>Calculate fitness measures with
 <code><a href="../reference/calculate_mix_fitness.html">calculate_mix_fitness()</a></code>
 </li>
-<li>Figure out which fitness measures to use with
+<li>Figure out which fitness and frequency measures to use with
 <code><a href="../reference/plot_mix_fitness.html">plot_mix_fitness()</a></code>
 </li>
-<li>Plot the fitness data using microbimixr’s built-in functions or its
-custom add-ins for ggplot2</li>
+<li>Plot the fitness data with microbimixr’s built-in functions or its
+add-ins for ggplot2</li>
 <li>Fit statistical models and plot them with your data</li>
 </ol>
-<!--
- A common experimental design in microbiology is to mix together two different microbes (different genotypes of bacteria, for example) then measure how their behavior depends on mix frequency. How do they act differently together than when they're on their own? How does mixing affect their survival and reproductive success (their fitness)? 
-
-It helps researchers get the most out of their data by providing convenience functions to calculate and plot fitness measures that are: 
-
-* Robust and quantitatively comparable across different species and types of 
-  interaction
-* Useful for both individual and group-centered approaches to social interaction
-* Well-suited to statistical analysis of effect sizes and confidence intervals
-* Meaningful for both kin and multilevel selection theories of social evolution
-
-3. Inspect a diagnostic plot of fitness measures with `plot_mix_fitness()`
-4. Plot measures of interest with `plot_strain_fitness()`, 
-  `plot_total_group_fitness()`, and/or `plot_within_group_fitness()`
-5. Fit statistical models of your choosing and plot them with the fitness data
---><div class="section level2">
+<div class="section level2">
 <h2 id="starting-data">Starting data<a class="anchor" aria-label="anchor" href="#starting-data"></a>
 </h2>
 <p>The starting point for microbimixr is a data frame that has the
@@ -113,8 +98,8 @@ each strain. Each row of the data frame should have all the data for a
 single observational unit: one experimental replicate with one strain
 combination, one mix frequency, one combination of experimental
 treatments, and so on.</p>
-<p>For example, we can look at some datasets included in the package.
-This is from a small experiment mixing a wild-type strain of
+<p>Here’s an example with a dataset that’s included in the package. This
+is from a small experiment mixing a wild-type strain of
 <em>Myxococcus</em> bacteria with an experimentally-evolved cheater
 strain and letting them make multicellular fruiting bodies together
 (smith <em>et al.</em> 2010). The abundance quantities here are the
@@ -166,26 +151,18 @@ experimental treatments with different concentrations of antibiotic
 <h2 id="calculate-fitness">Calculate fitness<a class="anchor" aria-label="anchor" href="#calculate-fitness"></a>
 </h2>
 <p>There are lots of quantities you can calculate to measure microbial
-survival and reproductive success that work well enough for a particular
-biological system and research question. But only a few fitness measures
-are robust enough to be quantitatively meaningful across different
-species and different types of interaction. microbimixr makes it easy to
-calculate them.</p>
-<!-- 
-* Robust and quantitatively comparable across different species and types of 
-  interaction
-* Useful for both individual and group-centered approaches to social interaction
-* Well-suited to statistical analysis of effect sizes and confidence intervals
-
-* Meaningful for both kin and multilevel selection theories of social evolution
--->
-<p>The microbimixr function to calculate fitness is
-<code><a href="../reference/calculate_mix_fitness.html">calculate_mix_fitness()</a></code>. It accepts an input data frame of
-microbial abundances and a character vector describing what the data
-columns are. It returns a data frame with several calculated measures of
-fitness and two measures of mix frequency. For example:</p>
+survival and reproduction. Many of them work well enough for a
+particular system and particular research question. But only a few are
+robust enough to be quantitatively meaningful across different species
+and different types of interaction (smith &amp; Inglis 2021).
+microbimixr makes it easy to calculate the good ones.</p>
+<p>The function to calculate fitness is
+<code><a href="../reference/calculate_mix_fitness.html">calculate_mix_fitness()</a></code>. It takes an input data frame of
+microbial abundances and a character vector describing what the columns
+in the data are. Then it returns a data frame with several measures of
+fitness and two measures of mix frequency. Here’s an example:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">fitness_smith_2010</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/calculate_mix_fitness.html">calculate_mix_fitness</a></span><span class="op">(</span></span>
+<code class="sourceCode R"><span><span class="va">fitness_myxo</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/calculate_mix_fitness.html">calculate_mix_fitness</a></span><span class="op">(</span></span>
 <span>    data <span class="op">=</span> <span class="va">data_smith_2010</span>, </span>
 <span>    var_names <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
 <span>        initial_number_A <span class="op">=</span> <span class="st">"initial_cells_evolved"</span>,</span>
@@ -196,7 +173,7 @@ fitness and two measures of mix frequency. For example:</p>
 <span>        name_B <span class="op">=</span> <span class="st">"GJV10"</span></span>
 <span>    <span class="op">)</span></span>
 <span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">fitness_smith_2010</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">fitness_myxo</span><span class="op">)</span></span>
 <span><span class="co">#&gt;     name_A name_B initial_fraction_A initial_ratio_A_B    fitness_A  fitness_B</span></span>
 <span><span class="co">#&gt; 1 GVB206.3  GJV10         1.00000000               Inf 1.200000e-07         NA</span></span>
 <span><span class="co">#&gt; 2 GVB206.3  GJV10         0.98901099       90.00000000 1.555556e-07 0.00000400</span></span>
@@ -211,12 +188,17 @@ fitness and two measures of mix frequency. For example:</p>
 <span><span class="co">#&gt; 4  9.940000e-04        0.27435897</span></span>
 <span><span class="co">#&gt; 5  1.680000e-02        3.00000000</span></span>
 <span><span class="co">#&gt; 6  3.189011e-02       36.78640777</span></span></code></pre></div>
-<p>To include data columns in the fitness output that describe
-experimental treatments, experimental block, and so on, use the
-<code>keep</code> argument. For the Yurtsev data, for example, we want
-to keep antibiotic concentration and culture dilution:</p>
+<p>The <code>var_names</code> argument tells the function what kinds of
+data you have and which strain is which. In the output,
+<code>initial_fraction_A</code> and <code>initial_ratio_A_B</code> are
+two measures of mix frequency. <code>fitness_A</code> and
+<code>fitness_B</code> are the absolute fitness of each strain.
+<code>fitness_total</code> is the fitness of the total group or
+subpopulation. And <code>fitness_ratio_A_B</code> is the relative
+fitness of A to B within the same group.</p>
+<p>Here’s an example with the <em>E. coli</em> data:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">fitness_Yurtsev_2013</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/calculate_mix_fitness.html">calculate_mix_fitness</a></span><span class="op">(</span></span>
+<code class="sourceCode R"><span><span class="va">fitness_ecoli</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/calculate_mix_fitness.html">calculate_mix_fitness</a></span><span class="op">(</span></span>
 <span>    <span class="va">data_Yurtsev_2013</span>, </span>
 <span>    var_names <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
 <span>        initial_number_total <span class="op">=</span> <span class="st">"OD_initial"</span>,</span>
@@ -232,7 +214,8 @@ to keep antibiotic concentration and culture dilution:</p>
 <span><span class="co">#&gt; biologically meaningful</span></span>
 <span><span class="co">#&gt; Warning: Some fraction_resistant_final values not in range [0, 1]: Not</span></span>
 <span><span class="co">#&gt; biologically meaningful</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">fitness_Yurtsev_2013</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">fitness_ecoli</span><span class="op">)</span></span>
 <span><span class="co">#&gt;   name_A name_B ampicillin dilution initial_fraction_A initial_ratio_A_B</span></span>
 <span><span class="co">#&gt; 1   AmpR   AmpS          0      100      -0.0003784523     -0.0003783091</span></span>
 <span><span class="co">#&gt; 2   AmpR   AmpS          0      100       0.0473674563      0.0497226938</span></span>
@@ -247,118 +230,95 @@ to keep antibiotic concentration and culture dilution:</p>
 <span><span class="co">#&gt; 4  72.68639  132.5415     124.39537         0.5484049</span></span>
 <span><span class="co">#&gt; 5  67.18882  123.0941     112.42060         0.5458331</span></span>
 <span><span class="co">#&gt; 6  54.90398  104.8752      93.15104         0.5235174</span></span></code></pre></div>
-<p>Note the warning messages here. <code><a href="../reference/calculate_mix_fitness.html">calculate_mix_fitness()</a></code>
-will warn you if any of the data are not biologically meaningful. There
-cannot be a negative number of cells, for example, and fractions are
-bounded at zero and one. Some of the Yurtsev data include negative
-fractions—likely a minor artifact of correcting for background
-fluorescence in flow cytometry.</p>
+<p>Notice the warning messages here.
+<code><a href="../reference/calculate_mix_fitness.html">calculate_mix_fitness()</a></code> will warn you if any of the data
+aren’t biologically meaningful. There can’t be a negative number of
+cells, for example, and fractions are bounded at zero and one. Some of
+the <em>E. coli</em> data include negative fractions—probably a minor
+artifact of correcting for background fluorescence in flow
+cytometry.</p>
+<p>This example also shows how you can use the <code>keep</code>
+argument to include columns in the fitness results for experimental
+treatments, experimental block, and so on.</p>
 <!-- 
-* Explain `name_A` and `name_B` arguments?
-* They make explicit which is which in the output itself
-* Can be column or label
-* Column example: Madgwick data
+*`name_A` and `name_B` can be label or column. Column example = dicty data
 -->
-</div>
-<div class="section level2">
-<h2 id="fitness-math-what-and-why">Fitness math: what and why<a class="anchor" aria-label="anchor" href="#fitness-math-what-and-why"></a>
-</h2>
-<p><code><a href="../reference/calculate_mix_fitness.html">calculate_mix_fitness()</a></code> calculates four fitness outcomes
-from the input data:</p>
-<ul>
-<li>
-<code>fitness_A</code> : Fitness of strain A</li>
-<li>
-<code>fitness_B</code> : Fitness of strain B</li>
-<li>
-<code>fitness_total</code> : Total-group fitness (strains A and B
-combined)</li>
-<li>
-<code>fitness_ratio_A_B</code> : Within-group relative fitness
-measured as <code>fitness_A / fitness_B</code>
-</li>
-</ul>
-<p>Some interaction effects are easier to visualize, analyze, and
-interpret with strain-focused fitness outcomes (<code>fitness_A</code>
-and <code>fitness_B</code>), while others are better suited to
-group-focused outcomes (<code>fitness_total</code> and
-<code>fitness_ratio_A_B</code>). So microbimixr includes both approaches
-by default.</p>
-<p>The actual calculations are very simple. If the initial abundance of
-strain A (measured as the number or density of cells or virions) is
+<div class="section level3">
+<h3 id="fitness-math">Fitness math<a class="anchor" aria-label="anchor" href="#fitness-math"></a>
+</h3>
+<p>The actual fitness calculations are very simple. If the initial
+abundance of each strain (measured as the number or density of cells or
+virions) is
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>n</mi><mi>A</mi></msub><annotation encoding="application/x-tex">n_A</annotation></semantics></math>
-and its final abundance is
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msubsup><mi>n</mi><mi>A</mi><mo>′</mo></msubsup><annotation encoding="application/x-tex">n'_A</annotation></semantics></math>,
-then its fitness is
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>w</mi><mi>A</mi></msub><mo>=</mo><msubsup><mi>n</mi><mi>A</mi><mo>′</mo></msubsup><mi>/</mi><msub><mi>n</mi><mi>A</mi></msub></mrow><annotation encoding="application/x-tex">w_A = n'_A/n_A</annotation></semantics></math>.
-Similarly, the fitness of strain B is
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>w</mi><mi>B</mi></msub><mo>=</mo><msubsup><mi>n</mi><mi>B</mi><mo>′</mo></msubsup><mi>/</mi><msub><mi>n</mi><mi>B</mi></msub></mrow><annotation encoding="application/x-tex">w_B = n'_B/n_B</annotation></semantics></math>.
-Total group fitness is
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>W</mi><mo>=</mo><mo stretchy="false" form="prefix">(</mo><msubsup><mi>n</mi><mi>A</mi><mo>′</mo></msubsup><mo>+</mo><msubsup><mi>n</mi><mi>B</mi><mo>′</mo></msubsup><mo stretchy="false" form="postfix">)</mo><mi>/</mi><mo stretchy="false" form="prefix">(</mo><msub><mi>n</mi><mi>A</mi></msub><mo>+</mo><msub><mi>n</mi><mi>B</mi></msub><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">W = (n'_A + n'_B)/(n_A + n_B)</annotation></semantics></math>
-and the within-group fitness ratio is
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>w</mi><mi>A</mi></msub><mi>/</mi><msub><mi>w</mi><mi>B</mi></msub></mrow><annotation encoding="application/x-tex">w_A/w_B</annotation></semantics></math>.</p>
-<p>These values are unscaled Wrightian fitness measured over the entire
-time period between the initial and final abundances. They measure fold
-change in absolute abundance. For example: if a bacterial strain’s cell
-density increases 100-fold, its fitness will be
+and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>n</mi><mi>B</mi></msub><annotation encoding="application/x-tex">n_B</annotation></semantics></math>,
+and their final abundances are
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msubsup><mi>n</mi><mi>A</mi><mo>′</mo></msubsup><annotation encoding="application/x-tex">n'_A</annotation></semantics></math>
+and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msubsup><mi>n</mi><mi>B</mi><mo>′</mo></msubsup><annotation encoding="application/x-tex">n'_B</annotation></semantics></math>,
+then</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><mtext mathvariant="monospace">𝚏𝚒𝚝𝚗𝚎𝚜𝚜_𝙰</mtext></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mspace width="0.278em"></mspace><msubsup><mi>n</mi><mi>A</mi><mo>′</mo></msubsup><mi>/</mi><msub><mi>n</mi><mi>A</mi></msub><mo>=</mo><msub><mi>w</mi><mi>A</mi></msub></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><mtext mathvariant="monospace">𝚏𝚒𝚝𝚗𝚎𝚜𝚜_𝙱</mtext></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mspace width="0.278em"></mspace><msubsup><mi>n</mi><mi>B</mi><mo>′</mo></msubsup><mi>/</mi><msub><mi>n</mi><mi>B</mi></msub><mo>=</mo><msub><mi>w</mi><mi>B</mi></msub></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><mtext mathvariant="monospace">𝚏𝚒𝚝𝚗𝚎𝚜𝚜_𝚝𝚘𝚝𝚊𝚕</mtext></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mspace width="0.278em"></mspace><mo stretchy="false" form="prefix">(</mo><msubsup><mi>n</mi><mi>A</mi><mo>′</mo></msubsup><mo>+</mo><msubsup><mi>n</mi><mi>B</mi><mo>′</mo></msubsup><mo stretchy="false" form="postfix">)</mo><mi>/</mi><mo stretchy="false" form="prefix">(</mo><msub><mi>n</mi><mi>A</mi></msub><mo>+</mo><msub><mi>n</mi><mi>B</mi></msub><mo stretchy="false" form="postfix">)</mo></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><mtext mathvariant="monospace">𝚏𝚒𝚝𝚗𝚎𝚜𝚜_𝚛𝚊𝚝𝚒𝚘_𝙰_𝙱</mtext></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mspace width="0.278em"></mspace><msub><mi>w</mi><mi>A</mi></msub><mi>/</mi><msub><mi>w</mi><mi>B</mi></msub></mtd></mtr></mtable><annotation encoding="application/x-tex">\begin{aligned}
+    \texttt{fitness_A} &amp;= \; n'_A / n_A = w_A \\
+    \texttt{fitness_B} &amp;= \; n'_B / n_B = w_B \\
+    \texttt{fitness_total} &amp;= \; (n'_A + n'_B) / (n_A + n_B) \\
+    \texttt{fitness_ratio_A_B} &amp;= \; w_A / w_B
+\end{aligned}</annotation></semantics></math></p>
+<p>These quantities are unscaled Wrightian fitness measured over the
+entire time period between the initial and final abundances. They
+measure fold change in absolute abundance. So if a bacterial strain’s
+cell density increases 100-fold, for example, its fitness will be
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>w</mi><mo>=</mo><mn>100</mn></mrow><annotation encoding="application/x-tex">w = 100</annotation></semantics></math>.
 If it decreases to 10% of its initial density, its fitness will be
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>w</mi><mo>=</mo><mn>0.1</mn></mrow><annotation encoding="application/x-tex">w = 0.1</annotation></semantics></math>.</p>
-<p>These fitness measures are robust across microbial species and types
-of interaction, make fitness effects quantitatively comparable across
-systems, and can be meaningfully incorporated into theoretical models of
-microbial social evolution (smith &amp; Inglis 2021). They are usually
-best visualized and analyzed over
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>w</mi><mo>=</mo><mn>0.1</mn></mrow><annotation encoding="application/x-tex">w = 0.1</annotation></semantics></math>.
+They’re usually best visualized and analyzed over
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mrow><mi mathvariant="normal">log</mi><mo>⁡</mo></mrow><mn>10</mn></msub><annotation encoding="application/x-tex">\log_{10}</annotation></semantics></math>
 scales.</p>
-<p><code><a href="../reference/calculate_mix_fitness.html">calculate_mix_fitness()</a></code> also calculates two measures of
-mixing frequency:</p>
-<ul>
-<li>
-<code>initial_fraction_A</code> : Initial frequency of strain A
-measured as the fraction of all cells or virions</li>
-<li>
-<code>initial_ratio_A_B</code> : Initial ratio of strain A to strain
-B</li>
-</ul>
-<p>Microbial interactions may be more relevant or more linear over one
-scale than the other, so microbimixr includes both by default.
-<code>initial_fraction_A</code> is calculated as
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>n</mi><mi>A</mi></msub><mi>/</mi><mo stretchy="false" form="prefix">(</mo><msub><mi>n</mi><mi>A</mi></msub><mo>+</mo><msub><mi>n</mi><mi>B</mi></msub><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">n_A / (n_A + n_B)</annotation></semantics></math>
-and runs from 0 to 1. <code>initial_ratio_A_B</code> is calculated as
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>n</mi><mi>A</mi></msub><mi>/</mi><msub><mi>n</mi><mi>B</mi></msub></mrow><annotation encoding="application/x-tex">n_A / n_B</annotation></semantics></math>.
-It runs from negative infinity to positive infinity and is best analyzed
-over
+<p>These fitness measures are robust across different species and types
+of interaction (smith &amp; Inglis 2021). They let you quantitatively
+compare fitness effects across systems. They’re good for statistical
+analyses of effect sizes and confidence intervals. And they’re directly
+comparable to fitness terms in theoretical models of microbial
+evolution.</p>
+<p>The two measures of mix frequency are:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><mtext mathvariant="monospace">𝚒𝚗𝚒𝚝𝚒𝚊𝚕_𝚏𝚛𝚊𝚌𝚝𝚒𝚘𝚗_𝙰</mtext></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mspace width="0.278em"></mspace><msub><mi>n</mi><mi>A</mi></msub><mi>/</mi><mo stretchy="false" form="prefix">(</mo><msub><mi>n</mi><mi>A</mi></msub><mo>+</mo><msub><mi>n</mi><mi>B</mi></msub><mo stretchy="false" form="postfix">)</mo></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><mtext mathvariant="monospace">𝚒𝚗𝚒𝚝𝚒𝚊𝚕_𝚛𝚊𝚝𝚒𝚘_𝙰_𝙱</mtext></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mspace width="0.278em"></mspace><msub><mi>n</mi><mi>A</mi></msub><mi>/</mi><msub><mi>n</mi><mi>B</mi></msub></mtd></mtr></mtable><annotation encoding="application/x-tex">\begin{aligned}
+    \texttt{initial_fraction_A} &amp;= \; n_A / (n_A + n_B) \\
+    \texttt{initial_ratio_A_B} &amp;= \; n_A / n_B
+\end{aligned}</annotation></semantics></math></p>
+<p><code>initial_fraction_A</code> runs from 0 to 1.
+<code>initial_ratio_A_B</code> runs from negative infinity to positive
+infinity and is best analyzed over
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mrow><mi mathvariant="normal">log</mi><mo>⁡</mo></mrow><mn>10</mn></msub><annotation encoding="application/x-tex">\log_{10}</annotation></semantics></math>
 scales.</p>
+</div>
 </div>
 <div class="section level2">
 <h2 id="compare-fitness-measures">Compare fitness measures<a class="anchor" aria-label="anchor" href="#compare-fitness-measures"></a>
 </h2>
-<p>To quickly see which fitness measures are most useful for analyzing
-your dataset, use <code><a href="../reference/plot_mix_fitness.html">plot_mix_fitness()</a></code>. <!-- 
-`plot_mix_fitness()` produces a diagnostic overview of the various fitness effects in a dataset.  
-To quickly see an overview of the various fitness effects in a dataset, use `plot_mix_fitness()`. 
---> It draws a combined figure with strain fitness, total group fitness,
-and relative within-group fitness plotted against two measures of mix
-frequency.</p>
+<p>Some microbial interaction are easier to visualize, analyze, and
+interpret with strain-focused fitness outcomes. Others are easier with
+group-focused outcomes (smith &amp; Inglis 2021). And effects can be
+more relevant or more linear over one frequency scale than the
+other.</p>
+<p>To see which measures are most useful for analyzing your dataset, use
+<code><a href="../reference/plot_mix_fitness.html">plot_mix_fitness()</a></code>. It draws a combined figure with strain
+fitness, total group fitness, and relative within-group fitness plotted
+against two measures of mix frequency.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_mix_fitness.html">plot_mix_fitness</a></span><span class="op">(</span><span class="va">fitness_smith_2010</span><span class="op">)</span></span></code></pre></div>
-<p><img src="microbimixr_files/figure-html/compare-smith-1.png" class="r-plt" alt="" width="100%" style="display: block; margin: auto;"></p>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_mix_fitness.html">plot_mix_fitness</a></span><span class="op">(</span><span class="va">fitness_myxo</span><span class="op">)</span></span></code></pre></div>
+<p><img src="microbimixr_files/figure-html/compare-myxo-1.png" class="r-plt" alt="" width="100%" style="display: block; margin: auto;"></p>
 <p>These plots help you see which fitness measures and mixing scales are
 more informative or easier to analyze. For example, within-group
 competition among these <em>Myxo</em> strains is negatively
-frequency-dependent and a linear function of log mixing ratio.</p>
+frequency-dependent and is a linear function of log mixing ratio.</p>
 <!--
 `plot_mix_fitness()` uses `log10` scales for fitness and mixing ratio, so it will return warnings when some of these values are zero---for data with only one strain, for example. 
+
+As a tool for data inspection, `plot_mix_fitness()` shows each data point individually instead of a statistical summary like the mean value with error bars. 
 -->
-<p>As a tool for data inspection, <code><a href="../reference/plot_mix_fitness.html">plot_mix_fitness()</a></code> shows
-each data point individually instead of a statistical summary like the
-mean value with error bars. For complex datasets with many strain
-combinations or treatment conditions, it may be easier to inspect
-subsets of the data.</p>
+<p>For complex datasets with many strain combinations or treatment
+conditions, it may be easier to inspect subsets of the data.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">fitness_Yurtsev_2013</span> <span class="op">|&gt;</span></span>
+<code class="sourceCode R"><span><span class="va">fitness_ecoli</span> <span class="op">|&gt;</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">ampicillin</span> <span class="op">==</span> <span class="fl">100</span> <span class="op">&amp;</span> <span class="va">dilution</span> <span class="op">==</span> <span class="fl">100</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span><span class="fu"><a href="../reference/plot_mix_fitness.html">plot_mix_fitness</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p><img src="microbimixr_files/figure-html/compare-Yurtsev-1.png" class="r-plt" alt="" width="100%" style="display: block; margin: auto;"></p>
@@ -376,11 +336,6 @@ microbimixr's plotting functions can use fitness datasets that aren't made by `c
 <div class="section level2">
 <h2 id="plot-fitness-with-microbimixr-functions">Plot fitness with microbimixr functions<a class="anchor" aria-label="anchor" href="#plot-fitness-with-microbimixr-functions"></a>
 </h2>
-<!-- 
-Once you know which fitness measures to focus on, you can visualize them with microbimixr's built-in plotting functions: 
-
-microbimixr offers several functions for plotting specific fitness measures as a function of their initial frequency 
--->
 <p>Once you know which fitness measures to focus on, you can use
 microbimixr to visualize them. The simplest way is to use its built-in
 plot functions:</p>
@@ -400,17 +355,17 @@ diagnostic plots. They’re an easy way to plot fitness data with
 reasonable default settings.
 <!-- They work best with simple mix experiments with two strains and no other treatment variables.  --></p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_total_group_fitness.html">plot_total_group_fitness</a></span><span class="op">(</span><span class="va">fitness_smith_2010</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_total_group_fitness.html">plot_total_group_fitness</a></span><span class="op">(</span><span class="va">fitness_myxo</span><span class="op">)</span></span></code></pre></div>
 <p><img src="microbimixr_files/figure-html/plot-smith2010-1.png" class="r-plt" alt="" width="50%" style="display: block; margin: auto;"></p>
 <p>They also include some basic plotting options:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fig_total</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/plot_total_group_fitness.html">plot_total_group_fitness</a></span><span class="op">(</span></span>
-<span>    <span class="va">fitness_smith_2010</span>,</span>
+<span>    <span class="va">fitness_myxo</span>,</span>
 <span>    xlab <span class="op">=</span> <span class="st">"Initial frequency of evolved strain"</span>,</span>
 <span>    ylab <span class="op">=</span> <span class="st">"Total sporulation efficiency\n(spores/cell)"</span></span>
 <span><span class="op">)</span></span>
 <span><span class="va">fig_within</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/plot_within_group_fitness.html">plot_within_group_fitness</a></span><span class="op">(</span></span>
-<span>    <span class="va">fitness_smith_2010</span>, </span>
+<span>    <span class="va">fitness_myxo</span>, </span>
 <span>    mix_scale <span class="op">=</span> <span class="st">"ratio"</span>,</span>
 <span>    xlab <span class="op">=</span> <span class="st">"Initial ratio evolved / ancestral"</span>,</span>
 <span>    ylab <span class="op">=</span> <span class="st">"Relative efficiency\nevolved / ancestral"</span>,</span>
@@ -444,7 +399,7 @@ when they overlap</li>
 <p>These functions return custom plot elements for ggplot2 that have
 default settings appropriate for microbial mix experiments.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">fitness_smith_2010</span> <span class="op">|&gt;</span></span>
+<code class="sourceCode R"><span><span class="va">fitness_myxo</span> <span class="op">|&gt;</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">initial_fraction_A</span>, y <span class="op">=</span> <span class="va">fitness_total</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="../reference/scale_x_initial_fraction.html">scale_x_initial_fraction</a></span><span class="op">(</span>name <span class="op">=</span> <span class="st">"Initial frequency of evolved strain"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="../reference/scale_y_fitness_total.html">scale_y_fitness_total</a></span><span class="op">(</span>name <span class="op">=</span> <span class="st">"Sporulation efficiency\n(spores/cell)"</span>, limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1e-8</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
@@ -457,7 +412,7 @@ different experimental conditions or multiple strain combinations.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">names_Yurtsev</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>name_A <span class="op">=</span> <span class="st">"resistant"</span>, name_B <span class="op">=</span> <span class="st">"sensitive"</span><span class="op">)</span></span>
 <span><span class="va">name_amp</span> <span class="op">&lt;-</span> <span class="st">"Ampicillin\n(\u03BCg/mL)"</span></span>
-<span><span class="va">fitness_Yurtsev_2013</span> <span class="op">|&gt;</span></span>
+<span><span class="va">fitness_ecoli</span> <span class="op">|&gt;</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span></span>
 <span>        <span class="va">ampicillin</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">15</span>, <span class="fl">50</span>, <span class="fl">100</span><span class="op">)</span> <span class="op">&amp;</span> <span class="va">dilution</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">200</span>, <span class="fl">400</span>, <span class="fl">800</span><span class="op">)</span> <span class="op">&amp;</span></span>
 <span>        <span class="va">fitness_ratio_A_B</span> <span class="op">&gt;</span> <span class="fl">0</span> <span class="op">&amp;</span> <span class="fu"><a href="https://rdrr.io/r/base/is.finite.html" class="external-link">is.finite</a></span><span class="op">(</span><span class="va">fitness_ratio_A_B</span><span class="op">)</span></span>
