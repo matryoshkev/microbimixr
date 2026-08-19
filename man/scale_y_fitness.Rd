@@ -5,7 +5,7 @@
 \title{Y-axis for strain fitnesses}
 \usage{
 scale_y_fitness(
-  name = NA,
+  name = waiver(),
   limits = NULL,
   breaks = NA,
   labels = NA,
@@ -14,7 +14,7 @@ scale_y_fitness(
 )
 }
 \arguments{
-\item{name}{Character vector (or expression) for axis title. Or \code{NA}
+\item{name}{Character vector (or expression) for axis title. Or \code{waiver()}
 to automatically name axis.}
 
 \item{limits}{Numeric vector of length two giving axis limits. Or \code{NULL} for

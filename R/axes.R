@@ -7,8 +7,8 @@
 #' calls `ggplot2::scale_x_continuous()` with default settings suited to
 #' microbial mix experiments.
 #'
-#' @param name Character vector (or expression) for axis title.
-#'   Or `NA` to automatically name axis using `strain_A_name`.
+#' @param name Character string or expression to label axis.
+#'   Or `waiver()` to automatically name axis using `strain_names`.
 #'   Or `NULL` for no title.
 #' @param strain_names Character vector or list used to automatically name axis
 #'   if `name = NA`.
@@ -42,14 +42,14 @@
 #' @export
 #'
 scale_x_initial_fraction <- function(
-	name = NA,
+	name = waiver(),
 	strain_names = c(name_A = "strain A", name_B = "strain B"),
 	limits = c(0, 1),
 	breaks = seq(0, 1, by = 0.2),
 	minor_breaks = NULL,
 	...
 ) {
-	if (is.na(name)) {
+	if (is_waiver(name)) {
 		strain_names <- as.list(strain_names)
 		name <- paste("Initial fraction", strain_names$name_A)
 	}
@@ -68,8 +68,8 @@ scale_x_initial_fraction <- function(
 #' frequencies. It calls `ggplot2::scale_x_log10()` with default settings suited
 #' to microbial mix experiments.
 #'
-#' @param name Character vector (or expression) for axis title.
-#'   Or `NA` to automatically name axis using `strain_names`.
+#' @param name Character string or expression to label axis.
+#'   Or `waiver()` to automatically name axis using `strain_names`.
 #'   Or `NULL` for no title.
 #' @param strain_names Character vector or list used to automatically name axis
 #'   if `name = NA`
@@ -115,7 +115,7 @@ scale_x_initial_fraction <- function(
 #' @export
 #'
 scale_x_initial_ratio <- function(
-	name = NA,
+	name = waiver(),
 	strain_names = c(name_A = "strain A", name_B = "strain B"),
 	limits = NULL,
 	breaks = NA,
@@ -123,7 +123,7 @@ scale_x_initial_ratio <- function(
 	minor_breaks = NULL,
 	...
 ) {
-	if (is.na(name)) {
+	if (is_waiver(name)) {
 		strain_names <- as.list(strain_names)
 		name <-
 			paste("Initial ratio", strain_names$name_A, "/", strain_names$name_B)
@@ -148,7 +148,7 @@ scale_x_initial_ratio <- function(
 #' to Wrightian fitness data.
 #'
 #' @inheritParams scale_x_initial_ratio
-#' @param name Character vector (or expression) for axis title. Or `NA`
+#' @param name Character vector (or expression) for axis title. Or `waiver()`
 #'   to automatically name axis.
 #' @param limits Numeric vector of length two giving axis limits. Or `NULL` for
 #'   automatic limits that include 1 for reference (no change in abundance)
@@ -185,14 +185,16 @@ scale_x_initial_ratio <- function(
 #' @export
 #'
 scale_y_fitness <- function(
-	name = NA,
+	name = waiver(),
 	limits = NULL,
 	breaks = NA,
 	labels = NA,
 	minor_breaks = NA,
 	...
 ) {
-	if (is.na(name)) {name <- "Wrightian fitness\n (final no. / initial no.)"}
+	if (is_waiver(name)) {
+		name <- "Wrightian fitness\n (final no. / initial no.)"
+	}
 	if (is.null(limits)) {limits <- expand_limits_log10}
 	if (is.na(breaks)) {breaks <- breaks_log10}
 	if (is.na(labels)) {labels <- labels_log10}
@@ -246,14 +248,16 @@ scale_y_fitness <- function(
 #' @export
 #'
 scale_y_fitness_total <- function(
-	name = NA,
+	name = waiver(),
 	limits = NULL,
 	breaks = NA,
 	labels = NA,
 	minor_breaks = NA,
 	...
 ) {
-	if (is.na(name)) {name <- "Total group fitness\n(final no. / initial no.)"}
+	if (is_waiver(name)) {
+		name <- "Total group fitness\n(final no. / initial no.)"
+	}
 	scale_y_fitness(
 		name = name,
 		limits = limits,
@@ -273,7 +277,7 @@ scale_y_fitness_total <- function(
 #'
 #' @inheritParams scale_y_fitness
 #' @param name Character vector (or expression) for axis title.
-#'   Or `NA` to automatically name axis using `strain_names`.
+#'   Or `waiver()` to automatically name axis using `strain_names`.
 #'   Or `NULL` for no title.
 #' @param strain_names Character vector or list used to automatically name axis
 #'   if `name = NA`
@@ -327,7 +331,7 @@ scale_y_fitness_total <- function(
 #' @export
 #'
 scale_y_fitness_ratio <- function(
-	name = NA,
+	name = waiver(),
 	strain_names = c(name_A = "strain A", name_B = "strain B"),
 	limits = NULL,
 	breaks = NA,
@@ -335,7 +339,7 @@ scale_y_fitness_ratio <- function(
 	minor_breaks = NA,
 	...
 ) {
-	if (is.na(name)) {
+	if (is_waiver(name)) {
 		strain_names <- as.list(strain_names)
 		name <- paste(
 			"Fitness ratio\n", strain_names$name_A, "/", strain_names$name_B
@@ -437,3 +441,7 @@ minor_breaks_log10 <- function(limits) {
 # 	max <- 10^(midpoint + span/2)
 # 	c(min, max)
 # }
+
+# Test for ggplot2 waiver object
+is_waiver <- function(x) {inherits(x, "waiver")}
+

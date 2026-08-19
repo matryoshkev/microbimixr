@@ -159,8 +159,10 @@ plot_strain_fitness <- function(
 
 	# Scale options
 	mix_scale <- rlang::arg_match(mix_scale, c("fraction", "ratio"))
-	if (missing(xlim)) { xlim <- NULL }
-	if (missing(ylim)) { ylim <- NULL }
+	if (missing(xlab)) {xlab <- waiver()}
+	if (missing(ylab)) {ylab <- waiver()}
+	if (missing(xlim)) {xlim <- NULL}
+	if (missing(ylim)) {ylim <- NULL}
 
 	# Make long-format data frame for plot
 	data_to_plot <- stats::reshape(
@@ -259,8 +261,10 @@ plot_total_group_fitness <- function(
 
 	# Scale options
 	mix_scale <- rlang::arg_match(mix_scale, c("fraction", "ratio"))
-	if (missing(xlim)) { xlim <- NULL }
-	if (missing(ylim)) { ylim <- NULL }
+	if (missing(xlab)) {xlab <- waiver()}
+	if (missing(ylab)) {ylab <- waiver()}
+	if (missing(xlim)) {xlim <- NULL}
+	if (missing(ylim)) {ylim <- NULL}
 
 	# Construct plot
 	fig_output <-
@@ -349,8 +353,10 @@ plot_within_group_fitness <- function(
 
 	# Scale options
 	mix_scale <- rlang::arg_match(mix_scale, c("fraction", "ratio"))
-	if (missing(xlim)) { xlim <- NULL }
-	if (missing(ylim)) { ylim <- NULL }
+	if (missing(xlab)) {xlab <- waiver()}
+	if (missing(ylab)) {ylab <- waiver()}
+	if (missing(xlim)) {xlim <- NULL}
+	if (missing(ylim)) {ylim <- NULL}
 
 	# Filter out single-strain data
 	if (mix_scale == "fraction") {
@@ -521,7 +527,7 @@ add_mix_axis <- function(
 	mix_scale,
 	var_names,
 	strain_names,
-	xlab = NA,
+	xlab = waiver(),
 	xlim = NULL
 ) {
 	fig_input + switch(

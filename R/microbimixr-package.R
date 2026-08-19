@@ -9,11 +9,12 @@
 #' * Identify which measures are best for a specific dataset and research question
 #' * Make publication-quality figures showing interaction effects
 #'
-#' @importFrom rlang .data
 #' @keywords internal
 "_PACKAGE"
 
 ## usethis namespace: start
+#' @importFrom rlang .data
+#' @importFrom ggplot2 waiver
 ## usethis namespace: end
 NULL
 

@@ -5,7 +5,7 @@
 \title{X-axis for initial strain ratio}
 \usage{
 scale_x_initial_ratio(
-  name = NA,
+  name = waiver(),
   strain_names = c(name_A = "strain A", name_B = "strain B"),
   limits = NULL,
   breaks = NA,
@@ -15,8 +15,8 @@ scale_x_initial_ratio(
 )
 }
 \arguments{
-\item{name}{Character vector (or expression) for axis title.
-Or \code{NA} to automatically name axis using \code{strain_names}.
+\item{name}{Character string or expression to label axis.
+Or \code{waiver()} to automatically name axis using \code{strain_names}.
 Or \code{NULL} for no title.}
 
 \item{strain_names}{Character vector or list used to automatically name axis
