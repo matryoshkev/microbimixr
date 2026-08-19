@@ -158,8 +158,9 @@ scale_x_initial_ratio <- function(
 #' @param limits Numeric vector of length two giving axis limits. Or `NULL` for
 #'   automatic limits that include 1 for reference (no change in abundance)
 #'   and span a minimum 10-fold range.
-#' @param minor_breaks Numeric vector of positions for axis minor breaks. Or
-#'  `NA` for automatic breaks. Or `NULL` for no breaks.
+#' @param minor_breaks Numeric vector of positions for axis minor breaks.
+#'   Or `waiver()` for automatic minor breaks.
+#'   Or `NULL` for no breaks.
 #'
 #' @details
 #' `scale_y_fitness()` expects data that are absolute (unscaled) Wrightian
@@ -194,7 +195,7 @@ scale_y_fitness <- function(
 	limits = NULL,
 	breaks = waiver(),
 	labels = NA,
-	minor_breaks = NA,
+	minor_breaks = waiver(),
 	...
 ) {
 	if (is_waiver(name)) {
@@ -203,7 +204,7 @@ scale_y_fitness <- function(
 	if (is.null(limits)) {limits <- expand_limits_log10}
 	if (is_waiver(breaks)) {breaks <- breaks_log10}
 	if (is.na(labels)) {labels <- labels_log10}
-	if (is.na(minor_breaks)) {minor_breaks <- minor_breaks_log10}
+	if (is_waiver(minor_breaks)) {minor_breaks <- minor_breaks_log10}
 	ggplot2::scale_y_log10(
 		name = name,
 		limits = limits,
@@ -257,7 +258,7 @@ scale_y_fitness_total <- function(
 	limits = NULL,
 	breaks = waiver(),
 	labels = NA,
-	minor_breaks = NA,
+	minor_breaks = waiver(),
 	...
 ) {
 	if (is_waiver(name)) {
@@ -341,7 +342,7 @@ scale_y_fitness_ratio <- function(
 	limits = NULL,
 	breaks = waiver(),
 	labels = NA,
-	minor_breaks = NA,
+	minor_breaks = waiver(),
 	...
 ) {
 	if (is_waiver(name)) {
@@ -353,7 +354,7 @@ scale_y_fitness_ratio <- function(
 	if (is.null(limits)) {limits <- expand_limits_log10}
 	if (is_waiver(breaks)) {breaks <- breaks_log10}
 	if (is.na(labels)) {labels <- labels_log10}
-	if (is.na(minor_breaks)) {minor_breaks <- minor_breaks_log10}
+	if (is_waiver(minor_breaks)) {minor_breaks <- minor_breaks_log10}
 	ggplot2::scale_y_log10(
 		name = name,
 		limits = limits,

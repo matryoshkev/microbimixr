@@ -10,7 +10,7 @@ scale_y_fitness_ratio(
   limits = NULL,
   breaks = waiver(),
   labels = NA,
-  minor_breaks = NA,
+  minor_breaks = waiver(),
   ...
 )
 }
@@ -42,8 +42,9 @@ for details.
 \item \code{NULL} for no labels
 }}
 
-\item{minor_breaks}{Numeric vector of positions for axis minor breaks. Or
-\code{NA} for automatic breaks. Or \code{NULL} for no breaks.}
+\item{minor_breaks}{Numeric vector of positions for axis minor breaks.
+Or \code{waiver()} for automatic minor breaks.
+Or \code{NULL} for no breaks.}
 
 \item{...}{Other arguments passed to \code{\link[ggplot2:scale_continuous]{ggplot2::scale_x_log10()}}}
 }
