@@ -48,9 +48,9 @@ default settings suited to Wrightian fitness data.</p>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">scale_y_fitness_total</span><span class="op">(</span></span>
 <span>  name <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/waiver.html" class="external-link">waiver</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  limits <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  breaks <span class="op">=</span> <span class="cn">NA</span>,</span>
-<span>  labels <span class="op">=</span> <span class="cn">NA</span>,</span>
-<span>  minor_breaks <span class="op">=</span> <span class="cn">NA</span>,</span>
+<span>  breaks <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/waiver.html" class="external-link">waiver</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  labels <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/waiver.html" class="external-link">waiver</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  minor_breaks <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/waiver.html" class="external-link">waiver</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -71,16 +71,17 @@ and span a minimum 10-fold range.</p></dd>
 
 
 <dt id="arg-breaks">breaks<a class="anchor" aria-label="anchor" href="#arg-breaks"></a></dt>
-<dd><p>Numeric vector of positions for axis breaks. Or <code>NA</code> for
-automatic breaks. Or <code>NULL</code> for no breaks.</p></dd>
+<dd><p>Numeric vector of positions for axis breaks.
+Or <code><a href="https://ggplot2.tidyverse.org/reference/waiver.html" class="external-link">waiver()</a></code> for automatic breaks.
+Or <code>NULL</code> for no breaks.</p></dd>
 
 
 <dt id="arg-labels">labels<a class="anchor" aria-label="anchor" href="#arg-labels"></a></dt>
 <dd><p>One of:</p><ul><li><p>Character vector giving labels for breaks (must be same length as
 <code>breaks</code>)</p></li>
-<li><p><code>NA</code> for automatic labels that use a simple number format when all breaks
-are between 0.01 and 100. For wider limits they use \(10^x\) format
-except for \(1\).</p></li>
+<li><p><code><a href="https://ggplot2.tidyverse.org/reference/waiver.html" class="external-link">waiver()</a></code> for automatic labels that use a simple number format when all
+breaks are between 0.01 and 100. For wider limits they use \(10^x\)
+format except for \(1\).</p></li>
 <li><p>Expression vector (must be the same length as <code>breaks</code>). See ?plotmath
 for details.</p></li>
 <li><p><code>NULL</code> for no labels</p></li>
@@ -88,8 +89,9 @@ for details.</p></li>
 
 
 <dt id="arg-minor-breaks">minor_breaks<a class="anchor" aria-label="anchor" href="#arg-minor-breaks"></a></dt>
-<dd><p>Numeric vector of positions for axis minor breaks. Or
-<code>NA</code> for automatic breaks. Or <code>NULL</code> for no breaks.</p></dd>
+<dd><p>Numeric vector of positions for axis minor breaks.
+Or <code><a href="https://ggplot2.tidyverse.org/reference/waiver.html" class="external-link">waiver()</a></code> for automatic minor breaks.
+Or <code>NULL</code> for no breaks.</p></dd>
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>

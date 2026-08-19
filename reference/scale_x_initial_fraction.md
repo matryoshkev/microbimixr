@@ -12,8 +12,8 @@ with default settings suited to microbial mix experiments.
 scale_x_initial_fraction(
   name = waiver(),
   strain_names = c(name_A = "strain A", name_B = "strain B"),
-  limits = c(0, 1),
-  breaks = seq(0, 1, by = 0.2),
+  limits = NULL,
+  breaks = waiver(),
   minor_breaks = NULL,
   ...
 )
@@ -34,12 +34,15 @@ scale_x_initial_fraction(
 
 - limits:
 
-  Numeric vector of length two giving axis limits. The default `c(0, 1)`
-  shows the full range of possible mix frequencies.
+  Numeric vector of length two giving axis limits. Or `NULL` for
+  automatic limits `c(0, 1)` showing the full range of possible mix
+  frequencies.
 
 - breaks:
 
-  Numeric vector of positions for axis breaks. Or `NULL` for no breaks.
+  Numeric vector of positions for axis breaks. Or
+  [`waiver()`](https://ggplot2.tidyverse.org/reference/waiver.html) for
+  automatic breaks. Or `NULL` for no breaks.
 
 - minor_breaks:
 

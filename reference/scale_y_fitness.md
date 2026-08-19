@@ -11,9 +11,9 @@ with default settings suited to Wrightian fitness data.
 scale_y_fitness(
   name = waiver(),
   limits = NULL,
-  breaks = NA,
-  labels = NA,
-  minor_breaks = NA,
+  breaks = waiver(),
+  labels = waiver(),
+  minor_breaks = waiver(),
   ...
 )
 ```
@@ -34,8 +34,9 @@ scale_y_fitness(
 
 - breaks:
 
-  Numeric vector of positions for axis breaks. Or `NA` for automatic
-  breaks. Or `NULL` for no breaks.
+  Numeric vector of positions for axis breaks. Or
+  [`waiver()`](https://ggplot2.tidyverse.org/reference/waiver.html) for
+  automatic breaks. Or `NULL` for no breaks.
 
 - labels:
 
@@ -44,9 +45,10 @@ scale_y_fitness(
   - Character vector giving labels for breaks (must be same length as
     `breaks`)
 
-  - `NA` for automatic labels that use a simple number format when all
-    breaks are between 0.01 and 100. For wider limits they use \\10^x\\
-    format except for \\1\\.
+  - [`waiver()`](https://ggplot2.tidyverse.org/reference/waiver.html)
+    for automatic labels that use a simple number format when all breaks
+    are between 0.01 and 100. For wider limits they use \\10^x\\ format
+    except for \\1\\.
 
   - Expression vector (must be the same length as `breaks`). See
     ?plotmath for details.
@@ -55,8 +57,9 @@ scale_y_fitness(
 
 - minor_breaks:
 
-  Numeric vector of positions for axis minor breaks. Or `NA` for
-  automatic breaks. Or `NULL` for no breaks.
+  Numeric vector of positions for axis minor breaks. Or
+  [`waiver()`](https://ggplot2.tidyverse.org/reference/waiver.html) for
+  automatic minor breaks. Or `NULL` for no breaks.
 
 - ...:
 

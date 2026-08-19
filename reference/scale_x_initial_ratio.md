@@ -12,8 +12,8 @@ scale_x_initial_ratio(
   name = waiver(),
   strain_names = c(name_A = "strain A", name_B = "strain B"),
   limits = NULL,
-  breaks = NA,
-  labels = NA,
+  breaks = waiver(),
+  labels = waiver(),
   minor_breaks = NULL,
   ...
 )
@@ -40,8 +40,9 @@ scale_x_initial_ratio(
 
 - breaks:
 
-  Numeric vector of positions for axis breaks. Or `NA` for automatic
-  breaks. Or `NULL` for no breaks.
+  Numeric vector of positions for axis breaks. Or
+  [`waiver()`](https://ggplot2.tidyverse.org/reference/waiver.html) for
+  automatic breaks. Or `NULL` for no breaks.
 
 - labels:
 
@@ -50,9 +51,10 @@ scale_x_initial_ratio(
   - Character vector giving labels for breaks (must be same length as
     `breaks`)
 
-  - `NA` for automatic labels that use a simple number format when all
-    breaks are between 0.01 and 100. For wider limits they use \\10^x\\
-    format except for \\1\\.
+  - [`waiver()`](https://ggplot2.tidyverse.org/reference/waiver.html)
+    for automatic labels that use a simple number format when all breaks
+    are between 0.01 and 100. For wider limits they use \\10^x\\ format
+    except for \\1\\.
 
   - Expression vector (must be the same length as `breaks`). See
     ?plotmath for details.
