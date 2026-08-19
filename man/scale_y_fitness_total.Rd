@@ -8,7 +8,7 @@ scale_y_fitness_total(
   name = waiver(),
   limits = NULL,
   breaks = waiver(),
-  labels = NA,
+  labels = waiver(),
   minor_breaks = waiver(),
   ...
 )
@@ -29,9 +29,9 @@ Or \code{NULL} for no breaks.}
 \itemize{
 \item Character vector giving labels for breaks (must be same length as
 \code{breaks})
-\item \code{NA} for automatic labels that use a simple number format when all breaks
-are between 0.01 and 100. For wider limits they use \eqn{10^x} format
-except for \eqn{1}.
+\item \code{waiver()} for automatic labels that use a simple number format when all
+breaks are between 0.01 and 100. For wider limits they use \eqn{10^x}
+format except for \eqn{1}.
 \item Expression vector (must be the same length as \code{breaks}). See ?plotmath
 for details.
 \item \code{NULL} for no labels

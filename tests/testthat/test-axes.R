@@ -23,6 +23,26 @@ test_that("axes accept specified breaks", {
 	expect_no_warning(scale_y_fitness_ratio(breaks = log_breaks))
 })
 
+test_that("axes accept specified break labels", {
+	expect_no_warning(scale_x_initial_fraction(
+		breaks = c(0, 0.5, 1), labels = c("Only A", "A+B", "Only B")
+	))
+	log_breaks <- c(0.1, 1, 10)
+	log_labels <- c("low", "medium", "high")
+	expect_no_warning(
+		scale_x_initial_ratio(breaks = log_breaks, labels = log_labels)
+	)
+	expect_no_warning(
+		scale_y_fitness(breaks = log_breaks, labels = log_labels)
+	)
+	expect_no_warning(
+		scale_y_fitness_total(breaks = log_breaks, labels = log_labels)
+	)
+	expect_no_warning(
+		scale_y_fitness_ratio(breaks = log_breaks, labels = log_labels)
+	)
+})
+
 test_that("axes accept specified minor_breaks", {
 	expect_no_warning(
 		scale_x_initial_fraction(minor_breaks = seq(0, 1, by = 0.1))

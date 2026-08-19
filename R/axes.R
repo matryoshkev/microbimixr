@@ -86,9 +86,9 @@ scale_x_initial_fraction <- function(
 #' @param labels One of:
 #'   * Character vector giving labels for breaks (must be same length as
 #'     `breaks`)
-#'   * `NA` for automatic labels that use a simple number format when all breaks
-#'     are between 0.01 and 100. For wider limits they use \eqn{10^x} format
-#'     except for \eqn{1}.
+#'   * `waiver()` for automatic labels that use a simple number format when all
+#'     breaks are between 0.01 and 100. For wider limits they use \eqn{10^x}
+#'     format except for \eqn{1}.
 #'   * Expression vector (must be the same length as `breaks`). See ?plotmath
 #'     for details.
 #'   * `NULL` for no labels
@@ -124,7 +124,7 @@ scale_x_initial_ratio <- function(
 	strain_names = c(name_A = "strain A", name_B = "strain B"),
 	limits = NULL,
 	breaks = waiver(),
-	labels = NA,
+	labels = waiver(),
 	minor_breaks = NULL,
 	...
 ) {
@@ -135,7 +135,7 @@ scale_x_initial_ratio <- function(
 	}
 	if (is.null(limits)) {limits <- expand_limits_log10}
 	if (is_waiver(breaks)) {breaks <- breaks_log10}
-	if (is.na(labels)) {labels <- labels_log10}
+	if (is_waiver(labels)) {labels <- labels_log10}
 	ggplot2::scale_x_log10(
 		name = name,
 		limits = limits,
@@ -194,7 +194,7 @@ scale_y_fitness <- function(
 	name = waiver(),
 	limits = NULL,
 	breaks = waiver(),
-	labels = NA,
+	labels = waiver(),
 	minor_breaks = waiver(),
 	...
 ) {
@@ -203,7 +203,7 @@ scale_y_fitness <- function(
 	}
 	if (is.null(limits)) {limits <- expand_limits_log10}
 	if (is_waiver(breaks)) {breaks <- breaks_log10}
-	if (is.na(labels)) {labels <- labels_log10}
+	if (is_waiver(labels)) {labels <- labels_log10}
 	if (is_waiver(minor_breaks)) {minor_breaks <- minor_breaks_log10}
 	ggplot2::scale_y_log10(
 		name = name,
@@ -257,7 +257,7 @@ scale_y_fitness_total <- function(
 	name = waiver(),
 	limits = NULL,
 	breaks = waiver(),
-	labels = NA,
+	labels = waiver(),
 	minor_breaks = waiver(),
 	...
 ) {
@@ -341,7 +341,7 @@ scale_y_fitness_ratio <- function(
 	strain_names = c(name_A = "strain A", name_B = "strain B"),
 	limits = NULL,
 	breaks = waiver(),
-	labels = NA,
+	labels = waiver(),
 	minor_breaks = waiver(),
 	...
 ) {
@@ -353,7 +353,7 @@ scale_y_fitness_ratio <- function(
 	}
 	if (is.null(limits)) {limits <- expand_limits_log10}
 	if (is_waiver(breaks)) {breaks <- breaks_log10}
-	if (is.na(labels)) {labels <- labels_log10}
+	if (is_waiver(labels)) {labels <- labels_log10}
 	if (is_waiver(minor_breaks)) {minor_breaks <- minor_breaks_log10}
 	ggplot2::scale_y_log10(
 		name = name,
