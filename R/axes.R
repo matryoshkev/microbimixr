@@ -16,6 +16,7 @@
 #'   Or `NULL` for automatic limits `c(0, 1)` showing the full range of possible
 #'   mix frequencies.
 #' @param breaks Numeric vector of positions for axis breaks.
+#'   Or `waiver()` for automatic breaks.
 #'   Or `NULL` for no breaks.
 #' @param minor_breaks Numeric vector of positions for axis minor breaks.
 #'   Or `NULL` for no minor breaks.
@@ -46,7 +47,7 @@ scale_x_initial_fraction <- function(
 	name = waiver(),
 	strain_names = c(name_A = "strain A", name_B = "strain B"),
 	limits = NULL,
-	breaks = seq(0, 1, by = 0.2),
+	breaks = waiver(),
 	minor_breaks = NULL,
 	...
 ) {
@@ -55,6 +56,7 @@ scale_x_initial_fraction <- function(
 		name <- paste("Initial fraction", strain_names$name_A)
 	}
 	if (is.null(limits)) {limits <- c(0, 1)}
+	if (is_waiver(breaks)) {breaks <- seq(0, 1, by = 0.2)}
 	ggplot2::scale_x_continuous(
 		name = name,
 		limits = limits,
@@ -78,8 +80,9 @@ scale_x_initial_fraction <- function(
 #' @param limits Numeric vector of length two giving axis limits. Or `NULL` for
 #'   automatic limits that include 1 for reference (equal 50:50 mix of strains)
 #'   and span a minimum 10-fold range.
-#' @param breaks Numeric vector of positions for axis breaks. Or `NA` for
-#'   automatic breaks. Or `NULL` for no breaks.
+#' @param breaks Numeric vector of positions for axis breaks.
+#'   Or `waiver()` for automatic breaks.
+#'   Or `NULL` for no breaks.
 #' @param labels One of:
 #'   * Character vector giving labels for breaks (must be same length as
 #'     `breaks`)
@@ -120,7 +123,7 @@ scale_x_initial_ratio <- function(
 	name = waiver(),
 	strain_names = c(name_A = "strain A", name_B = "strain B"),
 	limits = NULL,
-	breaks = NA,
+	breaks = waiver(),
 	labels = NA,
 	minor_breaks = NULL,
 	...
@@ -131,7 +134,7 @@ scale_x_initial_ratio <- function(
 			paste("Initial ratio", strain_names$name_A, "/", strain_names$name_B)
 	}
 	if (is.null(limits)) {limits <- expand_limits_log10}
-	if (is.na(breaks)) {breaks <- breaks_log10}
+	if (is_waiver(breaks)) {breaks <- breaks_log10}
 	if (is.na(labels)) {labels <- labels_log10}
 	ggplot2::scale_x_log10(
 		name = name,
@@ -189,7 +192,7 @@ scale_x_initial_ratio <- function(
 scale_y_fitness <- function(
 	name = waiver(),
 	limits = NULL,
-	breaks = NA,
+	breaks = waiver(),
 	labels = NA,
 	minor_breaks = NA,
 	...
@@ -198,7 +201,7 @@ scale_y_fitness <- function(
 		name <- "Wrightian fitness\n (final no. / initial no.)"
 	}
 	if (is.null(limits)) {limits <- expand_limits_log10}
-	if (is.na(breaks)) {breaks <- breaks_log10}
+	if (is_waiver(breaks)) {breaks <- breaks_log10}
 	if (is.na(labels)) {labels <- labels_log10}
 	if (is.na(minor_breaks)) {minor_breaks <- minor_breaks_log10}
 	ggplot2::scale_y_log10(
@@ -252,7 +255,7 @@ scale_y_fitness <- function(
 scale_y_fitness_total <- function(
 	name = waiver(),
 	limits = NULL,
-	breaks = NA,
+	breaks = waiver(),
 	labels = NA,
 	minor_breaks = NA,
 	...
@@ -336,7 +339,7 @@ scale_y_fitness_ratio <- function(
 	name = waiver(),
 	strain_names = c(name_A = "strain A", name_B = "strain B"),
 	limits = NULL,
-	breaks = NA,
+	breaks = waiver(),
 	labels = NA,
 	minor_breaks = NA,
 	...
@@ -348,7 +351,7 @@ scale_y_fitness_ratio <- function(
 		)
 	}
 	if (is.null(limits)) {limits <- expand_limits_log10}
-	if (is.na(breaks)) {breaks <- breaks_log10}
+	if (is_waiver(breaks)) {breaks <- breaks_log10}
 	if (is.na(labels)) {labels <- labels_log10}
 	if (is.na(minor_breaks)) {minor_breaks <- minor_breaks_log10}
 	ggplot2::scale_y_log10(

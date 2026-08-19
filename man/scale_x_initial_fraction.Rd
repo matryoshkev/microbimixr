@@ -8,7 +8,7 @@ scale_x_initial_fraction(
   name = waiver(),
   strain_names = c(name_A = "strain A", name_B = "strain B"),
   limits = NULL,
-  breaks = seq(0, 1, by = 0.2),
+  breaks = waiver(),
   minor_breaks = NULL,
   ...
 )
@@ -26,6 +26,7 @@ Or \code{NULL} for automatic limits \code{c(0, 1)} showing the full range of pos
 mix frequencies.}
 
 \item{breaks}{Numeric vector of positions for axis breaks.
+Or \code{waiver()} for automatic breaks.
 Or \code{NULL} for no breaks.}
 
 \item{minor_breaks}{Numeric vector of positions for axis minor breaks.

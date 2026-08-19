@@ -7,7 +7,7 @@
 scale_y_fitness_total(
   name = waiver(),
   limits = NULL,
-  breaks = NA,
+  breaks = waiver(),
   labels = NA,
   minor_breaks = NA,
   ...
@@ -21,8 +21,9 @@ to automatically name axis.}
 automatic limits that include 1 for reference (no change in abundance)
 and span a minimum 10-fold range.}
 
-\item{breaks}{Numeric vector of positions for axis breaks. Or \code{NA} for
-automatic breaks. Or \code{NULL} for no breaks.}
+\item{breaks}{Numeric vector of positions for axis breaks.
+Or \code{waiver()} for automatic breaks.
+Or \code{NULL} for no breaks.}
 
 \item{labels}{One of:
 \itemize{

@@ -8,7 +8,7 @@ scale_x_initial_ratio(
   name = waiver(),
   strain_names = c(name_A = "strain A", name_B = "strain B"),
   limits = NULL,
-  breaks = NA,
+  breaks = waiver(),
   labels = NA,
   minor_breaks = NULL,
   ...
@@ -26,8 +26,9 @@ if \code{name = NA}}
 automatic limits that include 1 for reference (equal 50:50 mix of strains)
 and span a minimum 10-fold range.}
 
-\item{breaks}{Numeric vector of positions for axis breaks. Or \code{NA} for
-automatic breaks. Or \code{NULL} for no breaks.}
+\item{breaks}{Numeric vector of positions for axis breaks.
+Or \code{waiver()} for automatic breaks.
+Or \code{NULL} for no breaks.}
 
 \item{labels}{One of:
 \itemize{
