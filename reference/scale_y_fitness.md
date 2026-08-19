@@ -9,7 +9,7 @@ with default settings suited to Wrightian fitness data.
 
 ``` r
 scale_y_fitness(
-  name = NA,
+  name = waiver(),
   limits = NULL,
   breaks = NA,
   labels = NA,
@@ -22,7 +22,8 @@ scale_y_fitness(
 
 - name:
 
-  Character vector (or expression) for axis title. Or `NA` to
+  Character vector (or expression) for axis title. Or
+  [`waiver()`](https://ggplot2.tidyverse.org/reference/waiver.html) to
   automatically name axis.
 
 - limits:

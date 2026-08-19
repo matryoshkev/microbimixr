@@ -10,7 +10,7 @@ with default settings suited to microbial mix experiments.
 
 ``` r
 scale_x_initial_fraction(
-  name = NA,
+  name = waiver(),
   strain_names = c(name_A = "strain A", name_B = "strain B"),
   limits = c(0, 1),
   breaks = seq(0, 1, by = 0.2),
@@ -23,8 +23,9 @@ scale_x_initial_fraction(
 
 - name:
 
-  Character vector (or expression) for axis title. Or `NA` to
-  automatically name axis using `strain_A_name`. Or `NULL` for no title.
+  Character string or expression to label axis. Or
+  [`waiver()`](https://ggplot2.tidyverse.org/reference/waiver.html) to
+  automatically name axis using `strain_names`. Or `NULL` for no title.
 
 - strain_names:
 
