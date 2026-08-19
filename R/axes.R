@@ -13,7 +13,8 @@
 #' @param strain_names Character vector or list used to automatically name axis
 #'   if `name = NA`.
 #' @param limits Numeric vector of length two giving axis limits.
-#'   The default `c(0, 1)` shows the full range of possible mix frequencies.
+#'   Or `NULL` for automatic limits `c(0, 1)` showing the full range of possible
+#'   mix frequencies.
 #' @param breaks Numeric vector of positions for axis breaks.
 #'   Or `NULL` for no breaks.
 #' @param minor_breaks Numeric vector of positions for axis minor breaks.
@@ -44,7 +45,7 @@
 scale_x_initial_fraction <- function(
 	name = waiver(),
 	strain_names = c(name_A = "strain A", name_B = "strain B"),
-	limits = c(0, 1),
+	limits = NULL,
 	breaks = seq(0, 1, by = 0.2),
 	minor_breaks = NULL,
 	...
@@ -53,6 +54,7 @@ scale_x_initial_fraction <- function(
 		strain_names <- as.list(strain_names)
 		name <- paste("Initial fraction", strain_names$name_A)
 	}
+	if (is.null(limits)) {limits <- c(0, 1)}
 	ggplot2::scale_x_continuous(
 		name = name,
 		limits = limits,
