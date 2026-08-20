@@ -15,7 +15,8 @@ plot_strain_fitness(
   color = c("tan4", "lightsteelblue4"),
   fill = c("tan", "lightsteelblue"),
   shape = 21,
-  size = 1.5
+  size = 1.5,
+  drop_NA = TRUE
 )
 }
 \arguments{
@@ -45,6 +46,9 @@ Vector of length two if strains are to be different}
 
 \item{size}{Point size in millimeters. Single value if both strains are to
 be the same. Vector of length two if strains are to be different.}
+
+\item{drop_NA}{Use \code{TRUE} to silently remove missing values.
+\code{FALSE} to warn when removing missing values.}
 }
 \value{
 A ggplot object that can be further modified using the ggplot2 package

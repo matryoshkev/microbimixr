@@ -4,7 +4,7 @@
 \alias{plot_mix_fitness}
 \title{Draw plots to compare fitness measures}
 \usage{
-plot_mix_fitness(data, var_names = NULL)
+plot_mix_fitness(data, var_names = NULL, drop_NA = TRUE)
 }
 \arguments{
 \item{data}{Data frame of fitness values. Wide format: each row must contain
@@ -14,6 +14,9 @@ extensions like \code{tibble}.}
 \item{var_names}{Named character vector identifying fitness and mixing
 variables in \code{data}. If \code{NULL}, defaults to column names returned by
 \code{\link[=calculate_mix_fitness]{calculate_mix_fitness()}}. See Details.}
+
+\item{drop_NA}{Use \code{TRUE} to silently remove missing values.
+\code{FALSE} to warn when removing missing values.}
 }
 \value{
 A ggplot object

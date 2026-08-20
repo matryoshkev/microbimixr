@@ -15,7 +15,8 @@ plot_within_group_fitness(
   color = "black",
   fill = "grey65",
   shape = 21,
-  size = 1.5
+  size = 1.5,
+  drop_NA = TRUE
 )
 }
 \arguments{
@@ -42,6 +43,9 @@ to strain B (on \eqn{\log_{10}} scale) from \code{initial_ratio_A_B} variable.}
 \item{shape}{Point shape}
 
 \item{size}{Point size in millimeters}
+
+\item{drop_NA}{Use \code{TRUE} to silently remove missing values.
+\code{FALSE} to warn when removing missing values.}
 }
 \value{
 A ggplot object that can be further modified using the ggplot2 package

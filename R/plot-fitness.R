@@ -1,7 +1,8 @@
 # Plot fitness measures ========================================================
 
 # These functions are meant to be as self-explanatory as possible,
-# so the color/fill/etc options aren't as non-repetitive as they could be
+# so the color/fill/etc options aren't as non-repetitive as they could be.
+# Might still go for single source of truth
 
 #' Draw plots to compare fitness measures
 #'
@@ -15,6 +16,8 @@
 #' @param var_names Named character vector identifying fitness and mixing
 #'   variables in `data`. If `NULL`, defaults to column names returned by
 #'   [calculate_mix_fitness()]. See Details.
+#' @param drop_NA Use `TRUE` to silently remove missing values.
+#'   `FALSE` to warn when removing missing values.
 #'
 #' @details
 #' Expects Wrightian fitness measures like those returned by
@@ -59,26 +62,42 @@
 #' @export
 #'
 plot_mix_fitness <- function(
-	data, var_names = NULL
+	data, var_names = NULL, drop_NA = TRUE
 ) {
 	# Variable names
 	if (is.null(var_names)) {var_names <- fitness_vars_default()}
 
-	# Scale options
+	# Axis options
 	ylim <- get_ylim_mix_fitness(data, var_names)
 
 	# Make subplots
 	figA <- plot_fitness_strain_total(
-		data, var_names, mix_scale = "fraction", ylim = ylim$fitness
+		data,
+		var_names,
+		mix_scale = "fraction",
+		ylim = ylim$fitness,
+		drop_NA = drop_NA
 	)
 	figB <- plot_within_group_fitness(
-		data, var_names, mix_scale = "fraction", ylim = ylim$fitness_ratio
+		data,
+		var_names,
+		mix_scale = "fraction",
+		ylim = ylim$fitness_ratio,
+		drop_NA = drop_NA
 	)
 	figC <- plot_fitness_strain_total(
-		data, var_names, mix_scale = "ratio", ylim = ylim$fitness
+		data,
+		var_names,
+		mix_scale = "ratio",
+		ylim = ylim$fitness,
+		drop_NA = drop_NA
 	)
 	figD <- plot_within_group_fitness(
-		data, var_names, mix_scale = "ratio", ylim = ylim$fitness_ratio
+		data,
+		var_names,
+		mix_scale = "ratio",
+		ylim = ylim$fitness_ratio,
+		drop_NA = drop_NA
 	)
 	fig_output <- figA + figB + figC + figD
 
@@ -115,6 +134,8 @@ plot_mix_fitness <- function(
 #'   Vector of length two if strains are to be different
 #' @param size Point size in millimeters. Single value if both strains are to
 #'   be the same. Vector of length two if strains are to be different.
+#' @param drop_NA Use `TRUE` to silently remove missing values.
+#'   `FALSE` to warn when removing missing values.
 #'
 #' @details
 #' Expects Wrightian fitness data like those returned by
@@ -166,7 +187,8 @@ plot_strain_fitness <- function(
 	color = c("tan4", "lightsteelblue4"),
 	fill = c("tan", "lightsteelblue"),
 	shape = 21,
-	size = 1.5
+	size = 1.5,
+	drop_NA = TRUE
 ) {
 	# Get variable and strain names
 	if (is.null(var_names)) {var_names <- fitness_vars_default()}
@@ -207,7 +229,7 @@ plot_strain_fitness <- function(
 		) +
 		theme_microbimixr() +
 		scale_y_fitness(name = ylab, limits = ylim) +
-		geom_point_overlap(na.rm = TRUE) +
+		geom_point_overlap(na.rm = drop_NA) +
 		ggplot2::scale_color_manual(values = color) +
 		ggplot2::scale_fill_manual(values = fill) +
 		ggplot2::scale_shape_manual(values = shape) +
@@ -294,7 +316,8 @@ plot_total_group_fitness <- function(
 	color = "black",
 	fill = "grey65",
 	shape = 21,
-	size = 1.5
+	size = 1.5,
+	drop_NA = TRUE
 ) {
 	# Get variable and strain names
 	if (is.null(var_names)) {var_names <- fitness_vars_default()}
@@ -314,7 +337,9 @@ plot_total_group_fitness <- function(
 		ggplot2::aes(y = .data[[var_names$fitness_total]]) +
 		theme_microbimixr() +
 		scale_y_fitness_total(name = ylab, limits = ylim) +
-		geom_point_overlap(color = color, fill = fill, shape = shape, size = size)
+		geom_point_overlap(
+			color = color, fill = fill, shape = shape, size = size, na.rm = drop_NA
+		)
 
 	# Add x-axis mixing scale
 	fig_output <- fig_output |>
@@ -391,7 +416,8 @@ plot_within_group_fitness <- function(
 	color = "black",
 	fill = "grey65",
 	shape = 21,
-	size = 1.5
+	size = 1.5,
+	drop_NA = TRUE
 ) {
 	# Get variable and strain names
 	if (is.null(var_names)) {var_names <- fitness_vars_default()}
@@ -422,7 +448,9 @@ plot_within_group_fitness <- function(
 		scale_y_fitness_ratio(
 			 name = ylab, strain_names = strain_names, limits = ylim
 		) +
-		geom_point_overlap(color = color, fill = fill, shape = shape, size = size)
+		geom_point_overlap(
+			color = color, fill = fill, shape = shape, size = size, na.rm = drop_NA
+		)
 
 	# Add x-axis mixing scale
 	fig_output <- fig_output |>
@@ -446,7 +474,8 @@ plot_fitness_strain_total <- function(
 	data,
 	var_names = fitness_vars_default(),
 	mix_scale = "fraction",
-	ylim = NULL
+	ylim = NULL,
+	drop_NA = TRUE
 ) {
 	# Variable names
 	var_names <- as.list(var_names)
@@ -486,7 +515,7 @@ plot_fitness_strain_total <- function(
 		theme_microbimixr() +
 		theme_plot_mix_fitness() +
 		scale_y_fitness(limits = ylim) +
-		geom_point_overlap(na.rm = TRUE) +
+		geom_point_overlap(na.rm = drop_NA) +
 		scale_color_strain() +
 		scale_fill_strain() +
 		ggplot2::facet_wrap(~ my_facet, nrow = 1)
@@ -645,16 +674,3 @@ add_mix_axis <- function(
 # 	output
 # }
 
-# Format data to plot within-group fitness ratio
-# format_to_plot_fitness_ratio <- function(data, var_names, mix_scale) {
-# 	output <- data
-#
-# 	if (mix_scale == "ratio") {
-# 		# Drop rows where mixing ratio undefined on log scale
-# 		var_initial_ratio <- var_names$initial_ratio_A_B
-# 		output <- output[is.finite(output[[var_initial_ratio]]), ]
-# 		output <- output[output[[var_initial_ratio]] > 0, ]
-# 	}
-#
-# 	output
-# }
