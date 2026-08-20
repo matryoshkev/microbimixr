@@ -49,7 +49,11 @@ microbe strains as a function of their initial frequency</p>
 <span>  xlab <span class="op">=</span> <span class="cn">NA</span>,</span>
 <span>  ylab <span class="op">=</span> <span class="cn">NA</span>,</span>
 <span>  xlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="cn">NA</span>, <span class="cn">NA</span><span class="op">)</span>,</span>
-<span>  ylim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="cn">NA</span>, <span class="cn">NA</span><span class="op">)</span></span>
+<span>  ylim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="cn">NA</span>, <span class="cn">NA</span><span class="op">)</span>,</span>
+<span>  color <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"tan4"</span>, <span class="st">"lightsteelblue4"</span><span class="op">)</span>,</span>
+<span>  fill <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"tan"</span>, <span class="st">"lightsteelblue"</span><span class="op">)</span>,</span>
+<span>  shape <span class="op">=</span> <span class="fl">21</span>,</span>
+<span>  size <span class="op">=</span> <span class="fl">1.5</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -82,6 +86,24 @@ to strain B (on \(\log_{10}\) scale) from <code>initial_ratio_A_B</code> variabl
 
 <dt id="arg-xlim-ylim">xlim, ylim<a class="anchor" aria-label="anchor" href="#arg-xlim-ylim"></a></dt>
 <dd><p>Optional axis limits to replace default</p></dd>
+
+
+<dt id="arg-color">color<a class="anchor" aria-label="anchor" href="#arg-color"></a></dt>
+<dd><p>Point color for each strain. Character vector of length two.</p></dd>
+
+
+<dt id="arg-fill">fill<a class="anchor" aria-label="anchor" href="#arg-fill"></a></dt>
+<dd><p>Point fill for each strain. Character vector of length two.</p></dd>
+
+
+<dt id="arg-shape">shape<a class="anchor" aria-label="anchor" href="#arg-shape"></a></dt>
+<dd><p>Point shape. Single value if both strains are to be the same.
+Vector of length two if strains are to be different</p></dd>
+
+
+<dt id="arg-size">size<a class="anchor" aria-label="anchor" href="#arg-size"></a></dt>
+<dd><p>Point size in millimeters. Single value if both strains are to
+be the same. Vector of length two if strains are to be different.</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -117,8 +139,12 @@ elements (shown here with default values):</p>
 <span class="r-in"><span><span class="co"># Some plot options</span></span></span>
 <span class="r-in"><span><span class="fu">plot_strain_fitness</span><span class="op">(</span></span></span>
 <span class="r-in"><span>  <span class="va">fitness_myxo</span>,</span></span>
-<span class="r-in"><span>  xlab <span class="op">=</span> <span class="st">"Initial frequency evolved GVB206.3"</span>,</span></span>
+<span class="r-in"><span>  xlab <span class="op">=</span> <span class="st">"Initial frequency GVB206.3"</span>,</span></span>
 <span class="r-in"><span>  ylab <span class="op">=</span> <span class="st">"Sporulation efficiency\n(spores/cell)"</span>,</span></span>
+<span class="r-in"><span>  color <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"black"</span>, <span class="st">"grey40"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  fill <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"grey50"</span>, <span class="st">"white"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  shape <span class="op">=</span> <span class="fl">23</span>,</span></span>
+<span class="r-in"><span>  size <span class="op">=</span> <span class="fl">2</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="plot_strain_fitness-2.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>

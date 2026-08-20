@@ -13,7 +13,11 @@ plot_within_group_fitness(
   xlab = NA,
   ylab = NA,
   xlim = c(NA, NA),
-  ylim = c(NA, NA)
+  ylim = c(NA, NA),
+  color = "black",
+  fill = "grey65",
+  shape = 21,
+  size = 1.5
 )
 ```
 
@@ -46,6 +50,22 @@ plot_within_group_fitness(
 - xlim, ylim:
 
   Optional axis limits to replace default
+
+- color:
+
+  Point color
+
+- fill:
+
+  Point fill. Only affects shapes 21-25.
+
+- shape:
+
+  Point shape
+
+- size:
+
+  Point size in millimeters
 
 ## Value
 
@@ -91,7 +111,11 @@ plot_within_group_fitness(
   mix_scale = "ratio",
   ylim = c(0.01, 100),
   xlab = "Initial ratio evolved / ancestral",
-  ylab = "Relative sporulation success\nevolved / ancestral"
+  ylab = "Relative sporulation success\nevolved / ancestral",
+  color = "darkblue",
+  fill = "lightblue",
+  shape = 23,
+  size = 2
 )
 
 ```

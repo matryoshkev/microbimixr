@@ -49,7 +49,11 @@ function of initial strain frequency</p>
 <span>  xlab <span class="op">=</span> <span class="cn">NA</span>,</span>
 <span>  ylab <span class="op">=</span> <span class="cn">NA</span>,</span>
 <span>  xlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="cn">NA</span>, <span class="cn">NA</span><span class="op">)</span>,</span>
-<span>  ylim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="cn">NA</span>, <span class="cn">NA</span><span class="op">)</span></span>
+<span>  ylim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="cn">NA</span>, <span class="cn">NA</span><span class="op">)</span>,</span>
+<span>  color <span class="op">=</span> <span class="st">"black"</span>,</span>
+<span>  fill <span class="op">=</span> <span class="st">"grey65"</span>,</span>
+<span>  shape <span class="op">=</span> <span class="fl">21</span>,</span>
+<span>  size <span class="op">=</span> <span class="fl">1.5</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -81,6 +85,22 @@ to strain B (on \(\log_{10}\) scale) from <code>initial_ratio_A_B</code> variabl
 
 <dt id="arg-xlim-ylim">xlim, ylim<a class="anchor" aria-label="anchor" href="#arg-xlim-ylim"></a></dt>
 <dd><p>Optional axis limits to replace default</p></dd>
+
+
+<dt id="arg-color">color<a class="anchor" aria-label="anchor" href="#arg-color"></a></dt>
+<dd><p>Point color</p></dd>
+
+
+<dt id="arg-fill">fill<a class="anchor" aria-label="anchor" href="#arg-fill"></a></dt>
+<dd><p>Point fill. Only affects shapes 21-25.</p></dd>
+
+
+<dt id="arg-shape">shape<a class="anchor" aria-label="anchor" href="#arg-shape"></a></dt>
+<dd><p>Point shape</p></dd>
+
+
+<dt id="arg-size">size<a class="anchor" aria-label="anchor" href="#arg-size"></a></dt>
+<dd><p>Point size in millimeters</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -118,12 +138,16 @@ elements (shown here with default values):</p>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span><span style="color: #00BB00;">log-10</span> transformation introduced infinite values.</span>
 <span class="r-plt img"><img src="plot_total_group_fitness-2.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># More plot options</span></span></span>
+<span class="r-in"><span><span class="co"># Other plot options</span></span></span>
 <span class="r-in"><span><span class="fu">plot_total_group_fitness</span><span class="op">(</span></span></span>
 <span class="r-in"><span>  <span class="va">fitness_myxo</span>,</span></span>
 <span class="r-in"><span>  ylim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1e-8</span>, <span class="fl">1</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>  xlab <span class="op">=</span> <span class="st">"Initial frequency of evolved strain"</span>,</span></span>
-<span class="r-in"><span>  ylab <span class="op">=</span> <span class="st">"Sporulation efficiency\n(spores / cell)"</span></span></span>
+<span class="r-in"><span>  ylab <span class="op">=</span> <span class="st">"Sporulation efficiency\n(spores / cell)"</span>,</span></span>
+<span class="r-in"><span>  color <span class="op">=</span> <span class="st">"darkblue"</span>,</span></span>
+<span class="r-in"><span>  fill <span class="op">=</span> <span class="st">"lightblue"</span>,</span></span>
+<span class="r-in"><span>  shape <span class="op">=</span> <span class="fl">23</span>,</span></span>
+<span class="r-in"><span>  size <span class="op">=</span> <span class="fl">2</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="plot_total_group_fitness-3.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>

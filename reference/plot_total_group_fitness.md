@@ -13,7 +13,11 @@ plot_total_group_fitness(
   xlab = NA,
   ylab = NA,
   xlim = c(NA, NA),
-  ylim = c(NA, NA)
+  ylim = c(NA, NA),
+  color = "black",
+  fill = "grey65",
+  shape = 21,
+  size = 1.5
 )
 ```
 
@@ -46,6 +50,22 @@ plot_total_group_fitness(
 - xlim, ylim:
 
   Optional axis limits to replace default
+
+- color:
+
+  Point color
+
+- fill:
+
+  Point fill. Only affects shapes 21-25.
+
+- shape:
+
+  Point shape
+
+- size:
+
+  Point size in millimeters
 
 ## Value
 
@@ -85,12 +105,16 @@ plot_total_group_fitness(fitness_myxo, mix_scale = "ratio")
 #> Warning: log-10 transformation introduced infinite values.
 
 
-# More plot options
+# Other plot options
 plot_total_group_fitness(
   fitness_myxo,
   ylim = c(1e-8, 1),
   xlab = "Initial frequency of evolved strain",
-  ylab = "Sporulation efficiency\n(spores / cell)"
+  ylab = "Sporulation efficiency\n(spores / cell)",
+  color = "darkblue",
+  fill = "lightblue",
+  shape = 23,
+  size = 2
 )
 
 ```
