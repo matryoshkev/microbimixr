@@ -1,5 +1,7 @@
 # Color & fill for ggplot2 =====================================================
 
+# Not currently used
+
 # Default colors
 color_strain_A <- function() { "tan4" }
 color_strain_B <- function() { "lightsteelblue4" }

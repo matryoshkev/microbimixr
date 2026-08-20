@@ -11,7 +11,11 @@ plot_total_group_fitness(
   xlab = NA,
   ylab = NA,
   xlim = c(NA, NA),
-  ylim = c(NA, NA)
+  ylim = c(NA, NA),
+  color = "black",
+  fill = "grey65",
+  shape = 21,
+  size = 1.5
 )
 }
 \arguments{
@@ -30,6 +34,14 @@ to strain B (on \eqn{\log_{10}} scale) from \code{initial_ratio_A_B} variable.}
 \item{xlab, ylab}{Optional string to replace default axis label}
 
 \item{xlim, ylim}{Optional axis limits to replace default}
+
+\item{color}{Point color}
+
+\item{fill}{Point fill. Only affects shapes 21-25.}
+
+\item{shape}{Point shape}
+
+\item{size}{Point size in millimeters}
 }
 \value{
 A ggplot object that can be further modified using the ggplot2 package
@@ -61,12 +73,16 @@ plot_total_group_fitness(fitness_myxo)
 # Using ratio scale for mix frequencies
 plot_total_group_fitness(fitness_myxo, mix_scale = "ratio")
 
-# More plot options
+# Other plot options
 plot_total_group_fitness(
   fitness_myxo,
   ylim = c(1e-8, 1),
   xlab = "Initial frequency of evolved strain",
-  ylab = "Sporulation efficiency\n(spores / cell)"
+  ylab = "Sporulation efficiency\n(spores / cell)",
+  color = "darkblue",
+  fill = "lightblue",
+  shape = 23,
+  size = 2
 )
 
 }

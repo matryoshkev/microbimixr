@@ -1,5 +1,8 @@
 # Plot fitness measures ========================================================
 
+# These functions are meant to be as self-explanatory as possible,
+# so the color/fill/etc options aren't as non-repetitive as they could be
+
 #' Draw plots to compare fitness measures
 #'
 #' `plot_mix_fitness()` shows a diagnostic overview of various fitness effects
@@ -40,7 +43,7 @@
 #' library(patchwork)
 #'
 #' # Using data from smith et al (2010)
-#' fitness_smith_2010 <- calculate_mix_fitness(
+#' fitness_myxo <- calculate_mix_fitness(
 #'   data_smith_2010,
 #'   var_names = c(
 #'     initial_number_A = "initial_cells_evolved",
@@ -51,7 +54,7 @@
 #'     name_B = "GJV10"
 #'   )
 #' )
-#' plot_mix_fitness(fitness_smith_2010)
+#' plot_mix_fitness(fitness_myxo)
 #'
 #' @export
 #'
@@ -106,6 +109,12 @@ plot_mix_fitness <- function(
 #'   to strain B (on \eqn{\log_{10}} scale) from `initial_ratio_A_B` variable.
 #' @param xlab,ylab Optional string to replace default axis label
 #' @param xlim,ylim Optional axis limits to replace default
+#' @param color Point color for each strain. Character vector of length two.
+#' @param fill Point fill for each strain. Character vector of length two.
+#' @param shape Point shape. Single value if both strains are to be the same.
+#'   Vector of length two if strains are to be different
+#' @param size Point size in millimeters. Single value if both strains are to
+#'   be the same. Vector of length two if strains are to be different.
 #'
 #' @details
 #' Expects Wrightian fitness data like those returned by
@@ -136,8 +145,12 @@ plot_mix_fitness <- function(
 #' # Some plot options
 #' plot_strain_fitness(
 #'   fitness_myxo,
-#'   xlab = "Initial frequency evolved GVB206.3",
+#'   xlab = "Initial frequency GVB206.3",
 #'   ylab = "Sporulation efficiency\n(spores/cell)",
+#'   color = c("black", "grey40"),
+#'   fill = c("grey50", "white"),
+#'   shape = 23,
+#'   size = 2
 #' )
 #'
 #' @export
@@ -149,20 +162,28 @@ plot_strain_fitness <- function(
 	xlab = NA,
 	ylab = NA,
 	xlim = c(NA, NA),
-	ylim = c(NA, NA)
+	ylim = c(NA, NA),
+	color = c("tan4", "lightsteelblue4"),
+	fill = c("tan", "lightsteelblue"),
+	shape = 21,
+	size = 1.5
 ) {
-	# Variable names
+	# Get variable and strain names
 	if (is.null(var_names)) {var_names <- fitness_vars_default()}
 	var_names <- as.list(var_names)
 	var_names$fitness <- "fitness"
 	strain_names <- get_strain_names(data, var_names)
 
-	# Scale options
+	# Axis options
 	mix_scale <- rlang::arg_match(mix_scale, c("fraction", "ratio"))
 	if (missing(xlab)) {xlab <- waiver()}
 	if (missing(ylab)) {ylab <- waiver()}
 	if (missing(xlim)) {xlim <- NULL}
 	if (missing(ylim)) {ylim <- NULL}
+
+	# Recycle shape and size args if only one provided
+	if (length(shape) == 1) {shape <- c(shape, shape)}
+	if (length(size) == 1) {size <- c(size, size)}
 
 	# Make long-format data frame for plot
 	data_to_plot <- stats::reshape(
@@ -177,12 +198,22 @@ plot_strain_fitness <- function(
 	# Make plot
 	fig_output <-
 		ggplot2::ggplot(data_to_plot) +
-		ggplot2::aes(y = .data$fitness, color = .data$strain, fill = .data$strain) +
+		ggplot2::aes(
+			y = .data$fitness,
+			color = .data$strain,
+			fill = .data$strain,
+			shape = .data$strain,
+			size = .data$strain
+		) +
 		theme_microbimixr() +
 		scale_y_fitness(name = ylab, limits = ylim) +
 		geom_point_overlap(na.rm = TRUE) +
-		scale_color_strain() +
-		scale_fill_strain()
+		ggplot2::scale_color_manual(values = color) +
+		ggplot2::scale_fill_manual(values = fill) +
+		ggplot2::scale_shape_manual(values = shape) +
+		ggplot2::scale_size_manual(values = size)
+		# scale_color_strain() +
+		# scale_fill_strain()
 
 	# Add x-axis mixing scale
 	fig_output <- fig_output |>
@@ -194,7 +225,6 @@ plot_strain_fitness <- function(
 			xlim = xlim
 		)
 
-	# Return ggplot object
 	fig_output
 }
 
@@ -206,6 +236,10 @@ plot_strain_fitness <- function(
 #' @inheritParams plot_strain_fitness
 #' @param data Data frame of fitness values and mix frequencies.
 #'   Accepts data frame extensions like `tibble`.
+#' @param color Point color
+#' @param fill Point fill. Only affects shapes 21-25.
+#' @param shape Point shape
+#' @param size Point size in millimeters
 #'
 #' @details
 #' Expects Wrightian fitness data like those returned by
@@ -235,12 +269,16 @@ plot_strain_fitness <- function(
 #' # Using ratio scale for mix frequencies
 #' plot_total_group_fitness(fitness_myxo, mix_scale = "ratio")
 #'
-#' # More plot options
+#' # Other plot options
 #' plot_total_group_fitness(
 #'   fitness_myxo,
 #'   ylim = c(1e-8, 1),
 #'   xlab = "Initial frequency of evolved strain",
-#'   ylab = "Sporulation efficiency\n(spores / cell)"
+#'   ylab = "Sporulation efficiency\n(spores / cell)",
+#'   color = "darkblue",
+#'   fill = "lightblue",
+#'   shape = 23,
+#'   size = 2
 #' )
 #'
 #' @export
@@ -252,27 +290,31 @@ plot_total_group_fitness <- function(
 	xlab = NA,
 	ylab = NA,
 	xlim = c(NA, NA),
-	ylim = c(NA, NA)
+	ylim = c(NA, NA),
+	color = "black",
+	fill = "grey65",
+	shape = 21,
+	size = 1.5
 ) {
 	# Get variable and strain names
 	if (is.null(var_names)) {var_names <- fitness_vars_default()}
 	var_names <- as.list(var_names)
 	strain_names <- get_strain_names(data, var_names)
 
-	# Scale options
+	# Axis options
 	mix_scale <- rlang::arg_match(mix_scale, c("fraction", "ratio"))
 	if (missing(xlab)) {xlab <- waiver()}
 	if (missing(ylab)) {ylab <- waiver()}
 	if (missing(xlim)) {xlim <- NULL}
 	if (missing(ylim)) {ylim <- NULL}
 
-	# Construct plot
+	# Make plot
 	fig_output <-
 		ggplot2::ggplot(data) +
 		ggplot2::aes(y = .data[[var_names$fitness_total]]) +
 		theme_microbimixr() +
 		scale_y_fitness_total(name = ylab, limits = ylim) +
-		geom_point_overlap()
+		geom_point_overlap(color = color, fill = fill, shape = shape, size = size)
 
 	# Add x-axis mixing scale
 	fig_output <- fig_output |>
@@ -284,7 +326,6 @@ plot_total_group_fitness <- function(
 			xlim = xlim
 		)
 
-	# Return ggplot object
 	fig_output
 }
 
@@ -293,9 +334,7 @@ plot_total_group_fitness <- function(
 #' `plot_within_group_fitness()` draws a plot of the relative within-group
 #' fitness of strains A and B as a function of their initial frequency
 #'
-#' @inheritParams plot_strain_fitness
-#' @param data Data frame of fitness values and mix frequencies.
-#'   Accepts data frame extensions like `tibble`.
+#' @inheritParams plot_total_group_fitness
 #'
 #' @details
 #' Expects Wrightian fitness data like those returned by
@@ -332,7 +371,11 @@ plot_total_group_fitness <- function(
 #'   mix_scale = "ratio",
 #'   ylim = c(0.01, 100),
 #'   xlab = "Initial ratio evolved / ancestral",
-#'   ylab = "Relative sporulation success\nevolved / ancestral"
+#'   ylab = "Relative sporulation success\nevolved / ancestral",
+#'   color = "darkblue",
+#'   fill = "lightblue",
+#'   shape = 23,
+#'   size = 2
 #' )
 #'
 #' @export
@@ -344,14 +387,18 @@ plot_within_group_fitness <- function(
 	xlab = NA,
 	ylab = NA,
 	xlim = c(NA, NA),
-	ylim = c(NA, NA)
+	ylim = c(NA, NA),
+	color = "black",
+	fill = "grey65",
+	shape = 21,
+	size = 1.5
 ) {
-	# Variable names
+	# Get variable and strain names
 	if (is.null(var_names)) {var_names <- fitness_vars_default()}
 	var_names <- as.list(var_names)
 	strain_names <- get_strain_names(data, var_names)
 
-	# Scale options
+	# Axis options
 	mix_scale <- rlang::arg_match(mix_scale, c("fraction", "ratio"))
 	if (missing(xlab)) {xlab <- waiver()}
 	if (missing(ylab)) {ylab <- waiver()}
@@ -367,7 +414,7 @@ plot_within_group_fitness <- function(
 		data <- data[(is.finite(data[[mixvar]])) & (data[[mixvar]] > 0), ]
 	}
 
-	# Construct plot
+	# Make plot
 	fig_output <-
 		ggplot2::ggplot(data) +
 		ggplot2::aes(y = .data[[var_names$fitness_ratio_A_B]]) +
@@ -375,7 +422,7 @@ plot_within_group_fitness <- function(
 		scale_y_fitness_ratio(
 			 name = ylab, strain_names = strain_names, limits = ylim
 		) +
-		geom_point_overlap()
+		geom_point_overlap(color = color, fill = fill, shape = shape, size = size)
 
 	# Add x-axis mixing scale
 	fig_output <- fig_output |>
@@ -387,7 +434,6 @@ plot_within_group_fitness <- function(
 			xlim = xlim
 		)
 
-	# Return ggplot object
 	fig_output
 }
 

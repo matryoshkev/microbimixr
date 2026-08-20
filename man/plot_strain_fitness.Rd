@@ -11,7 +11,11 @@ plot_strain_fitness(
   xlab = NA,
   ylab = NA,
   xlim = c(NA, NA),
-  ylim = c(NA, NA)
+  ylim = c(NA, NA),
+  color = c("tan4", "lightsteelblue4"),
+  fill = c("tan", "lightsteelblue"),
+  shape = 21,
+  size = 1.5
 )
 }
 \arguments{
@@ -31,6 +35,16 @@ to strain B (on \eqn{\log_{10}} scale) from \code{initial_ratio_A_B} variable.}
 \item{xlab, ylab}{Optional string to replace default axis label}
 
 \item{xlim, ylim}{Optional axis limits to replace default}
+
+\item{color}{Point color for each strain. Character vector of length two.}
+
+\item{fill}{Point fill for each strain. Character vector of length two.}
+
+\item{shape}{Point shape. Single value if both strains are to be the same.
+Vector of length two if strains are to be different}
+
+\item{size}{Point size in millimeters. Single value if both strains are to
+be the same. Vector of length two if strains are to be different.}
 }
 \value{
 A ggplot object that can be further modified using the ggplot2 package
@@ -63,8 +77,12 @@ plot_strain_fitness(fitness_myxo)
 # Some plot options
 plot_strain_fitness(
   fitness_myxo,
-  xlab = "Initial frequency evolved GVB206.3",
+  xlab = "Initial frequency GVB206.3",
   ylab = "Sporulation efficiency\n(spores/cell)",
+  color = c("black", "grey40"),
+  fill = c("grey50", "white"),
+  shape = 23,
+  size = 2
 )
 
 }

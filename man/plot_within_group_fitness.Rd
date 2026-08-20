@@ -11,7 +11,11 @@ plot_within_group_fitness(
   xlab = NA,
   ylab = NA,
   xlim = c(NA, NA),
-  ylim = c(NA, NA)
+  ylim = c(NA, NA),
+  color = "black",
+  fill = "grey65",
+  shape = 21,
+  size = 1.5
 )
 }
 \arguments{
@@ -30,6 +34,14 @@ to strain B (on \eqn{\log_{10}} scale) from \code{initial_ratio_A_B} variable.}
 \item{xlab, ylab}{Optional string to replace default axis label}
 
 \item{xlim, ylim}{Optional axis limits to replace default}
+
+\item{color}{Point color}
+
+\item{fill}{Point fill. Only affects shapes 21-25.}
+
+\item{shape}{Point shape}
+
+\item{size}{Point size in millimeters}
 }
 \value{
 A ggplot object that can be further modified using the ggplot2 package
@@ -68,7 +80,11 @@ plot_within_group_fitness(
   mix_scale = "ratio",
   ylim = c(0.01, 100),
   xlab = "Initial ratio evolved / ancestral",
-  ylab = "Relative sporulation success\nevolved / ancestral"
+  ylab = "Relative sporulation success\nevolved / ancestral",
+  color = "darkblue",
+  fill = "lightblue",
+  shape = 23,
+  size = 2
 )
 
 }

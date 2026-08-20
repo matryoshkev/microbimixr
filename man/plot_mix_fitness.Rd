@@ -46,7 +46,7 @@ elements (shown here with default values):
 library(patchwork)
 
 # Using data from smith et al (2010)
-fitness_smith_2010 <- calculate_mix_fitness(
+fitness_myxo <- calculate_mix_fitness(
   data_smith_2010,
   var_names = c(
     initial_number_A = "initial_cells_evolved",
@@ -57,7 +57,7 @@ fitness_smith_2010 <- calculate_mix_fitness(
     name_B = "GJV10"
   )
 )
-plot_mix_fitness(fitness_smith_2010)
+plot_mix_fitness(fitness_myxo)
 
 }
 \seealso{

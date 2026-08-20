@@ -145,6 +145,8 @@ fitness_smith_2010 |> plot_total_group_fitness() + aes(fill = exptl_block)
 fitness_smith_2010 |> plot_within_group_fitness(mix_scale = "ratio")
 
 
+
+
 # Plot elements ----------------------------------------------------------------
 
 fitness_smith_2010 |>
