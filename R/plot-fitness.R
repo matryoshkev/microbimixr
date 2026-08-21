@@ -1,9 +1,5 @@
 # Plot fitness measures ========================================================
 
-# These functions are meant to be as self-explanatory as possible,
-# so the color/fill/etc options aren't as non-repetitive as they could be.
-# Might still go for single source of truth.
-
 #' Draw plots to compare fitness measures
 #'
 #' `plot_mix_fitness()` shows a diagnostic overview of various fitness effects
@@ -16,6 +12,11 @@
 #' @param var_names Named character vector identifying fitness and mixing
 #'   variables in `data`. If `NULL`, defaults to column names returned by
 #'   [calculate_mix_fitness()]. See Details.
+#' @param mix_scale Mixing frequency scale for x axis. `"fraction"` uses
+#'   initial frequency of strain A (proportion of total) from
+#'   `initial_fraction_A` variable in data. `"ratio"` uses ratio of strain A to
+#'   strain B (on \eqn{\log_{10}} scale) from `initial_ratio_A_B`.
+#'    Defaults to show both.
 #' @param color Point colors `c(strain_A, strain_B, total_group)`
 #' @param fill Point fill colors `c(strain_A, strain_B, total_group)`.
 #'   Only affects shapes 21--25.
@@ -54,6 +55,7 @@
 #' # Some plot options
 #' plot_mix_fitness(
 #'   fitness_myxo,
+#'   mix_scale = "fraction",
 #'   color = c("black", "grey40", "grey40"),
 #'   fill = c("grey50", "white", "grey75"),
 #'   shape = 23,
@@ -65,6 +67,7 @@
 plot_mix_fitness <- function(
 	data,
 	var_names = NULL,
+	mix_scale = c("fraction", "ratio"),
 	color = c(NULL, NULL, NULL),
 	fill = c(NULL, NULL, NULL),
 	shape = NULL,
@@ -75,6 +78,9 @@ plot_mix_fitness <- function(
 	if (is.null(var_names)) {var_names <- fitness_vars_default()}
 
 	# Axis options
+	mix_scale <- rlang::arg_match(
+		mix_scale, c("fraction", "ratio"), multiple = TRUE
+	)
 	ylim <- get_ylim_mix_fitness(data, var_names)
 
 	# Point color and fill
@@ -144,8 +150,17 @@ plot_mix_fitness <- function(
 	)
 
 	# Combine subplots
+	if (("fraction" %in% mix_scale) & ("ratio" %in% mix_scale)) {
+		fig_output <- figA + figB + figC + figD
+	} else if ("ratio" %in% mix_scale) {
+		fig_output <- figC + figD
+	} else {
+		fig_output <- figA + figB
+	}
+
+	# Size plots for page-width figure
 	fig_output <-
-		figA + figB + figC + figD +
+		fig_output +
 		patchwork::plot_layout(
 			widths = grid::unit(c(3.2, 1.6), "inches"),
 			heights = grid::unit(1.4, "inches")

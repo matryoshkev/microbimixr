@@ -7,6 +7,7 @@
 plot_mix_fitness(
   data,
   var_names = NULL,
+  mix_scale = c("fraction", "ratio"),
   color = c(NULL, NULL, NULL),
   fill = c(NULL, NULL, NULL),
   shape = NULL,
@@ -22,6 +23,12 @@ extensions like \code{tibble}.}
 \item{var_names}{Named character vector identifying fitness and mixing
 variables in \code{data}. If \code{NULL}, defaults to column names returned by
 \code{\link[=calculate_mix_fitness]{calculate_mix_fitness()}}. See Details.}
+
+\item{mix_scale}{Mixing frequency scale for x axis. \code{"fraction"} uses
+initial frequency of strain A (proportion of total) from
+\code{initial_fraction_A} variable in data. \code{"ratio"} uses ratio of strain A to
+strain B (on \eqn{\log_{10}} scale) from \code{initial_ratio_A_B}.
+Defaults to show both.}
 
 \item{color}{Point colors \code{c(strain_A, strain_B, total_group)}}
 
@@ -69,9 +76,11 @@ plot_mix_fitness(fitness_myxo)
 # Some plot options
 plot_mix_fitness(
   fitness_myxo,
+  mix_scale = "fraction",
   color = c("black", "grey40", "grey40"),
   fill = c("grey50", "white", "grey75"),
-  shape = 23
+  shape = 23,
+  size = 2
 )
 
 }
