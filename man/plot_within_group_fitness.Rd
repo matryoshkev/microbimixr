@@ -55,10 +55,6 @@ A ggplot object that can be further modified using the ggplot2 package
 fitness of strains A and B as a function of their initial frequency
 }
 \details{
-Expects Wrightian fitness data like those returned by
-\code{\link[=calculate_mix_fitness]{calculate_mix_fitness()}}. Relative within-group fitness is measured as
-the ratio of strain A fitness to strain B fitness.
-
 \code{var_names} must be a named vector or list that includes the following
 elements (shown here with default values):
 
@@ -70,6 +66,11 @@ elements (shown here with default values):
   fitness_ratio_A_B = "fitness_ratio_A_B"
 )
 }\if{html}{\out{</div>}}
+
+Expects Wrightian fitness data like those returned by
+\code{\link[=calculate_mix_fitness]{calculate_mix_fitness()}}. Relative within-group fitness is measured as
+the ratio of strain A fitness to strain B fitness.
+Does not try to plot single-strain data.
 }
 \examples{
 fitness_myxo <- calculate_mix_fitness(data_smith_2010, var_names_smith_2010)

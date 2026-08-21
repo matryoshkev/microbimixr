@@ -51,9 +51,6 @@ in a dataset. Draws a combined plot of strain, total group, and relative
 within-group fitness against two measures of mix frequency.
 }
 \details{
-Expects Wrightian fitness measures like those returned by
-\code{\link[=calculate_mix_fitness]{calculate_mix_fitness()}}.
-
 \code{var_names} must be a named vector or list that includes the following
 elements (shown here with default values):
 
@@ -68,6 +65,10 @@ elements (shown here with default values):
   fitness_ratio_A_B = "fitness_ratio_A_B"
 )
 }\if{html}{\out{</div>}}
+
+Expects Wrightian fitness data like those returned by
+\code{\link[=calculate_mix_fitness]{calculate_mix_fitness()}}.
+Does not try to plot single-strain data for plots with \code{mix_scale = "ratio"}.
 }
 \examples{
 fitness_myxo <- calculate_mix_fitness(data_smith_2010, var_names_smith_2010)

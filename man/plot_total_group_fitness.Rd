@@ -55,9 +55,6 @@ A ggplot object that can be further modified using the ggplot2 package
 function of initial strain frequency
 }
 \details{
-Expects Wrightian fitness data like those returned by
-\code{\link[=calculate_mix_fitness]{calculate_mix_fitness()}}.
-
 \code{var_names} must be a named vector or list that includes the following
 elements (shown here with default values):
 
@@ -69,6 +66,10 @@ elements (shown here with default values):
   fitness_total = "fitness_total"
 )
 }\if{html}{\out{</div>}}
+
+Expects Wrightian fitness data like those returned by
+\code{\link[=calculate_mix_fitness]{calculate_mix_fitness()}}.
+Does not try to plot single-strain data if \code{mix_scale = "ratio"}.
 }
 \examples{
 fitness_myxo <- calculate_mix_fitness(data_smith_2010, var_names_smith_2010)

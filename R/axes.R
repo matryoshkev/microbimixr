@@ -385,7 +385,8 @@ expand_limits_log10 <- function(limits) {
 
 # Breaks for log10 axes
 breaks_log10 <- function(limits) {
-	limits_range <- suppressWarnings(log10(range(limits, na.rm = TRUE)))
+	# limits_range <- suppressWarnings(log10(range(limits, na.rm = TRUE)))
+	limits_range <- log10(range(limits, na.rm = TRUE))
 	span <- limits_range[2] - limits_range[1]
 	# Limits assumed to include 1, minimum 10-fold range
 	if (span < 1.47) {
@@ -420,7 +421,8 @@ labels_log10 <- function(breaks) {
 
 # Minor breaks for log10 axes
 minor_breaks_log10 <- function(limits) {
-	limits_range <- suppressWarnings(log10(range(limits, na.rm = TRUE)))
+	# limits_range <- suppressWarnings(log10(range(limits, na.rm = TRUE)))
+	limits_range <- log10(range(limits, na.rm = TRUE))
 	span <- limits_range[2] - limits_range[1]
 	if (span < 3) {
 		breaks <- rep(1:9, 6) * 10^sort(rep(-3:2, 9))

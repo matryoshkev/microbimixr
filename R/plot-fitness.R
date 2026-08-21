@@ -26,9 +26,6 @@
 #'   `FALSE` to warn when removing missing values.
 #'
 #' @details
-#' Expects Wrightian fitness measures like those returned by
-#' [calculate_mix_fitness()].
-#'
 #' `var_names` must be a named vector or list that includes the following
 #' elements (shown here with default values):
 #' ```
@@ -43,6 +40,10 @@
 #'   fitness_ratio_A_B = "fitness_ratio_A_B"
 #' )
 #' ```
+#'
+#' Expects Wrightian fitness data like those returned by
+#' [calculate_mix_fitness()].
+#' Does not try to plot single-strain data for plots with `mix_scale = "ratio"`.
 #'
 #' @returns A ggplot object
 #'
@@ -167,7 +168,7 @@ plot_mix_fitness <- function(
 			# Units affect plotting area, not total size
 		)
 
-	suppressWarnings(print(fig_output))
+	fig_output
 }
 
 #' Plot fitness of each strain separately
@@ -195,9 +196,6 @@ plot_mix_fitness <- function(
 #'   `FALSE` to warn when removing missing values.
 #'
 #' @details
-#' Expects Wrightian fitness data like those returned by
-#' [calculate_mix_fitness()].
-#'
 #' `var_names` must be a named vector or list that includes the following
 #' elements (shown here with default values):
 #' ```
@@ -210,6 +208,10 @@ plot_mix_fitness <- function(
 #'   fitness_B = "fitness_B"
 #' )
 #' ```
+#'
+#' Expects Wrightian fitness data like those returned by
+#' [calculate_mix_fitness()].
+#' Does not try to plot single-strain data if `mix_scale = "ratio"`.
 #'
 #' @returns
 #' A ggplot object that can be further modified using the ggplot2 package
@@ -277,6 +279,11 @@ plot_strain_fitness <- function(
 		point_args <- c(point_args, list(size = size))
 	}
 
+	# Drop single-strain data for log mixing scales
+	if (mix_scale == "ratio") {
+		data <- data[is.finite(log(data[[var_names$initial_ratio_A_B]])), ]
+	}
+
 	# Make long-format data frame for plot
 	data_to_plot <- stats::reshape(
 		as.data.frame(data),  # reshape() chokes on tibbles
@@ -323,9 +330,6 @@ plot_strain_fitness <- function(
 #' @param fill Point fill color. Only affects shapes 21-25.
 #'
 #' @details
-#' Expects Wrightian fitness data like those returned by
-#' [calculate_mix_fitness()].
-#'
 #' `var_names` must be a named vector or list that includes the following
 #' elements (shown here with default values):
 #' ```
@@ -337,6 +341,10 @@ plot_strain_fitness <- function(
 #'   fitness_total = "fitness_total"
 #' )
 #' ```
+#'
+#' Expects Wrightian fitness data like those returned by
+#' [calculate_mix_fitness()].
+#' Does not try to plot single-strain data if `mix_scale = "ratio"`.
 #'
 #' @returns
 #' A ggplot object that can be further modified using the ggplot2 package
@@ -402,6 +410,11 @@ plot_total_group_fitness <- function(
 		point_args <- c(point_args, list(size = size))
 	}
 
+	# Drop single-strain data for log mixing scales
+	if (mix_scale == "ratio") {
+		data <- data[is.finite(log(data[[var_names$initial_ratio_A_B]])), ]
+	}
+
 	# Make plot
 	fig_output <-
 		ggplot2::ggplot(data) +
@@ -429,10 +442,6 @@ plot_total_group_fitness <- function(
 #' @inheritParams plot_total_group_fitness
 #'
 #' @details
-#' Expects Wrightian fitness data like those returned by
-#' [calculate_mix_fitness()]. Relative within-group fitness is measured as
-#' the ratio of strain A fitness to strain B fitness.
-#'
 #' `var_names` must be a named vector or list that includes the following
 #' elements (shown here with default values):
 #' ```
@@ -444,6 +453,11 @@ plot_total_group_fitness <- function(
 #'   fitness_ratio_A_B = "fitness_ratio_A_B"
 #' )
 #' ```
+#'
+#' Expects Wrightian fitness data like those returned by
+#' [calculate_mix_fitness()]. Relative within-group fitness is measured as
+#' the ratio of strain A fitness to strain B fitness.
+#' Does not try to plot single-strain data.
 #'
 #' @returns
 #' A ggplot object that can be further modified using the ggplot2 package
@@ -577,6 +591,11 @@ plot_fitness_strain_total <- function(
 	point_args <- list(na.rm = drop_NA)
 	if (!is_waiver(shape)) {point_args <- c(point_args, list(shape = shape))}
 	if (!is_waiver(size)) {point_args <- c(point_args, list(size = size))}
+
+	# Drop single-strain data for log mixing scales
+	if (mix_scale == "ratio") {
+		data <- data[is.finite(log(data[[var_names$initial_ratio_A_B]])), ]
+	}
 
 	# Make long-format data
 	data_for_plot <- stats::reshape(
