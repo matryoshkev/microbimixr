@@ -78,11 +78,6 @@ A ggplot object that can be further modified using the ggplot2 package
 
 ## Details
 
-Expects Wrightian fitness data like those returned by
-[`calculate_mix_fitness()`](https://matryoshkev.github.io/microbimixr/reference/calculate_mix_fitness.md).
-Relative within-group fitness is measured as the ratio of strain A
-fitness to strain B fitness.
-
 `var_names` must be a named vector or list that includes the following
 elements (shown here with default values):
 
@@ -93,6 +88,11 @@ elements (shown here with default values):
       initial_ratio_A_B = "initial_ratio_A_B",
       fitness_ratio_A_B = "fitness_ratio_A_B"
     )
+
+Expects Wrightian fitness data like those returned by
+[`calculate_mix_fitness()`](https://matryoshkev.github.io/microbimixr/reference/calculate_mix_fitness.md).
+Relative within-group fitness is measured as the ratio of strain A
+fitness to strain B fitness. Does not try to plot single-strain data.
 
 ## See also
 

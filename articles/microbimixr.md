@@ -272,6 +272,7 @@ conditions, it may be easier to inspect subsets of the data.
 fitness_ecoli |>
 subset(ampicillin == 100 & dilution == 100) |>
 plot_mix_fitness()
+#> Warning in log(data[[var_names$initial_ratio_A_B]]): NaNs produced
 ```
 
 ![](microbimixr_files/figure-html/compare-Yurtsev-1.png)

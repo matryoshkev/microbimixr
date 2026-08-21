@@ -320,7 +320,8 @@ conditions, it may be easier to inspect subsets of the data.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fitness_ecoli</span> <span class="op">|&gt;</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">ampicillin</span> <span class="op">==</span> <span class="fl">100</span> <span class="op">&amp;</span> <span class="va">dilution</span> <span class="op">==</span> <span class="fl">100</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span><span class="fu"><a href="../reference/plot_mix_fitness.html">plot_mix_fitness</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="../reference/plot_mix_fitness.html">plot_mix_fitness</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Warning in log(data[[var_names$initial_ratio_A_B]]): NaNs produced</span></span></code></pre></div>
 <p><img src="microbimixr_files/figure-html/compare-Yurtsev-1.png" class="r-plt" alt="" width="100%" style="display: block; margin: auto;"></p>
 <p>This example also shows that microbimixr functions work with the R
 pipe <code>|&gt;</code>.</p>

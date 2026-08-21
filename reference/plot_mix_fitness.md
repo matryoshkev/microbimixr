@@ -69,9 +69,6 @@ A ggplot object
 
 ## Details
 
-Expects Wrightian fitness measures like those returned by
-[`calculate_mix_fitness()`](https://matryoshkev.github.io/microbimixr/reference/calculate_mix_fitness.md).
-
 `var_names` must be a named vector or list that includes the following
 elements (shown here with default values):
 
@@ -85,6 +82,11 @@ elements (shown here with default values):
       fitness_total = "fitness_total",
       fitness_ratio_A_B = "fitness_ratio_A_B"
     )
+
+Expects Wrightian fitness data like those returned by
+[`calculate_mix_fitness()`](https://matryoshkev.github.io/microbimixr/reference/calculate_mix_fitness.md).
+Does not try to plot single-strain data for plots with
+`mix_scale = "ratio"`.
 
 ## See also
 

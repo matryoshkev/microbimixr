@@ -78,9 +78,6 @@ A ggplot object that can be further modified using the ggplot2 package
 
 ## Details
 
-Expects Wrightian fitness data like those returned by
-[`calculate_mix_fitness()`](https://matryoshkev.github.io/microbimixr/reference/calculate_mix_fitness.md).
-
 `var_names` must be a named vector or list that includes the following
 elements (shown here with default values):
 
@@ -91,6 +88,10 @@ elements (shown here with default values):
       initial_ratio_A_B = "initial_ratio_A_B",
       fitness_total = "fitness_total"
     )
+
+Expects Wrightian fitness data like those returned by
+[`calculate_mix_fitness()`](https://matryoshkev.github.io/microbimixr/reference/calculate_mix_fitness.md).
+Does not try to plot single-strain data if `mix_scale = "ratio"`.
 
 ## See also
 
@@ -106,8 +107,6 @@ plot_total_group_fitness(fitness_myxo)
 
 # Using ratio scale for mix frequencies
 plot_total_group_fitness(fitness_myxo, mix_scale = "ratio")
-#> Warning: log-10 transformation introduced infinite values.
-#> Warning: log-10 transformation introduced infinite values.
 
 
 # Other plot options
