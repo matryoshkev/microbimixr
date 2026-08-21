@@ -14,10 +14,11 @@ plot_total_group_fitness(
   ylab = NA,
   xlim = c(NA, NA),
   ylim = c(NA, NA),
-  color = "black",
-  fill = "grey65",
-  shape = 21,
-  size = 1.5
+  color = NULL,
+  fill = NULL,
+  shape = NULL,
+  size = NULL,
+  drop_NA = TRUE
 )
 ```
 
@@ -37,19 +38,18 @@ plot_total_group_fitness(
 
 - mix_scale:
 
-  Determines mixing scale for x axis. When `"fraction"` (the default),
-  uses initial frequency of strain A (proportion of total) from
-  `initial_fraction_A` variable. When `"ratio"`, uses ratio of strain A
-  to strain B (on \\\log\_{10}\\ scale) from `initial_ratio_A_B`
-  variable.
+  Mixing scale for x axis. Default `"fraction"` uses initial frequency
+  of strain A (proportion of total) from `initial_fraction_A` variable
+  of data. `"ratio"` uses ratio of strain A to strain B (on
+  \\\log\_{10}\\ scale) from `initial_ratio_A_B`.
 
 - xlab, ylab:
 
-  Optional string to replace default axis label
+  X and y axis labels
 
 - xlim, ylim:
 
-  Optional axis limits to replace default
+  X and y axis limits
 
 - color:
 
@@ -57,7 +57,7 @@ plot_total_group_fitness(
 
 - fill:
 
-  Point fill. Only affects shapes 21-25.
+  Point fill color. Only affects shapes 21-25.
 
 - shape:
 
@@ -65,7 +65,12 @@ plot_total_group_fitness(
 
 - size:
 
-  Point size in millimeters
+  Point size in mm
+
+- drop_NA:
+
+  `TRUE` to silently remove missing values. `FALSE` to warn when
+  removing missing values.
 
 ## Value
 

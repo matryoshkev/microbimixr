@@ -14,10 +14,11 @@ plot_strain_fitness(
   ylab = NA,
   xlim = c(NA, NA),
   ylim = c(NA, NA),
-  color = c("tan4", "lightsteelblue4"),
-  fill = c("tan", "lightsteelblue"),
-  shape = 21,
-  size = 1.5
+  color = c(NULL, NULL),
+  fill = c(NULL, NULL),
+  shape = NULL,
+  size = NULL,
+  drop_NA = TRUE
 )
 ```
 
@@ -38,37 +39,39 @@ plot_strain_fitness(
 
 - mix_scale:
 
-  Determines mixing scale for x axis. When `"fraction"` (the default),
-  uses initial frequency of strain A (proportion of total) from
-  `initial_fraction_A` variable. When `"ratio"`, uses ratio of strain A
-  to strain B (on \\\log\_{10}\\ scale) from `initial_ratio_A_B`
-  variable.
+  Mixing scale for x axis. Default `"fraction"` uses initial frequency
+  of strain A (proportion of total) from `initial_fraction_A` variable
+  of data. `"ratio"` uses ratio of strain A to strain B (on
+  \\\log\_{10}\\ scale) from `initial_ratio_A_B`.
 
 - xlab, ylab:
 
-  Optional string to replace default axis label
+  X and y axis labels
 
 - xlim, ylim:
 
-  Optional axis limits to replace default
+  X and y axis limits
 
 - color:
 
-  Point color for each strain. Character vector of length two.
+  Point colors
 
 - fill:
 
-  Point fill for each strain. Character vector of length two.
+  Point fill colors. Only affects shapes 21–25.
 
 - shape:
 
-  Point shape. Single value if both strains are to be the same. Vector
-  of length two if strains are to be different
+  Point shape
 
 - size:
 
-  Point size in millimeters. Single value if both strains are to be the
-  same. Vector of length two if strains are to be different.
+  Point size in mm
+
+- drop_NA:
+
+  `TRUE` to silently remove missing values. `FALSE` to warn when
+  removing missing values.
 
 ## Value
 
@@ -106,7 +109,7 @@ plot_strain_fitness(fitness_myxo)
 # Some plot options
 plot_strain_fitness(
   fitness_myxo,
-  xlab = "Initial frequency GVB206.3",
+  xlab = "Initial frequency of GVB206.3",
   ylab = "Sporulation efficiency\n(spores/cell)",
   color = c("black", "grey40"),
   fill = c("grey50", "white"),

@@ -7,7 +7,15 @@ relative within-group fitness against two measures of mix frequency.
 ## Usage
 
 ``` r
-plot_mix_fitness(data, var_names = NULL)
+plot_mix_fitness(
+  data,
+  var_names = NULL,
+  color = c(NULL, NULL, NULL),
+  fill = c(NULL, NULL, NULL),
+  shape = NULL,
+  size = NULL,
+  drop_NA = TRUE
+)
 ```
 
 ## Arguments
@@ -24,6 +32,28 @@ plot_mix_fitness(data, var_names = NULL)
   `data`. If `NULL`, defaults to column names returned by
   [`calculate_mix_fitness()`](https://matryoshkev.github.io/microbimixr/reference/calculate_mix_fitness.md).
   See Details.
+
+- color:
+
+  Point colors `c(strain_A, strain_B, total_group)`
+
+- fill:
+
+  Point fill colors `c(strain_A, strain_B, total_group)`. Only affects
+  shapes 21–25.
+
+- shape:
+
+  Point shape
+
+- size:
+
+  Point size in mm
+
+- drop_NA:
+
+  `TRUE` to silently remove missing values. `FALSE` to warn when
+  removing missing values.
 
 ## Value
 
@@ -55,20 +85,16 @@ elements (shown here with default values):
 ## Examples
 
 ``` r
-library(patchwork)
-
-# Using data from smith et al (2010)
-fitness_myxo <- calculate_mix_fitness(
-  data_smith_2010,
-  var_names = c(
-    initial_number_A = "initial_cells_evolved",
-    initial_number_B = "initial_cells_ancestral",
-    final_number_A = "final_spores_evolved",
-    final_number_B = "final_spores_ancestral",
-    name_A = "GVB206.3",
-    name_B = "GJV10"
-  )
-)
+fitness_myxo <- calculate_mix_fitness(data_smith_2010, var_names_smith_2010)
 plot_mix_fitness(fitness_myxo)
+
+
+# Some plot options
+plot_mix_fitness(
+  fitness_myxo,
+  color = c("black", "grey40", "grey40"),
+  fill = c("grey50", "white", "grey75"),
+  shape = 23
+)
 
 ```
