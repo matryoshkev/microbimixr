@@ -4,7 +4,15 @@
 \alias{plot_mix_fitness}
 \title{Draw plots to compare fitness measures}
 \usage{
-plot_mix_fitness(data, var_names = NULL, drop_NA = TRUE)
+plot_mix_fitness(
+  data,
+  var_names = NULL,
+  color = c(NULL, NULL, NULL),
+  fill = c(NULL, NULL, NULL),
+  shape = NULL,
+  size = NULL,
+  drop_NA = TRUE
+)
 }
 \arguments{
 \item{data}{Data frame of fitness values. Wide format: each row must contain
@@ -15,7 +23,16 @@ extensions like \code{tibble}.}
 variables in \code{data}. If \code{NULL}, defaults to column names returned by
 \code{\link[=calculate_mix_fitness]{calculate_mix_fitness()}}. See Details.}
 
-\item{drop_NA}{Use \code{TRUE} to silently remove missing values.
+\item{color}{Point colors \code{c(strain_A, strain_B, total_group)}}
+
+\item{fill}{Point fill colors \code{c(strain_A, strain_B, total_group)}.
+Only affects shapes 21--25.}
+
+\item{shape}{Point shape}
+
+\item{size}{Point size in mm}
+
+\item{drop_NA}{\code{TRUE} to silently remove missing values.
 \code{FALSE} to warn when removing missing values.}
 }
 \value{
@@ -46,21 +63,16 @@ elements (shown here with default values):
 }\if{html}{\out{</div>}}
 }
 \examples{
-library(patchwork)
-
-# Using data from smith et al (2010)
-fitness_myxo <- calculate_mix_fitness(
-  data_smith_2010,
-  var_names = c(
-    initial_number_A = "initial_cells_evolved",
-    initial_number_B = "initial_cells_ancestral",
-    final_number_A = "final_spores_evolved",
-    final_number_B = "final_spores_ancestral",
-    name_A = "GVB206.3",
-    name_B = "GJV10"
-  )
-)
+fitness_myxo <- calculate_mix_fitness(data_smith_2010, var_names_smith_2010)
 plot_mix_fitness(fitness_myxo)
+
+# Some plot options
+plot_mix_fitness(
+  fitness_myxo,
+  color = c("black", "grey40", "grey40"),
+  fill = c("grey50", "white", "grey75"),
+  shape = 23
+)
 
 }
 \seealso{

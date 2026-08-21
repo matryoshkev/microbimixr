@@ -16,7 +16,12 @@
 #' @param var_names Named character vector identifying fitness and mixing
 #'   variables in `data`. If `NULL`, defaults to column names returned by
 #'   [calculate_mix_fitness()]. See Details.
-#' @param drop_NA Use `TRUE` to silently remove missing values.
+#' @param color Point colors `c(strain_A, strain_B, total_group)`
+#' @param fill Point fill colors `c(strain_A, strain_B, total_group)`.
+#'   Only affects shapes 21--25.
+#' @param shape Point shape
+#' @param size Point size in mm
+#' @param drop_NA `TRUE` to silently remove missing values.
 #'   `FALSE` to warn when removing missing values.
 #'
 #' @details
@@ -43,32 +48,54 @@
 #' @seealso [calculate_mix_fitness()]
 #'
 #' @examples
-#' library(patchwork)
-#'
-#' # Using data from smith et al (2010)
-#' fitness_myxo <- calculate_mix_fitness(
-#'   data_smith_2010,
-#'   var_names = c(
-#'     initial_number_A = "initial_cells_evolved",
-#'     initial_number_B = "initial_cells_ancestral",
-#'     final_number_A = "final_spores_evolved",
-#'     final_number_B = "final_spores_ancestral",
-#'     name_A = "GVB206.3",
-#'     name_B = "GJV10"
-#'   )
-#' )
+#' fitness_myxo <- calculate_mix_fitness(data_smith_2010, var_names_smith_2010)
 #' plot_mix_fitness(fitness_myxo)
+#'
+#' # Some plot options
+#' plot_mix_fitness(
+#'   fitness_myxo,
+#'   color = c("black", "grey40", "grey40"),
+#'   fill = c("grey50", "white", "grey75"),
+#'   shape = 23,
+#'   size = 2
+#' )
 #'
 #' @export
 #'
 plot_mix_fitness <- function(
-	data, var_names = NULL, drop_NA = TRUE
+	data,
+	var_names = NULL,
+	color = c(NULL, NULL, NULL),
+	fill = c(NULL, NULL, NULL),
+	shape = NULL,
+	size = NULL,
+	drop_NA = TRUE
 ) {
-	# Variable names
+	# Get variable names
 	if (is.null(var_names)) {var_names <- fitness_vars_default()}
 
 	# Axis options
 	ylim <- get_ylim_mix_fitness(data, var_names)
+
+	# Point color and fill
+	if (missing(color)) {
+		color_strain_group <- waiver()
+		color_group <- waiver()
+	} else {
+		color_strain_group <- color
+		color_group <- color[[3]]
+	}
+	if (missing(fill)) {
+		fill_strain_group <- waiver()
+		fill_group <- waiver()
+	} else {
+		fill_strain_group <- fill
+		fill_group <- fill[[3]]
+	}
+
+	# Other point options
+	if (missing(shape)) {shape <- waiver()}
+	if (missing(size)) {size <- waiver()}
 
 	# Make subplots
 	figA <- plot_fitness_strain_total(
@@ -76,6 +103,10 @@ plot_mix_fitness <- function(
 		var_names,
 		mix_scale = "fraction",
 		ylim = ylim$fitness,
+		color = color_strain_group,
+		fill = fill_strain_group,
+		shape = shape,
+		size = size,
 		drop_NA = drop_NA
 	)
 	figB <- plot_within_group_fitness(
@@ -83,6 +114,10 @@ plot_mix_fitness <- function(
 		var_names,
 		mix_scale = "fraction",
 		ylim = ylim$fitness_ratio,
+		color = color_group,
+		fill = fill_group,
+		shape = shape,
+		size = size,
 		drop_NA = drop_NA
 	)
 	figC <- plot_fitness_strain_total(
@@ -90,6 +125,10 @@ plot_mix_fitness <- function(
 		var_names,
 		mix_scale = "ratio",
 		ylim = ylim$fitness,
+		color = color_strain_group,
+		fill = fill_strain_group,
+		shape = shape,
+		size = size,
 		drop_NA = drop_NA
 	)
 	figD <- plot_within_group_fitness(
@@ -97,16 +136,21 @@ plot_mix_fitness <- function(
 		var_names,
 		mix_scale = "ratio",
 		ylim = ylim$fitness_ratio,
+		color = color_group,
+		fill = fill_group,
+		shape = shape,
+		size = size,
 		drop_NA = drop_NA
 	)
-	fig_output <- figA + figB + figC + figD
 
-	# Size plots for page-width figure
-	fig_output <- fig_output + patchwork::plot_layout(
-		widths = grid::unit(c(3.2, 1.6), "inches"),
-		heights = grid::unit(1.4, "inches")
-		# Units affect plotting area, not total size
-	)
+	# Combine subplots
+	fig_output <-
+		figA + figB + figC + figD +
+		patchwork::plot_layout(
+			widths = grid::unit(c(3.2, 1.6), "inches"),
+			heights = grid::unit(1.4, "inches")
+			# Units affect plotting area, not total size
+		)
 
 	suppressWarnings(print(fig_output))
 }
@@ -240,8 +284,6 @@ plot_strain_fitness <- function(
 		do.call(geom_point_overlap, point_args) +
 		ggplot2::scale_color_manual(values = color) +
 		ggplot2::scale_fill_manual(values = fill)
-
-	# Add x-axis mixing scale
 	fig_output <- fig_output |>
 		add_mix_axis(
 			mix_scale = mix_scale,
@@ -352,8 +394,6 @@ plot_total_group_fitness <- function(
 		theme_microbimixr() +
 		scale_y_fitness_total(name = ylab, limits = ylim) +
 		do.call(geom_point_overlap, point_args)
-
-	# Add x-axis mixing scale
 	fig_output <- fig_output |>
 		add_mix_axis(
 			mix_scale = mix_scale,
@@ -473,11 +513,6 @@ plot_within_group_fitness <- function(
 			 name = ylab, strain_names = strain_names, limits = ylim
 		) +
 		do.call(geom_point_overlap, point_args)
-		# geom_point_overlap(
-		# 	color = color, fill = fill, shape = shape, size = size, na.rm = drop_NA
-		# )
-
-	# Add x-axis mixing scale
 	fig_output <- fig_output |>
 		add_mix_axis(
 			mix_scale = mix_scale,
@@ -494,12 +529,16 @@ plot_within_group_fitness <- function(
 # Helper functions =============================================================
 
 # Plot strain and total-group fitness
-# Used by plot_mix_fitness() (not exported)
+#   Used by plot_mix_fitness()
 plot_fitness_strain_total <- function(
 	data,
 	var_names = fitness_vars_default(),
 	mix_scale = "fraction",
 	ylim = NULL,
+	color = waiver(),
+	fill = waiver(),
+	shape = waiver(),
+	size = waiver(),
 	drop_NA = TRUE
 ) {
 	# Variable names
@@ -508,11 +547,23 @@ plot_fitness_strain_total <- function(
 	strain_names <- get_strain_names(data, var_names)
 	name_total <- "Total group"
 
-	# Scale options
+	# Axis options
 	mix_scale <- rlang::arg_match(mix_scale, c("fraction", "ratio"))
 
+	# Point color and fill
+	if (is_waiver(color)) {
+		color <- c(color_strain_A(), color_strain_B(), color_group())
+	}
+	if (is_waiver(fill)) {
+		fill <- c(fill_strain_A(), fill_strain_B(), fill_group())
+	}
+
+	# Other point options
+	point_args <- list(na.rm = drop_NA)
+	if (!is_waiver(shape)) {point_args <- c(point_args, list(shape = shape))}
+	if (!is_waiver(size)) {point_args <- c(point_args, list(size = size))}
+
 	# Make long-format data
-	# data_for_plot <- format_to_plot_fitness(data, var_names, mix_scale)
 	data_for_plot <- stats::reshape(
 		as.data.frame(data),
 		direction = "long",
@@ -532,20 +583,14 @@ plot_fitness_strain_total <- function(
 	# Make plot
 	fig_output <-
 		ggplot2::ggplot(data_for_plot) +
-		ggplot2::aes(
-			y = .data$fitness,
-			color = .data$strain,
-			fill = .data$strain
-		) +
+		ggplot2::aes(y = .data$fitness, color = .data$strain, fill = .data$strain) +
 		theme_microbimixr() +
 		theme_plot_mix_fitness() +
 		scale_y_fitness(limits = ylim) +
-		geom_point_overlap(na.rm = drop_NA) +
-		scale_color_strain() +
-		scale_fill_strain() +
+		do.call(geom_point_overlap, point_args) +
+		ggplot2::scale_color_manual(values = color, na.value = NA) +
+		ggplot2::scale_fill_manual(values = fill, na.value = NA) +
 		ggplot2::facet_wrap(~ my_facet, nrow = 1)
-
-	# Add x-axis mixing scale
 	fig_output <- fig_output |>
 		add_mix_axis(
 			mix_scale = mix_scale,
@@ -553,7 +598,6 @@ plot_fitness_strain_total <- function(
 			strain_names = strain_names
 		)
 
-	# Return ggplot object
 	fig_output
 }
 

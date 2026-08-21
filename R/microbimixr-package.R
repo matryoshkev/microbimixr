@@ -15,6 +15,7 @@
 ## usethis namespace: start
 #' @importFrom rlang .data
 #' @importFrom ggplot2 waiver
+#' @importFrom patchwork plot_layout
 ## usethis namespace: end
 NULL
 
