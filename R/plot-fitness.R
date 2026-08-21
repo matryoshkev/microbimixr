@@ -2,7 +2,7 @@
 
 # These functions are meant to be as self-explanatory as possible,
 # so the color/fill/etc options aren't as non-repetitive as they could be.
-# Might still go for single source of truth
+# Might still go for single source of truth.
 
 #' Draw plots to compare fitness measures
 #'
@@ -122,19 +122,17 @@ plot_mix_fitness <- function(
 #' @param var_names Named character vector identifying fitness and mixing
 #'   variables in `data`. If `NULL`, defaults to column names returned by
 #'   [calculate_mix_fitness()]. See Details.
-#' @param mix_scale Determines mixing scale for x axis. When `"fraction"`
-#'   (the default), uses initial frequency of strain A (proportion of total)
-#'   from `initial_fraction_A` variable. When `"ratio"`, uses ratio of strain A
-#'   to strain B (on \eqn{\log_{10}} scale) from `initial_ratio_A_B` variable.
-#' @param xlab,ylab Optional string to replace default axis label
-#' @param xlim,ylim Optional axis limits to replace default
-#' @param color Point color for each strain. Character vector of length two.
-#' @param fill Point fill for each strain. Character vector of length two.
-#' @param shape Point shape. Single value if both strains are to be the same.
-#'   Vector of length two if strains are to be different
-#' @param size Point size in millimeters. Single value if both strains are to
-#'   be the same. Vector of length two if strains are to be different.
-#' @param drop_NA Use `TRUE` to silently remove missing values.
+#' @param mix_scale Mixing scale for x axis. Default `"fraction"` uses initial
+#'   frequency of strain A (proportion of total) from `initial_fraction_A`
+#'   variable of data. `"ratio"` uses ratio of strain A to strain B (on
+#'   \eqn{\log_{10}} scale) from `initial_ratio_A_B`.
+#' @param xlab,ylab X and y axis labels
+#' @param xlim,ylim X and y axis limits
+#' @param color Point colors
+#' @param fill Point fill colors. Only affects shapes 21--25.
+#' @param shape Point shape
+#' @param size Point size in mm
+#' @param drop_NA `TRUE` to silently remove missing values.
 #'   `FALSE` to warn when removing missing values.
 #'
 #' @details
@@ -166,7 +164,7 @@ plot_mix_fitness <- function(
 #' # Some plot options
 #' plot_strain_fitness(
 #'   fitness_myxo,
-#'   xlab = "Initial frequency GVB206.3",
+#'   xlab = "Initial frequency of GVB206.3",
 #'   ylab = "Sporulation efficiency\n(spores/cell)",
 #'   color = c("black", "grey40"),
 #'   fill = c("grey50", "white"),
@@ -184,10 +182,10 @@ plot_strain_fitness <- function(
 	ylab = NA,
 	xlim = c(NA, NA),
 	ylim = c(NA, NA),
-	color = c("tan4", "lightsteelblue4"),
-	fill = c("tan", "lightsteelblue"),
-	shape = 21,
-	size = 1.5,
+	color = c(NULL, NULL),
+	fill = c(NULL, NULL),
+	shape = NULL,
+	size = NULL,
 	drop_NA = TRUE
 ) {
 	# Get variable and strain names
@@ -203,9 +201,22 @@ plot_strain_fitness <- function(
 	if (missing(xlim)) {xlim <- NULL}
 	if (missing(ylim)) {ylim <- NULL}
 
-	# Recycle shape and size args if only one provided
-	if (length(shape) == 1) {shape <- c(shape, shape)}
-	if (length(size) == 1) {size <- c(size, size)}
+	# Point color and fill
+	if (missing(color) | is_waiver(color)) {
+		color <- c(color_strain_A(), color_strain_B())
+	}
+	if (missing(fill) | is_waiver(fill)) {
+		fill <- c(fill_strain_A(), fill_strain_B())
+	}
+
+	# Other point options
+	point_args <- list(na.rm = drop_NA)
+	if (!missing(shape) & !is_waiver(shape)) {
+		point_args <- c(point_args, list(shape = shape))
+	}
+	if (!missing(size) & !is_waiver(size)) {
+		point_args <- c(point_args, list(size = size))
+	}
 
 	# Make long-format data frame for plot
 	data_to_plot <- stats::reshape(
@@ -220,22 +231,12 @@ plot_strain_fitness <- function(
 	# Make plot
 	fig_output <-
 		ggplot2::ggplot(data_to_plot) +
-		ggplot2::aes(
-			y = .data$fitness,
-			color = .data$strain,
-			fill = .data$strain,
-			shape = .data$strain,
-			size = .data$strain
-		) +
+		ggplot2::aes(y = .data$fitness, color = .data$strain, fill = .data$strain) +
 		theme_microbimixr() +
 		scale_y_fitness(name = ylab, limits = ylim) +
-		geom_point_overlap(na.rm = drop_NA) +
+		do.call(geom_point_overlap, point_args) +
 		ggplot2::scale_color_manual(values = color) +
-		ggplot2::scale_fill_manual(values = fill) +
-		ggplot2::scale_shape_manual(values = shape) +
-		ggplot2::scale_size_manual(values = size)
-		# scale_color_strain() +
-		# scale_fill_strain()
+		ggplot2::scale_fill_manual(values = fill)
 
 	# Add x-axis mixing scale
 	fig_output <- fig_output |>
@@ -259,9 +260,7 @@ plot_strain_fitness <- function(
 #' @param data Data frame of fitness values and mix frequencies.
 #'   Accepts data frame extensions like `tibble`.
 #' @param color Point color
-#' @param fill Point fill. Only affects shapes 21-25.
-#' @param shape Point shape
-#' @param size Point size in millimeters
+#' @param fill Point fill color. Only affects shapes 21-25.
 #'
 #' @details
 #' Expects Wrightian fitness data like those returned by
@@ -313,10 +312,10 @@ plot_total_group_fitness <- function(
 	ylab = NA,
 	xlim = c(NA, NA),
 	ylim = c(NA, NA),
-	color = "black",
-	fill = "grey65",
-	shape = 21,
-	size = 1.5,
+	color = NULL,
+	fill = NULL,
+	shape = NULL,
+	size = NULL,
 	drop_NA = TRUE
 ) {
 	# Get variable and strain names
@@ -331,15 +330,25 @@ plot_total_group_fitness <- function(
 	if (missing(xlim)) {xlim <- NULL}
 	if (missing(ylim)) {ylim <- NULL}
 
+	# Point options
+	point_args <- list(na.rm = drop_NA)
+	if (missing(color) | is_waiver(color)) {color <- color_group()}
+	if (missing(fill) | is_waiver(fill)) {fill <- fill_group()}
+	point_args <- c(point_args, list(color = color, fill = fill))
+	if (!missing(shape) & !is_waiver(shape)) {
+		point_args <- c(point_args, list(shape = shape))
+	}
+	if (!missing(size) & !is_waiver(size)) {
+		point_args <- c(point_args, list(size = size))
+	}
+
 	# Make plot
 	fig_output <-
 		ggplot2::ggplot(data) +
 		ggplot2::aes(y = .data[[var_names$fitness_total]]) +
 		theme_microbimixr() +
 		scale_y_fitness_total(name = ylab, limits = ylim) +
-		geom_point_overlap(
-			color = color, fill = fill, shape = shape, size = size, na.rm = drop_NA
-		)
+		do.call(geom_point_overlap, point_args)
 
 	# Add x-axis mixing scale
 	fig_output <- fig_output |>
@@ -413,10 +422,10 @@ plot_within_group_fitness <- function(
 	ylab = NA,
 	xlim = c(NA, NA),
 	ylim = c(NA, NA),
-	color = "black",
-	fill = "grey65",
-	shape = 21,
-	size = 1.5,
+	color = NULL,
+	fill = NULL,
+	shape = NULL,
+	size = NULL,
 	drop_NA = TRUE
 ) {
 	# Get variable and strain names
@@ -430,6 +439,18 @@ plot_within_group_fitness <- function(
 	if (missing(ylab)) {ylab <- waiver()}
 	if (missing(xlim)) {xlim <- NULL}
 	if (missing(ylim)) {ylim <- NULL}
+
+	# Point options
+	point_args <- list(na.rm = drop_NA)
+	if (missing(color) | is_waiver(color)) {color <- color_group()}
+	if (missing(fill) | is_waiver(fill)) {fill <- fill_group()}
+	point_args <- c(point_args, list(color = color, fill = fill))
+	if (!missing(shape) & !is_waiver(shape)) {
+		point_args <- c(point_args, list(shape = shape))
+	}
+	if (!missing(size) & !is_waiver(size)) {
+		point_args <- c(point_args, list(size = size))
+	}
 
 	# Filter out single-strain data
 	if (mix_scale == "fraction") {
@@ -448,9 +469,10 @@ plot_within_group_fitness <- function(
 		scale_y_fitness_ratio(
 			 name = ylab, strain_names = strain_names, limits = ylim
 		) +
-		geom_point_overlap(
-			color = color, fill = fill, shape = shape, size = size, na.rm = drop_NA
-		)
+		do.call(geom_point_overlap, point_args)
+		# geom_point_overlap(
+		# 	color = color, fill = fill, shape = shape, size = size, na.rm = drop_NA
+		# )
 
 	# Add x-axis mixing scale
 	fig_output <- fig_output |>

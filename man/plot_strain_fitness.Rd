@@ -12,10 +12,10 @@ plot_strain_fitness(
   ylab = NA,
   xlim = c(NA, NA),
   ylim = c(NA, NA),
-  color = c("tan4", "lightsteelblue4"),
-  fill = c("tan", "lightsteelblue"),
-  shape = 21,
-  size = 1.5,
+  color = c(NULL, NULL),
+  fill = c(NULL, NULL),
+  shape = NULL,
+  size = NULL,
   drop_NA = TRUE
 )
 }
@@ -28,26 +28,24 @@ Accepts data frame extensions like \code{tibble}.}
 variables in \code{data}. If \code{NULL}, defaults to column names returned by
 \code{\link[=calculate_mix_fitness]{calculate_mix_fitness()}}. See Details.}
 
-\item{mix_scale}{Determines mixing scale for x axis. When \code{"fraction"}
-(the default), uses initial frequency of strain A (proportion of total)
-from \code{initial_fraction_A} variable. When \code{"ratio"}, uses ratio of strain A
-to strain B (on \eqn{\log_{10}} scale) from \code{initial_ratio_A_B} variable.}
+\item{mix_scale}{Mixing scale for x axis. Default \code{"fraction"} uses initial
+frequency of strain A (proportion of total) from \code{initial_fraction_A}
+variable of data. \code{"ratio"} uses ratio of strain A to strain B (on
+\eqn{\log_{10}} scale) from \code{initial_ratio_A_B}.}
 
-\item{xlab, ylab}{Optional string to replace default axis label}
+\item{xlab, ylab}{X and y axis labels}
 
-\item{xlim, ylim}{Optional axis limits to replace default}
+\item{xlim, ylim}{X and y axis limits}
 
-\item{color}{Point color for each strain. Character vector of length two.}
+\item{color}{Point colors}
 
-\item{fill}{Point fill for each strain. Character vector of length two.}
+\item{fill}{Point fill colors. Only affects shapes 21--25.}
 
-\item{shape}{Point shape. Single value if both strains are to be the same.
-Vector of length two if strains are to be different}
+\item{shape}{Point shape}
 
-\item{size}{Point size in millimeters. Single value if both strains are to
-be the same. Vector of length two if strains are to be different.}
+\item{size}{Point size in mm}
 
-\item{drop_NA}{Use \code{TRUE} to silently remove missing values.
+\item{drop_NA}{\code{TRUE} to silently remove missing values.
 \code{FALSE} to warn when removing missing values.}
 }
 \value{
@@ -81,7 +79,7 @@ plot_strain_fitness(fitness_myxo)
 # Some plot options
 plot_strain_fitness(
   fitness_myxo,
-  xlab = "Initial frequency GVB206.3",
+  xlab = "Initial frequency of GVB206.3",
   ylab = "Sporulation efficiency\n(spores/cell)",
   color = c("black", "grey40"),
   fill = c("grey50", "white"),
