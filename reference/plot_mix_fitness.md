@@ -10,6 +10,7 @@ relative within-group fitness against two measures of mix frequency.
 plot_mix_fitness(
   data,
   var_names = NULL,
+  mix_scale = c("fraction", "ratio"),
   color = c(NULL, NULL, NULL),
   fill = c(NULL, NULL, NULL),
   shape = NULL,
@@ -32,6 +33,13 @@ plot_mix_fitness(
   `data`. If `NULL`, defaults to column names returned by
   [`calculate_mix_fitness()`](https://matryoshkev.github.io/microbimixr/reference/calculate_mix_fitness.md).
   See Details.
+
+- mix_scale:
+
+  Mixing frequency scale for x axis. `"fraction"` uses initial frequency
+  of strain A (proportion of total) from `initial_fraction_A` variable
+  in data. `"ratio"` uses ratio of strain A to strain B (on
+  \\\log\_{10}\\ scale) from `initial_ratio_A_B`. Defaults to show both.
 
 - color:
 
@@ -92,9 +100,11 @@ plot_mix_fitness(fitness_myxo)
 # Some plot options
 plot_mix_fitness(
   fitness_myxo,
+  mix_scale = "fraction",
   color = c("black", "grey40", "grey40"),
   fill = c("grey50", "white", "grey75"),
-  shape = 23
+  shape = 23,
+  size = 2
 )
 
 ```
