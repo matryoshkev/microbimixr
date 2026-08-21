@@ -227,6 +227,9 @@ plot_strain_fitness <- function(
 		timevar = "strain",
 		times = c(strain_names$name_A, strain_names$name_B)
 	)
+	data_to_plot$strain <- factor(
+		data_to_plot$strain, levels = c(strain_names$name_A, strain_names$name_B)
+	)
 
 	# Make plot
 	fig_output <-
