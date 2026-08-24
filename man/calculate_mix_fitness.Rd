@@ -73,10 +73,10 @@ For final abundance, this must be two of:
 Values of \code{number} vars in \code{data} can be counts or densities, but \code{initial}
 and \code{final} must have same units.
 
-\code{var_names} must also contain \code{name_A} and \code{name_B} naming the
-microbes in \code{data.} If these values are column names in \code{data}, \code{data} values
-will be used in the output frame. Otherwise the output frame will use the
-string values as names.
+\code{var_names} must also contain \code{name_A} and \code{name_B} naming the strains in
+\code{data.} If the values of \code{name_A} and \code{name_B} are columns in \code{data}
+(for datasets with multiple strain combinations),
+those columns will be used in the output frame.
 }
 \examples{
 # Data with cell counts for each strain
@@ -85,8 +85,8 @@ fitness_smith_2010 <- calculate_mix_fitness(
   var_names = c(
     initial_number_A = "initial_cells_evolved",
     initial_number_B = "initial_cells_ancestral",
-    final_number_A   = "final_spores_evolved",
-    final_number_B   = "final_spores_ancestral",
+    final_number_A = "final_spores_evolved",
+    final_number_B = "final_spores_ancestral",
     name_A = "Evolved GVB206.3",
     name_B = "Ancestral GJV10"
   ),
@@ -109,6 +109,7 @@ fitness_Yurtsev_2013 <- calculate_mix_fitness(
 )
 # Warns of nonbiological values in data: some resistant fractions < 0
 # Artifact of subtracting background during flow cytometry?
+
 head(fitness_Yurtsev_2013)
 
 }

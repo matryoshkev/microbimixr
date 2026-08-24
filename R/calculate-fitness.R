@@ -31,10 +31,10 @@
 #' Values of `number` vars in `data` can be counts or densities, but `initial`
 #' and `final` must have same units.
 #'
-#' `var_names` must also contain `name_A` and `name_B` naming the
-#' microbes in `data.` If these values are column names in `data`, `data` values
-#' will be used in the output frame. Otherwise the output frame will use the
-#' string values as names.
+#' `var_names` must also contain `name_A` and `name_B` naming the strains in
+#' `data.` If the values of `name_A` and `name_B` are columns in `data`
+#' (for datasets with multiple strain combinations),
+#' those columns will be used in the output frame.
 #'
 #' @return
 #' A data frame of same type as `data` with the following columns:
@@ -77,8 +77,8 @@
 #'   var_names = c(
 #'     initial_number_A = "initial_cells_evolved",
 #'     initial_number_B = "initial_cells_ancestral",
-#'     final_number_A   = "final_spores_evolved",
-#'     final_number_B   = "final_spores_ancestral",
+#'     final_number_A = "final_spores_evolved",
+#'     final_number_B = "final_spores_ancestral",
 #'     name_A = "Evolved GVB206.3",
 #'     name_B = "Ancestral GJV10"
 #'   ),
@@ -101,16 +101,24 @@
 #' )
 #' # Warns of nonbiological values in data: some resistant fractions < 0
 #' # Artifact of subtracting background during flow cytometry?
+#'
 #' head(fitness_Yurtsev_2013)
 #'
 #' @export
 #'
 calculate_mix_fitness <- function(data, var_names, keep = NULL) {
+	# Warn if any data not biologically meaningful
+	check_abundance_data(data, var_names)
+
+	# Copy data to preserve type (base data frame, tibble, etc)
 	output <- data
 
-	# Calculate initial and final population states
-	output <- set_population(output, "initial", data, var_names)
-	output <- set_population(output, "final", data, var_names)
+	# Calculate initial and final population states,
+	# and label which strain is A and which is B
+	output <- output |>
+		set_population("initial", data, var_names) |>
+		set_population("final", data, var_names) |>
+		set_strain_names(data, var_names)
 
 	# Calculate fitness measures
 	output$fitness_A <- output$final_number_A / output$initial_number_A
@@ -119,29 +127,121 @@ calculate_mix_fitness <- function(data, var_names, keep = NULL) {
 		output$final_number_total / output$initial_number_total
 	output$fitness_ratio_A_B <- output$fitness_A / output$fitness_B
 
-	# Replace NaN from single-strain expts etc
+	# Replace fitness NaNs from single-strain expts etc
 	output[sapply(output, is.nan)] <- NA
 
-	# Warn about fitness zeroes
-	if (any(c(output$fitness_A == 0, output$fitness_B == 0), na.rm = TRUE)) {
+	# TODO: Move this to plot_*_fitness() functions
+	# # Warn about fitness zeroes
+	# if (any(c(output$fitness_A == 0, output$fitness_B == 0), na.rm = TRUE)) {
+	# 	warning(
+	# 		"Some fitness values are zero. Undefined on log scale.",
+	# 		call. = FALSE
+	# 	)
+	# }
+
+	# Return data frame with calculated values
+	output[c(
+		keep, "name_A", "name_B",
+		"initial_fraction_A", "initial_ratio_A_B",
+		"fitness_A", "fitness_B", "fitness_total", "fitness_ratio_A_B"
+	)]
+}
+
+
+# Helper functions =============================================================
+
+# Warn if any abundance data are not biologically meaningful
+check_abundance_data <- function(data, var_names) {
+	var_names <- as.list(var_names)
+
+	# Initial population
+	if (!is.null(var_names$initial_number_A)) {
+		check_counts(data, var_names$initial_number_A)
+	}
+	if (!is.null(var_names$initial_number_B)) {
+		check_counts(data, var_names$initial_number_B)
+	}
+	if (!is.null(var_names$initial_fraction_A)) {
+		check_fractions(data, var_names$initial_fraction_A)
+	}
+	if (!is.null(var_names$initial_fraction_B)) {
+		check_fractions(data, var_names$initial_fraction_B)
+	}
+	if (!is.null(var_names$initial_number_total)) {
+		check_counts(data, var_names$initial_number_total)
+		if (!is.null(var_names$initial_number_A)) {
+			check_count_differences(
+				data, var_names$initial_number_A, var_names$initial_number_total
+			)
+		}
+		if (!is.null(var_names$initial_number_B)) {
+			check_count_differences(
+				data, var_names$initial_number_B, var_names$initial_number_total
+			)
+		}
+	}
+
+	# Final population
+	if (!is.null(var_names$final_number_A)) {
+		check_counts(data, var_names$final_number_A)
+	}
+	if (!is.null(var_names$final_number_B)) {
+		check_counts(data, var_names$final_number_B)
+	}
+	if (!is.null(var_names$final_fraction_A)) {
+		check_fractions(data, var_names$final_fraction_A)
+	}
+	if (!is.null(var_names$final_fraction_B)) {
+		check_fractions(data, var_names$final_fraction_B)
+	}
+	if (!is.null(var_names$final_number_total)) {
+		check_counts(data, var_names$final_number_total)
+		if (!is.null(var_names$final_number_A)) {
+			check_count_differences(
+				data, var_names$final_number_A, var_names$final_number_total
+			)
+		}
+		if (!is.null(var_names$final_number_B)) {
+			check_count_differences(
+				data, var_names$final_number_B, var_names$final_number_total
+			)
+		}
+	}
+}
+
+# Warn if any count data not biologically meaningful
+check_counts <- function(data, var_name) {
+	if (any(data[[var_name]] < 0, na.rm = TRUE)) {
 		warning(
-			"Some fitness values are zero. Undefined on log scale.",
+			"Some ", var_name, " values < 0",
+			" -- Not biologically meaningful.",
 			call. = FALSE
 		)
 	}
-
-	# Label which is A and which is B
-	output <- set_strain_names(output, data, var_names)
-
-	# Return data frame with calculated values
-	subset(output, select = c(
-		"name_A", "name_B", keep,
-		"initial_fraction_A", "initial_ratio_A_B",
-		"fitness_A", "fitness_B", "fitness_total", "fitness_ratio_A_B"
-	))
 }
 
-# Helper functions =============================================================
+# Warn if any fraction data not biologically meaningful
+check_fractions <- function(data, var_name) {
+	if (any(c(data[[var_name]] < 0, data[[var_name]] > 1), na.rm = TRUE)) {
+		warning(
+			"Some ", var_name, " values not in range [0, 1]",
+			" -- Not biologically meaningful",
+			call. = FALSE
+		)
+	}
+}
+
+# Warn if difference between strain count and total count
+# not biologically meaningful
+check_count_differences <- function(data, var_name_strain, var_name_total) {
+	if (any(c(data[[var_name_strain]] > data[[var_name_total]]), na.rm = TRUE)) {
+		warning(
+			"Some ", var_name_strain, " values > ", var_name_total,
+			" -- Not biologically meaningful",
+			call. = FALSE
+		)
+	}
+}
 
 # Calculate initial/final population state
 set_population <- function(output, time_point, data, var_names) {
@@ -163,109 +263,66 @@ set_population <- function(output, time_point, data, var_names) {
 	var_fraction_A   <- var_names[[name_fraction_A]]
 	var_fraction_B   <- var_names[[name_fraction_B]]
 
+	# Calculate unknown abundance vars from the two that are known
 	if (!is.null(var_number_A) & !is.null(var_number_B)) {
-		# Data are number A & number B
-		validate_count_data(data, var_number_A)
-		validate_count_data(data, var_number_B)
 		number_A     <- data[[var_number_A]]
 		number_B     <- data[[var_number_B]]
 		number_total <- number_A + number_B
 		fraction_A   <- number_A / number_total
 	} else if (!is.null(var_number_total) & !is.null(var_fraction_A)) {
-		# Data are number total & fraction A
-		validate_count_data(data, var_number_total)
-		validate_fraction_data(data, var_fraction_A)
 		number_total <- data[[var_number_total]]
 		fraction_A   <- data[[var_fraction_A]]
 		number_A     <- number_total * fraction_A
 		number_B     <- number_total * (1-fraction_A)
 	} else if (!is.null(var_number_total) & !is.null(var_fraction_B)) {
-		# Data are number total & fraction B
-		validate_count_data(data, var_number_total)
-		validate_fraction_data(data, var_fraction_B)
 		number_total <- data[[var_number_total]]
 		fraction_A   <- 1 - data[[var_fraction_B]]
 		number_A     <- number_total * fraction_A
 		number_B     <- number_total * (1-fraction_A)
 	} else if (!is.null(var_number_total) & !is.null(var_number_A)) {
-		# Data are number total & number A
-		validate_count_data(data, var_number_total)
-		validate_count_data(data, var_number_A)
-		validate_difference_data(data, var_number_A, var_number_total)
 		number_total <- data[[var_number_total]]
 		number_A     <- data[[var_number_A]]
 		number_B     <- number_total - number_A
 		fraction_A   <- number_A / number_total
 	} else if (!is.null(var_number_total) & !is.null(var_number_B)) {
-		# Data are number total & number B
-		validate_count_data(data, var_number_total)
-		validate_count_data(data, var_number_B)
-		validate_difference_data(data, var_number_B, var_number_total)
 		number_total <- data[[var_number_total]]
 		number_B     <- data[[var_number_B]]
 		number_A     <- number_total - number_B
 		fraction_A   <- number_A / number_total
+	} else {
+		stop("Not enough information in data to calculate fitness")
 	}
 
-	output[[name_number_A]]     <- number_A
-	output[[name_number_B]]     <- number_B
-	output[[name_number_total]] <- number_total
+	# Write abundance vars to output frame
 	if (time_point == "initial") {
 		output[[name_fraction_A]] <- fraction_A
 		output[[name_ratio_A_B]]  <- number_A / number_B
 	}
+	output[[name_number_A]] <- number_A
+	output[[name_number_B]] <- number_B
+	output[[name_number_total]] <- number_total
+
 	output
 }
 
-# Validate number data
-validate_count_data <- function(data, var_name) {
-	if (any(data[[var_name]] < 0, na.rm = TRUE)) {
-		warning(
-			"Some ", var_name, " values < 0: Not biologically meaningful",
-			call. = FALSE
-		)
-	}
-}
-
-# Validate fraction data
-validate_fraction_data <- function(data, var_name) {
-	if (any(c(data[[var_name]] < 0, data[[var_name]] > 1), na.rm = TRUE)) {
-		warning(
-			"Some ", var_name, " values not in range [0, 1]",
-			": Not biologically meaningful",
-			call. = FALSE
-		)
-	}
-}
-
-# Validate data difference between strain and total number
-validate_difference_data <- function(data, var_name_strain, var_name_total) {
-	if (any(c(data[[var_name_strain]] > data[[var_name_total]]), na.rm = TRUE)) {
-		warning(
-			"Some ", var_name_strain, " values > ", var_name_total,
-			": Not biologically meaningful",
-			call. = FALSE
-		)
-	}
-}
-
-# Set strain names in target frame using vars in input frame
-#   If input var not present use string
-set_strain_names <- function(target, input, var_names) {
+# Label which strain is A and which is B in fitness frame
+set_strain_names <- function(output, data, var_names) {
 	var_names <- as.list(var_names)
-	var_name_A <- var_names$name_A
-	var_name_B <- var_names$name_B
+	string_name_A <- var_names[["name_A"]]
+	string_name_B <- var_names[["name_B"]]
 
 	# Error if names missing
-	if (is.null(var_name_A)) stop("var_names must contain name_A")
-	if (is.null(var_name_B)) stop("var_names must contain name_B")
+	if (is.null(string_name_A)) stop("var_names must contain name_A")
+	if (is.null(string_name_B)) stop("var_names must contain name_B")
 
-	# If input var not present use string
-	name_A <- input[[var_name_A]]
-	name_B <- input[[var_name_B]]
-	target$name_A <- if (is.null(name_A)) var_name_A else name_A
-	target$name_B <- if (is.null(name_B)) var_name_B else name_B
+	# Use strain name variable in abundance data if present
+	# otherwise use given string
+	data_name_A <- data[[string_name_A]]
+	data_name_B <- data[[string_name_B]]
+	output[["name_A"]] <-
+		if (is.null(data_name_A)) string_name_A else data_name_A
+	output[["name_B"]] <-
+		if (is.null(data_name_B)) string_name_B else data_name_B
 
-	target
+	output
 }
-
