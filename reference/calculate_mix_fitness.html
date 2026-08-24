@@ -128,10 +128,10 @@ be two of:</p><ul><li><p><code>initial_number_A</code></p></li>
 <li><p><code>final_fraction_B</code></p></li>
 </ul><p>Values of <code>number</code> vars in <code>data</code> can be counts or densities, but <code>initial</code>
 and <code>final</code> must have same units.</p>
-<p><code>var_names</code> must also contain <code>name_A</code> and <code>name_B</code> naming the
-microbes in <code>data.</code> If these values are column names in <code>data</code>, <code>data</code> values
-will be used in the output frame. Otherwise the output frame will use the
-string values as names.</p>
+<p><code>var_names</code> must also contain <code>name_A</code> and <code>name_B</code> naming the strains in
+<code>data.</code> If the values of <code>name_A</code> and <code>name_B</code> are columns in <code>data</code>
+(for datasets with multiple strain combinations),
+those columns will be used in the output frame.</p>
     </div>
     <div class="section level2">
     <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a></h2>
@@ -148,21 +148,21 @@ quantitative analysis of microbial data. Proceedings B 288:20201657.
 <span class="r-in"><span>  var_names <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span>    initial_number_A <span class="op">=</span> <span class="st">"initial_cells_evolved"</span>,</span></span>
 <span class="r-in"><span>    initial_number_B <span class="op">=</span> <span class="st">"initial_cells_ancestral"</span>,</span></span>
-<span class="r-in"><span>    final_number_A   <span class="op">=</span> <span class="st">"final_spores_evolved"</span>,</span></span>
-<span class="r-in"><span>    final_number_B   <span class="op">=</span> <span class="st">"final_spores_ancestral"</span>,</span></span>
+<span class="r-in"><span>    final_number_A <span class="op">=</span> <span class="st">"final_spores_evolved"</span>,</span></span>
+<span class="r-in"><span>    final_number_B <span class="op">=</span> <span class="st">"final_spores_ancestral"</span>,</span></span>
 <span class="r-in"><span>    name_A <span class="op">=</span> <span class="st">"Evolved GVB206.3"</span>,</span></span>
 <span class="r-in"><span>    name_B <span class="op">=</span> <span class="st">"Ancestral GJV10"</span></span></span>
 <span class="r-in"><span>  <span class="op">)</span>,</span></span>
 <span class="r-in"><span>  keep <span class="op">=</span> <span class="st">"exptl_block"</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">fitness_smith_2010</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             name_A          name_B exptl_block initial_fraction_A</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 Evolved GVB206.3 Ancestral GJV10  2009-04-29         1.00000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2 Evolved GVB206.3 Ancestral GJV10  2009-04-29         0.98901099</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3 Evolved GVB206.3 Ancestral GJV10  2009-04-29         0.90000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4 Evolved GVB206.3 Ancestral GJV10  2009-04-29         0.50000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5 Evolved GVB206.3 Ancestral GJV10  2009-04-29         0.10000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6 Evolved GVB206.3 Ancestral GJV10  2009-04-29         0.01098901</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   exptl_block           name_A          name_B initial_fraction_A</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1  2009-04-29 Evolved GVB206.3 Ancestral GJV10         1.00000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2  2009-04-29 Evolved GVB206.3 Ancestral GJV10         0.98901099</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3  2009-04-29 Evolved GVB206.3 Ancestral GJV10         0.90000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4  2009-04-29 Evolved GVB206.3 Ancestral GJV10         0.50000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5  2009-04-29 Evolved GVB206.3 Ancestral GJV10         0.10000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6  2009-04-29 Evolved GVB206.3 Ancestral GJV10         0.01098901</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   initial_ratio_A_B    fitness_A  fitness_B fitness_total fitness_ratio_A_B</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1               Inf 1.200000e-07         NA  1.200000e-07                NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2       90.00000000 1.555556e-07 0.00000400  1.978022e-07        0.03888889</span>
@@ -184,18 +184,19 @@ quantitative analysis of microbial data. Proceedings B 288:20201657.
 <span class="r-in"><span>  <span class="op">)</span>,</span></span>
 <span class="r-in"><span>  keep <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ampicillin"</span>, <span class="st">"dilution"</span>, <span class="st">"replicate"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Some fraction_resistant_initial values not in range [0, 1]: Not biologically meaningful</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Some fraction_resistant_final values not in range [0, 1]: Not biologically meaningful</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Some fraction_resistant_initial values not in range [0, 1] -- Not biologically meaningful</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Some fraction_resistant_final values not in range [0, 1] -- Not biologically meaningful</span>
 <span class="r-in"><span><span class="co"># Warns of nonbiological values in data: some resistant fractions &lt; 0</span></span></span>
 <span class="r-in"><span><span class="co"># Artifact of subtracting background during flow cytometry?</span></span></span>
+<span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">fitness_Yurtsev_2013</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   name_A name_B ampicillin dilution replicate initial_fraction_A</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1   AmpR   AmpS          0      100         0      -0.0003784523</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2   AmpR   AmpS          0      100         0       0.0473674563</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3   AmpR   AmpS          0      100         0       0.0831943961</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4   AmpR   AmpS          0      100         0       0.1360970434</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5   AmpR   AmpS          0      100         0       0.1909207725</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6   AmpR   AmpS          0      100         0       0.2346178261</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ampicillin dilution replicate name_A name_B initial_fraction_A</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1          0      100         0   AmpR   AmpS      -0.0003784523</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2          0      100         0   AmpR   AmpS       0.0473674563</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3          0      100         0   AmpR   AmpS       0.0831943961</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4          0      100         0   AmpR   AmpS       0.1360970434</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5          0      100         0   AmpR   AmpS       0.1909207725</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6          0      100         0   AmpR   AmpS       0.2346178261</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   initial_ratio_A_B fitness_A fitness_B fitness_total fitness_ratio_A_B</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1     -0.0003783091  51.82082  115.6992     115.72341         0.4478925</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2      0.0497226938  55.19903  104.4084     102.07749         0.5286838</span>

@@ -162,19 +162,19 @@ fitness_ecoli <- calculate_mix_fitness(
     ), 
     keep = c("ampicillin", "dilution")
 )
-#> Warning: Some fraction_resistant_initial values not in range [0, 1]: Not
+#> Warning: Some fraction_resistant_initial values not in range [0, 1] -- Not
 #> biologically meaningful
-#> Warning: Some fraction_resistant_final values not in range [0, 1]: Not
+#> Warning: Some fraction_resistant_final values not in range [0, 1] -- Not
 #> biologically meaningful
 
 head(fitness_ecoli)
-#>   name_A name_B ampicillin dilution initial_fraction_A initial_ratio_A_B
-#> 1   AmpR   AmpS          0      100      -0.0003784523     -0.0003783091
-#> 2   AmpR   AmpS          0      100       0.0473674563      0.0497226938
-#> 3   AmpR   AmpS          0      100       0.0831943961      0.0907437691
-#> 4   AmpR   AmpS          0      100       0.1360970434      0.1575374205
-#> 5   AmpR   AmpS          0      100       0.1909207725      0.2359729011
-#> 6   AmpR   AmpS          0      100       0.2346178261      0.3065368309
+#>   ampicillin dilution name_A name_B initial_fraction_A initial_ratio_A_B
+#> 1          0      100   AmpR   AmpS      -0.0003784523     -0.0003783091
+#> 2          0      100   AmpR   AmpS       0.0473674563      0.0497226938
+#> 3          0      100   AmpR   AmpS       0.0831943961      0.0907437691
+#> 4          0      100   AmpR   AmpS       0.1360970434      0.1575374205
+#> 5          0      100   AmpR   AmpS       0.1909207725      0.2359729011
+#> 6          0      100   AmpR   AmpS       0.2346178261      0.3065368309
 #>   fitness_A fitness_B fitness_total fitness_ratio_A_B
 #> 1  51.82082  115.6992     115.72341         0.4478925
 #> 2  55.19903  104.4084     102.07749         0.5286838

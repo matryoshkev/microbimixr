@@ -110,10 +110,10 @@ For final abundance, this must be two of:
 Values of `number` vars in `data` can be counts or densities, but
 `initial` and `final` must have same units.
 
-`var_names` must also contain `name_A` and `name_B` naming the microbes
-in `data.` If these values are column names in `data`, `data` values
-will be used in the output frame. Otherwise the output frame will use
-the string values as names.
+`var_names` must also contain `name_A` and `name_B` naming the strains
+in `data.` If the values of `name_A` and `name_B` are columns in `data`
+(for datasets with multiple strain combinations), those columns will be
+used in the output frame.
 
 ## References
 
@@ -130,21 +130,21 @@ fitness_smith_2010 <- calculate_mix_fitness(
   var_names = c(
     initial_number_A = "initial_cells_evolved",
     initial_number_B = "initial_cells_ancestral",
-    final_number_A   = "final_spores_evolved",
-    final_number_B   = "final_spores_ancestral",
+    final_number_A = "final_spores_evolved",
+    final_number_B = "final_spores_ancestral",
     name_A = "Evolved GVB206.3",
     name_B = "Ancestral GJV10"
   ),
   keep = "exptl_block"
 )
 head(fitness_smith_2010)
-#>             name_A          name_B exptl_block initial_fraction_A
-#> 1 Evolved GVB206.3 Ancestral GJV10  2009-04-29         1.00000000
-#> 2 Evolved GVB206.3 Ancestral GJV10  2009-04-29         0.98901099
-#> 3 Evolved GVB206.3 Ancestral GJV10  2009-04-29         0.90000000
-#> 4 Evolved GVB206.3 Ancestral GJV10  2009-04-29         0.50000000
-#> 5 Evolved GVB206.3 Ancestral GJV10  2009-04-29         0.10000000
-#> 6 Evolved GVB206.3 Ancestral GJV10  2009-04-29         0.01098901
+#>   exptl_block           name_A          name_B initial_fraction_A
+#> 1  2009-04-29 Evolved GVB206.3 Ancestral GJV10         1.00000000
+#> 2  2009-04-29 Evolved GVB206.3 Ancestral GJV10         0.98901099
+#> 3  2009-04-29 Evolved GVB206.3 Ancestral GJV10         0.90000000
+#> 4  2009-04-29 Evolved GVB206.3 Ancestral GJV10         0.50000000
+#> 5  2009-04-29 Evolved GVB206.3 Ancestral GJV10         0.10000000
+#> 6  2009-04-29 Evolved GVB206.3 Ancestral GJV10         0.01098901
 #>   initial_ratio_A_B    fitness_A  fitness_B fitness_total fitness_ratio_A_B
 #> 1               Inf 1.200000e-07         NA  1.200000e-07                NA
 #> 2       90.00000000 1.555556e-07 0.00000400  1.978022e-07        0.03888889
@@ -166,18 +166,19 @@ fitness_Yurtsev_2013 <- calculate_mix_fitness(
   ),
   keep = c("ampicillin", "dilution", "replicate")
 )
-#> Warning: Some fraction_resistant_initial values not in range [0, 1]: Not biologically meaningful
-#> Warning: Some fraction_resistant_final values not in range [0, 1]: Not biologically meaningful
+#> Warning: Some fraction_resistant_initial values not in range [0, 1] -- Not biologically meaningful
+#> Warning: Some fraction_resistant_final values not in range [0, 1] -- Not biologically meaningful
 # Warns of nonbiological values in data: some resistant fractions < 0
 # Artifact of subtracting background during flow cytometry?
+
 head(fitness_Yurtsev_2013)
-#>   name_A name_B ampicillin dilution replicate initial_fraction_A
-#> 1   AmpR   AmpS          0      100         0      -0.0003784523
-#> 2   AmpR   AmpS          0      100         0       0.0473674563
-#> 3   AmpR   AmpS          0      100         0       0.0831943961
-#> 4   AmpR   AmpS          0      100         0       0.1360970434
-#> 5   AmpR   AmpS          0      100         0       0.1909207725
-#> 6   AmpR   AmpS          0      100         0       0.2346178261
+#>   ampicillin dilution replicate name_A name_B initial_fraction_A
+#> 1          0      100         0   AmpR   AmpS      -0.0003784523
+#> 2          0      100         0   AmpR   AmpS       0.0473674563
+#> 3          0      100         0   AmpR   AmpS       0.0831943961
+#> 4          0      100         0   AmpR   AmpS       0.1360970434
+#> 5          0      100         0   AmpR   AmpS       0.1909207725
+#> 6          0      100         0   AmpR   AmpS       0.2346178261
 #>   initial_ratio_A_B fitness_A fitness_B fitness_total fitness_ratio_A_B
 #> 1     -0.0003783091  51.82082  115.6992     115.72341         0.4478925
 #> 2      0.0497226938  55.19903  104.4084     102.07749         0.5286838
