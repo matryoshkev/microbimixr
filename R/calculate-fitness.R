@@ -110,26 +110,6 @@ calculate_mix_fitness <- function(data, var_names, keep = NULL) {
 	# Warn if any data not biologically meaningful
 	check_abundance_data(data, var_names)
 
-	# Copy data to preserve type (base data frame, tibble, etc)
-	output <- data
-
-	# Calculate initial and final population states,
-	# and label which strain is A and which is B
-	output <- output |>
-		set_population("initial", data, var_names) |>
-		set_population("final", data, var_names) |>
-		set_strain_names(data, var_names)
-
-	# Calculate fitness measures
-	output$fitness_A <- output$final_number_A / output$initial_number_A
-	output$fitness_B <- output$final_number_B / output$initial_number_B
-	output$fitness_total <-
-		output$final_number_total / output$initial_number_total
-	output$fitness_ratio_A_B <- output$fitness_A / output$fitness_B
-
-	# Replace fitness NaNs from single-strain expts etc
-	output[sapply(output, is.nan)] <- NA
-
 	# TODO: Move this to plot_*_fitness() functions
 	# # Warn about fitness zeroes
 	# if (any(c(output$fitness_A == 0, output$fitness_B == 0), na.rm = TRUE)) {
@@ -139,12 +119,13 @@ calculate_mix_fitness <- function(data, var_names, keep = NULL) {
 	# 	)
 	# }
 
-	# Return data frame with calculated values
-	output[c(
-		keep, "name_A", "name_B",
-		"initial_fraction_A", "initial_ratio_A_B",
-		"fitness_A", "fitness_B", "fitness_total", "fitness_ratio_A_B"
-	)]
+	data |>
+	rename_abundance_vars(var_names) |>
+	set_strain_names(var_names) |>
+	calculate_population("initial") |>
+	calculate_population("final") |>
+	calculate_fitness_measures() |>
+	clean_up_fitness_frame(keep)
 }
 
 
@@ -243,86 +224,87 @@ check_count_differences <- function(data, var_name_strain, var_name_total) {
 	}
 }
 
-# Calculate initial/final population state
-set_population <- function(output, time_point, data, var_names) {
-	time_point <- match.arg(time_point, c("initial", "final"))
+# Set standardized variable names in abundance data
+rename_abundance_vars <- function(data, var_names) {
+	for (new_name in names(var_names)) {
+		names(data)[names(data) == var_names[new_name]] <- new_name
+	}
+	data
+}
 
-	# Names for output data frame
-	name_number_A     <- paste0(time_point, "_number_A")
-	name_number_B     <- paste0(time_point, "_number_B")
-	name_number_total <- paste0(time_point, "_number_total")
-	name_fraction_A   <- paste0(time_point, "_fraction_A")
-	name_fraction_B   <- paste0(time_point, "_fraction_B")
-	name_ratio_A_B    <- paste0(time_point, "_ratio_A_B")
+# Calculate unknown abundance variables from the two that are known
+calculate_population <- function(data, time_point) {
+	time_point   <- match.arg(time_point, c("initial", "final"))
+	number_A     <- paste0(time_point, "_number_A")
+	number_B     <- paste0(time_point, "_number_B")
+	number_total <- paste0(time_point, "_number_total")
+	fraction_A   <- paste0(time_point, "_fraction_A")
+	fraction_B   <- paste0(time_point, "_fraction_B")
 
-	# Variable names in data
-	var_names <- as.list(var_names)
-	var_number_A     <- var_names[[name_number_A]]
-	var_number_B     <- var_names[[name_number_B]]
-	var_number_total <- var_names[[name_number_total]]
-	var_fraction_A   <- var_names[[name_fraction_A]]
-	var_fraction_B   <- var_names[[name_fraction_B]]
-
-	# Calculate unknown abundance vars from the two that are known
-	if (!is.null(var_number_A) & !is.null(var_number_B)) {
-		number_A     <- data[[var_number_A]]
-		number_B     <- data[[var_number_B]]
-		number_total <- number_A + number_B
-		fraction_A   <- number_A / number_total
-	} else if (!is.null(var_number_total) & !is.null(var_fraction_A)) {
-		number_total <- data[[var_number_total]]
-		fraction_A   <- data[[var_fraction_A]]
-		number_A     <- number_total * fraction_A
-		number_B     <- number_total * (1-fraction_A)
-	} else if (!is.null(var_number_total) & !is.null(var_fraction_B)) {
-		number_total <- data[[var_number_total]]
-		fraction_A   <- 1 - data[[var_fraction_B]]
-		number_A     <- number_total * fraction_A
-		number_B     <- number_total * (1-fraction_A)
-	} else if (!is.null(var_number_total) & !is.null(var_number_A)) {
-		number_total <- data[[var_number_total]]
-		number_A     <- data[[var_number_A]]
-		number_B     <- number_total - number_A
-		fraction_A   <- number_A / number_total
-	} else if (!is.null(var_number_total) & !is.null(var_number_B)) {
-		number_total <- data[[var_number_total]]
-		number_B     <- data[[var_number_B]]
-		number_A     <- number_total - number_B
-		fraction_A   <- number_A / number_total
+	if (!is.null(data[[number_A]]) & !is.null(data[[number_B]])) {
+		data[number_total] <- data[number_A] + data[number_B]
+		data[fraction_A]   <- data[number_A] / data[number_total]
+	} else if (!is.null(data[[number_total]]) & !is.null(data[[fraction_A]])) {
+		data[number_A]     <- data[number_total] * data[fraction_A]
+		data[number_B]     <- data[number_total] * (1 - data[fraction_A])
+	} else if (!is.null(data[[number_total]]) & !is.null(data[[fraction_B]])) {
+		data[fraction_A]   <- 1 - data[fraction_B]
+		data[number_A]     <- data[number_total] * data[fraction_A]
+		data[number_B]     <- data[number_total] * (1 - data[fraction_A])
+	} else if (!is.null(data[[number_total]]) & !is.null(data[[number_A]])) {
+		data[number_B]     <- data[number_total] - data[number_A]
+		data[fraction_A]   <- data[number_A] / data[number_total]
+	} else if (!is.null(data[[number_total]]) & !is.null(data[[number_B]])) {
+		data[number_A]     <- data[number_total] - data[number_B]
+		data[fraction_A]   <- data[number_A] / data[number_total]
 	} else {
 		stop("Not enough information in data to calculate fitness")
 	}
 
-	# Write abundance vars to output frame
 	if (time_point == "initial") {
-		output[[name_fraction_A]] <- fraction_A
-		output[[name_ratio_A_B]]  <- number_A / number_B
+		data["initial_ratio_A_B"] <- data[number_A] / data[number_B]
 	}
-	output[[name_number_A]] <- number_A
-	output[[name_number_B]] <- number_B
-	output[[name_number_total]] <- number_total
 
-	output
+	data
 }
 
-# Label which strain is A and which is B in fitness frame
-set_strain_names <- function(output, data, var_names) {
-	var_names <- as.list(var_names)
-	string_name_A <- var_names[["name_A"]]
-	string_name_B <- var_names[["name_B"]]
-
-	# Error if names missing
-	if (is.null(string_name_A)) stop("var_names must contain name_A")
-	if (is.null(string_name_B)) stop("var_names must contain name_B")
-
-	# Use strain name variable in abundance data if present
-	# otherwise use given string
-	data_name_A <- data[[string_name_A]]
-	data_name_B <- data[[string_name_B]]
-	output[["name_A"]] <-
-		if (is.null(data_name_A)) string_name_A else data_name_A
-	output[["name_B"]] <-
-		if (is.null(data_name_B)) string_name_B else data_name_B
-
-	output
+# Label which strain is A and which is B if not already in data
+set_strain_names <- function(data, var_names) {
+	if (is.null(data[["name_A"]])) {data["name_A"] <- var_names[["name_A"]]}
+	if (is.null(data[["name_B"]])) {data["name_B"] <- var_names[["name_B"]]}
+	data
 }
+
+# Calculate Wrightian fitness measures from initial and final population states
+calculate_fitness_measures <- function(data) {
+	data["fitness_A"] <- data["final_number_A"] / data["initial_number_A"]
+	data["fitness_B"] <- data["final_number_B"] / data["initial_number_B"]
+	data["fitness_total"] <-
+		data["final_number_total"] / data["initial_number_total"]
+	data["fitness_ratio_A_B"] <- data["fitness_A"] / data["fitness_B"]
+	data
+}
+
+clean_up_fitness_frame <- function(data, keep) {
+	# Replace any NaNs from single-strain experiments
+	data[sapply(data, is.nan)] <- NA
+	# Reorder frame and drop extra columns
+	data[c(keep, fitness_vars_default())]
+}
+
+# Default names for fitness and mixing variables
+fitness_vars_default <- function() {
+	c(
+		name_A = "name_A",
+		name_B = "name_B",
+		initial_fraction_A = "initial_fraction_A",
+		initial_ratio_A_B = "initial_ratio_A_B",
+		# fitness = "fitness",
+		fitness_A = "fitness_A",
+		fitness_B = "fitness_B",
+		fitness_total = "fitness_total",
+		fitness_ratio_A_B = "fitness_ratio_A_B"
+	)
+}
+
+

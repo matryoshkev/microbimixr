@@ -635,21 +635,6 @@ plot_fitness_strain_total <- function(
 	fig_output
 }
 
-# Default names for fitness and mixing variables
-fitness_vars_default <- function() {
-	c(
-		name_A = "name_A",
-		name_B = "name_B",
-		initial_fraction_A = "initial_fraction_A",
-		initial_ratio_A_B = "initial_ratio_A_B",
-		fitness = "fitness",
-		fitness_A = "fitness_A",
-		fitness_B = "fitness_B",
-		fitness_total = "fitness_total",
-		fitness_ratio_A_B = "fitness_ratio_A_B"
-	)
-}
-
 # Get shared y-axis limits for fitness & fitness_ratio
 #   So log10(fitness) and log10(fitness_ratio) are visually comparable
 #   Used by plot_mix_fitness()
