@@ -11,7 +11,6 @@ with default settings suited to fitness-ratio data.
 ``` r
 scale_y_fitness_ratio(
   name = waiver(),
-  strain_names = c(name_A = "strain A", name_B = "strain B"),
   limits = NULL,
   breaks = waiver(),
   labels = waiver(),
@@ -26,12 +25,7 @@ scale_y_fitness_ratio(
 
   Character vector (or expression) for axis title. Or
   [`waiver()`](https://ggplot2.tidyverse.org/reference/waiver.html) to
-  automatically name axis using `strain_names`. Or `NULL` for no title.
-
-- strain_names:
-
-  Character vector or list used to automatically name axis if
-  `name = NA`
+  automatically name axis`. Or `NULL\` for no title.
 
 - limits:
 
@@ -116,7 +110,7 @@ fig <- fitness_myxo |>
 
 fig + scale_y_log10()
 
-fig + scale_y_fitness_ratio(strain_names = var_names_smith_2010)
+fig + scale_y_fitness_ratio()
 
 
 # Axis options

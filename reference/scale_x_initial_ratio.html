@@ -47,7 +47,6 @@ to microbial mix experiments.</p>
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">scale_x_initial_ratio</span><span class="op">(</span></span>
 <span>  name <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/waiver.html" class="external-link">waiver</a></span><span class="op">(</span><span class="op">)</span>,</span>
-<span>  strain_names <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>name_A <span class="op">=</span> <span class="st">"strain A"</span>, name_B <span class="op">=</span> <span class="st">"strain B"</span><span class="op">)</span>,</span>
 <span>  limits <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  breaks <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/waiver.html" class="external-link">waiver</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  labels <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/waiver.html" class="external-link">waiver</a></span><span class="op">(</span><span class="op">)</span>,</span>
@@ -62,13 +61,8 @@ to microbial mix experiments.</p>
 
 <dl><dt id="arg-name">name<a class="anchor" aria-label="anchor" href="#arg-name"></a></dt>
 <dd><p>Character string or expression to label axis.
-Or <code><a href="https://ggplot2.tidyverse.org/reference/waiver.html" class="external-link">waiver()</a></code> to automatically name axis using <code>strain_names</code>.
+Or <code><a href="https://ggplot2.tidyverse.org/reference/waiver.html" class="external-link">waiver()</a></code> to automatically name axis.
 Or <code>NULL</code> for no title.</p></dd>
-
-
-<dt id="arg-strain-names">strain_names<a class="anchor" aria-label="anchor" href="#arg-strain-names"></a></dt>
-<dd><p>Character vector or list used to automatically name axis
-if <code>name = NA</code></p></dd>
 
 
 <dt id="arg-limits">limits<a class="anchor" aria-label="anchor" href="#arg-limits"></a></dt>
@@ -126,7 +120,7 @@ for details.</p></li>
 <span class="r-plt img"><img src="scale_x_initial_ratio-1.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Automatically label axis</span></span></span>
-<span class="r-in"><span><span class="va">fig</span> <span class="op">+</span> <span class="fu">scale_x_initial_ratio</span><span class="op">(</span>strain_names <span class="op">=</span> <span class="va">var_names_smith_2010</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">fig</span> <span class="op">+</span> <span class="fu">scale_x_initial_ratio</span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="scale_x_initial_ratio-2.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Manually label axis</span></span></span>

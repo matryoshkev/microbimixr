@@ -50,7 +50,6 @@ to fitness-ratio data.</p>
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">scale_y_fitness_ratio</span><span class="op">(</span></span>
 <span>  name <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/waiver.html" class="external-link">waiver</a></span><span class="op">(</span><span class="op">)</span>,</span>
-<span>  strain_names <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>name_A <span class="op">=</span> <span class="st">"strain A"</span>, name_B <span class="op">=</span> <span class="st">"strain B"</span><span class="op">)</span>,</span>
 <span>  limits <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  breaks <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/waiver.html" class="external-link">waiver</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  labels <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/waiver.html" class="external-link">waiver</a></span><span class="op">(</span><span class="op">)</span>,</span>
@@ -65,13 +64,7 @@ to fitness-ratio data.</p>
 
 <dl><dt id="arg-name">name<a class="anchor" aria-label="anchor" href="#arg-name"></a></dt>
 <dd><p>Character vector (or expression) for axis title.
-Or <code><a href="https://ggplot2.tidyverse.org/reference/waiver.html" class="external-link">waiver()</a></code> to automatically name axis using <code>strain_names</code>.
-Or <code>NULL</code> for no title.</p></dd>
-
-
-<dt id="arg-strain-names">strain_names<a class="anchor" aria-label="anchor" href="#arg-strain-names"></a></dt>
-<dd><p>Character vector or list used to automatically name axis
-if <code>name = NA</code></p></dd>
+Or <code><a href="https://ggplot2.tidyverse.org/reference/waiver.html" class="external-link">waiver()</a></code> to automatically name axis<code>. Or </code>NULL` for no title.</p></dd>
 
 
 <dt id="arg-limits">limits<a class="anchor" aria-label="anchor" href="#arg-limits"></a></dt>
@@ -149,7 +142,7 @@ $$w_A / w_B = \frac{q'_A / q'_B}{q_A / q_B}$$</p>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">fig</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_log10</a></span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="scale_y_fitness_ratio-1.png" alt="" width="700" height="433"></span>
-<span class="r-in"><span><span class="va">fig</span> <span class="op">+</span> <span class="fu">scale_y_fitness_ratio</span><span class="op">(</span>strain_names <span class="op">=</span> <span class="va">var_names_smith_2010</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">fig</span> <span class="op">+</span> <span class="fu">scale_y_fitness_ratio</span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="scale_y_fitness_ratio-2.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Axis options</span></span></span>

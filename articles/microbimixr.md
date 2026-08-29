@@ -46,6 +46,7 @@ before and after development.
 
 ``` r
 
+library(microbimixr)
 head(data_smith_2010)
 #>   exptl_block initial_cells_evolved initial_cells_ancestral
 #> 1  2009-04-29               5.0e+08                 0.0e+00
@@ -299,9 +300,10 @@ plot functions:
 - [`plot_within_group_fitness()`](https://matryoshkev.github.io/microbimixr/reference/plot_within_group_fitness.md)
   : Plot within-group ratio of strain fitnesses
 
-These functions let you reproduce the individual parts of the diagnostic
-plots. They’re an easy way to plot fitness data with reasonable default
-settings.
+These functions let you reproduce the individual subplots from
+[`plot_mix_fitness()`](https://matryoshkev.github.io/microbimixr/reference/plot_mix_fitness.md).
+They’re a simple, straight-forward way to make figures designed for
+fitness data.
 
 ``` r
 
@@ -310,10 +312,11 @@ plot_total_group_fitness(fitness_myxo)
 
 ![](microbimixr_files/figure-html/plot-smith2010-1.png)
 
-They also include some basic plotting options:
+They have some basic options:
 
 ``` r
 
+library(patchwork)
 fig_total <- plot_total_group_fitness(
     fitness_myxo,
     xlab = "Initial frequency of evolved strain",
@@ -358,6 +361,7 @@ default settings appropriate for microbial mix experiments.
 
 ``` r
 
+library(ggplot2)
 fitness_myxo |>
     ggplot(aes(x = initial_fraction_A, y = fitness_total)) +
     scale_x_initial_fraction(name = "Initial frequency of evolved strain") +
@@ -374,7 +378,6 @@ different experimental conditions or multiple strain combinations.
 
 ``` r
 
-names_Yurtsev <- c(name_A = "resistant", name_B = "sensitive")
 name_amp <- "Ampicillin\n(\u03BCg/mL)"
 fitness_ecoli |>
     subset(
@@ -386,8 +389,11 @@ fitness_ecoli |>
         fill = factor(ampicillin), color = factor(ampicillin))
     ) +
     geom_point_overlap(na.rm = TRUE) +
-    scale_x_initial_fraction(strain_names = names_Yurtsev) +
-    scale_y_fitness_ratio(strain_names = names_Yurtsev, limits = c(1e-1, 1e4)) +
+    scale_x_initial_fraction(name = "Initial frequency resistant") +
+    scale_y_fitness_ratio(
+        name = "Fitness ratio\nresistant / sensitive", 
+        limits = c(1e-1, 1e4)
+    ) +
     scale_fill_viridis_d(name = name_amp, option = "magma", direction = -1, begin = 0.5, end = 1) +
     scale_color_viridis_d(name = name_amp, option = "magma", direction = -1, begin = 0, end = 0.8) +
     facet_wrap(~ dilution, labeller = as_labeller(function(x) paste0(x, "-fold dilution"))) 

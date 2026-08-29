@@ -10,7 +10,6 @@ with default settings suited to microbial mix experiments.
 ``` r
 scale_x_initial_ratio(
   name = waiver(),
-  strain_names = c(name_A = "strain A", name_B = "strain B"),
   limits = NULL,
   breaks = waiver(),
   labels = waiver(),
@@ -25,12 +24,7 @@ scale_x_initial_ratio(
 
   Character string or expression to label axis. Or
   [`waiver()`](https://ggplot2.tidyverse.org/reference/waiver.html) to
-  automatically name axis using `strain_names`. Or `NULL` for no title.
-
-- strain_names:
-
-  Character vector or list used to automatically name axis if
-  `name = NA`
+  automatically name axis. Or `NULL` for no title.
 
 - limits:
 
@@ -93,7 +87,7 @@ fig
 
 
 # Automatically label axis
-fig + scale_x_initial_ratio(strain_names = var_names_smith_2010)
+fig + scale_x_initial_ratio()
 
 
 # Manually label axis

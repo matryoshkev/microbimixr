@@ -105,7 +105,8 @@ strain and letting them make multicellular fruiting bodies together
 (smith <em>et al.</em> 2010). The abundance quantities here are the
 number of cells from each strain before and after development.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">data_smith_2010</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://matryoshkev.github.io/microbimixr/">microbimixr</a></span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">data_smith_2010</span><span class="op">)</span></span>
 <span><span class="co">#&gt;   exptl_block initial_cells_evolved initial_cells_ancestral</span></span>
 <span><span class="co">#&gt; 1  2009-04-29               5.0e+08                 0.0e+00</span></span>
 <span><span class="co">#&gt; 2  2009-04-29               4.5e+08                 5.0e+06</span></span>
@@ -351,16 +352,18 @@ group or subpopulation</li>
 <code><a href="../reference/plot_within_group_fitness.html">plot_within_group_fitness()</a></code> : Plot within-group ratio
 of strain fitnesses</li>
 </ul>
-<p>These functions let you reproduce the individual parts of the
-diagnostic plots. They’re an easy way to plot fitness data with
-reasonable default settings.
-<!-- They work best with simple mix experiments with two strains and no other treatment variables.  --></p>
+<p>These functions let you reproduce the individual subplots from
+<code><a href="../reference/plot_mix_fitness.html">plot_mix_fitness()</a></code>. They’re a simple, straight-forward way
+to make figures designed for fitness data. <!-- 
+They work best with simple mix experiments with two strains and no other treatment variables.  
+--></p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_total_group_fitness.html">plot_total_group_fitness</a></span><span class="op">(</span><span class="va">fitness_myxo</span><span class="op">)</span></span></code></pre></div>
 <p><img src="microbimixr_files/figure-html/plot-smith2010-1.png" class="r-plt" alt="" width="50%" style="display: block; margin: auto;"></p>
-<p>They also include some basic plotting options:</p>
+<p>They have some basic options:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">fig_total</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/plot_total_group_fitness.html">plot_total_group_fitness</a></span><span class="op">(</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://patchwork.data-imaginist.com" class="external-link">patchwork</a></span><span class="op">)</span></span>
+<span><span class="va">fig_total</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/plot_total_group_fitness.html">plot_total_group_fitness</a></span><span class="op">(</span></span>
 <span>    <span class="va">fitness_myxo</span>,</span>
 <span>    xlab <span class="op">=</span> <span class="st">"Initial frequency of evolved strain"</span>,</span>
 <span>    ylab <span class="op">=</span> <span class="st">"Total sporulation efficiency\n(spores/cell)"</span></span>
@@ -400,7 +403,8 @@ when they overlap</li>
 <p>These functions return custom plot elements for ggplot2 that have
 default settings appropriate for microbial mix experiments.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">fitness_myxo</span> <span class="op">|&gt;</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
+<span><span class="va">fitness_myxo</span> <span class="op">|&gt;</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">initial_fraction_A</span>, y <span class="op">=</span> <span class="va">fitness_total</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="../reference/scale_x_initial_fraction.html">scale_x_initial_fraction</a></span><span class="op">(</span>name <span class="op">=</span> <span class="st">"Initial frequency of evolved strain"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="../reference/scale_y_fitness_total.html">scale_y_fitness_total</a></span><span class="op">(</span>name <span class="op">=</span> <span class="st">"Sporulation efficiency\n(spores/cell)"</span>, limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1e-8</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
@@ -411,8 +415,7 @@ default settings appropriate for microbial mix experiments.</p>
 <p>The plot elements are especially useful for more-complex figures with
 different experimental conditions or multiple strain combinations.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">names_Yurtsev</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>name_A <span class="op">=</span> <span class="st">"resistant"</span>, name_B <span class="op">=</span> <span class="st">"sensitive"</span><span class="op">)</span></span>
-<span><span class="va">name_amp</span> <span class="op">&lt;-</span> <span class="st">"Ampicillin\n(\u03BCg/mL)"</span></span>
+<code class="sourceCode R"><span><span class="va">name_amp</span> <span class="op">&lt;-</span> <span class="st">"Ampicillin\n(\u03BCg/mL)"</span></span>
 <span><span class="va">fitness_ecoli</span> <span class="op">|&gt;</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span></span>
 <span>        <span class="va">ampicillin</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">15</span>, <span class="fl">50</span>, <span class="fl">100</span><span class="op">)</span> <span class="op">&amp;</span> <span class="va">dilution</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">200</span>, <span class="fl">400</span>, <span class="fl">800</span><span class="op">)</span> <span class="op">&amp;</span></span>
@@ -423,8 +426,11 @@ different experimental conditions or multiple strain combinations.</p>
 <span>        fill <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">ampicillin</span><span class="op">)</span>, color <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">ampicillin</span><span class="op">)</span><span class="op">)</span></span>
 <span>    <span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="../reference/geom_point_overlap.html">geom_point_overlap</a></span><span class="op">(</span>na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu"><a href="../reference/scale_x_initial_fraction.html">scale_x_initial_fraction</a></span><span class="op">(</span>strain_names <span class="op">=</span> <span class="va">names_Yurtsev</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu"><a href="../reference/scale_y_fitness_ratio.html">scale_y_fitness_ratio</a></span><span class="op">(</span>strain_names <span class="op">=</span> <span class="va">names_Yurtsev</span>, limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1e-1</span>, <span class="fl">1e4</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="../reference/scale_x_initial_fraction.html">scale_x_initial_fraction</a></span><span class="op">(</span>name <span class="op">=</span> <span class="st">"Initial frequency resistant"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="../reference/scale_y_fitness_ratio.html">scale_y_fitness_ratio</a></span><span class="op">(</span></span>
+<span>        name <span class="op">=</span> <span class="st">"Fitness ratio\nresistant / sensitive"</span>, </span>
+<span>        limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1e-1</span>, <span class="fl">1e4</span><span class="op">)</span></span>
+<span>    <span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_viridis.html" class="external-link">scale_fill_viridis_d</a></span><span class="op">(</span>name <span class="op">=</span> <span class="va">name_amp</span>, option <span class="op">=</span> <span class="st">"magma"</span>, direction <span class="op">=</span> <span class="op">-</span><span class="fl">1</span>, begin <span class="op">=</span> <span class="fl">0.5</span>, end <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_viridis.html" class="external-link">scale_color_viridis_d</a></span><span class="op">(</span>name <span class="op">=</span> <span class="va">name_amp</span>, option <span class="op">=</span> <span class="st">"magma"</span>, direction <span class="op">=</span> <span class="op">-</span><span class="fl">1</span>, begin <span class="op">=</span> <span class="fl">0</span>, end <span class="op">=</span> <span class="fl">0.8</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html" class="external-link">facet_wrap</a></span><span class="op">(</span><span class="op">~</span> <span class="va">dilution</span>, labeller <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/as_labeller.html" class="external-link">as_labeller</a></span><span class="op">(</span><span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">x</span>, <span class="st">"-fold dilution"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> </span></code></pre></div>
