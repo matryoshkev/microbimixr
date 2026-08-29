@@ -6,7 +6,6 @@
 \usage{
 scale_y_fitness_ratio(
   name = waiver(),
-  strain_names = c(name_A = "strain A", name_B = "strain B"),
   limits = NULL,
   breaks = waiver(),
   labels = waiver(),
@@ -16,11 +15,7 @@ scale_y_fitness_ratio(
 }
 \arguments{
 \item{name}{Character vector (or expression) for axis title.
-Or \code{waiver()} to automatically name axis using \code{strain_names}.
-Or \code{NULL} for no title.}
-
-\item{strain_names}{Character vector or list used to automatically name axis
-if \code{name = NA}}
+Or \code{waiver()} to automatically name axis\verb{. Or }NULL` for no title.}
 
 \item{limits}{Numeric vector of length two giving axis limits. Or \code{NULL} for
 automatic limits that include 1 for reference (no change in relative
@@ -87,7 +82,7 @@ fig <- fitness_myxo |>
   scale_x_log10()
 
 fig + scale_y_log10()
-fig + scale_y_fitness_ratio(strain_names = var_names_smith_2010)
+fig + scale_y_fitness_ratio()
 
 # Axis options
 fig + scale_y_fitness_ratio(

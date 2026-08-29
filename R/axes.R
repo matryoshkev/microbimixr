@@ -8,10 +8,8 @@
 #' microbial mix experiments.
 #'
 #' @param name Character string or expression to label axis.
-#'   Or `waiver()` to automatically name axis using `strain_names`.
+#'   Or `waiver()` to automatically name axis.
 #'   Or `NULL` for no title.
-#' @param strain_names Character vector or list used to automatically name axis
-#'   if `name = NA`.
 #' @param limits Numeric vector of length two giving axis limits.
 #'   Or `NULL` for automatic limits `c(0, 1)` showing the full range of possible
 #'   mix frequencies.
@@ -36,7 +34,7 @@
 #'   scale_y_log10()
 #'
 #' fig
-#' fig + scale_x_initial_fraction(strain_names = var_names_smith_2010)
+#' fig + scale_x_initial_fraction()
 #'
 #' # Manually label axis
 #' fig + scale_x_initial_fraction(name = "Initial frequency of evolved strain")
@@ -45,16 +43,12 @@
 #'
 scale_x_initial_fraction <- function(
 	name = waiver(),
-	strain_names = c(name_A = "strain A", name_B = "strain B"),
 	limits = NULL,
 	breaks = waiver(),
 	minor_breaks = NULL,
 	...
 ) {
-	if (is_waiver(name)) {
-		strain_names <- as.list(strain_names)
-		name <- paste("Initial fraction", strain_names$name_A)
-	}
+	if (is_waiver(name)) {name <- paste("Initial fraction strain A")}
 	if (is.null(limits)) {limits <- c(0, 1)}
 	if (is_waiver(breaks)) {breaks <- seq(0, 1, by = 0.2)}
 	ggplot2::scale_x_continuous(
@@ -73,10 +67,8 @@ scale_x_initial_fraction <- function(
 #' to microbial mix experiments.
 #'
 #' @param name Character string or expression to label axis.
-#'   Or `waiver()` to automatically name axis using `strain_names`.
+#'   Or `waiver()` to automatically name axis.
 #'   Or `NULL` for no title.
-#' @param strain_names Character vector or list used to automatically name axis
-#'   if `name = NA`
 #' @param limits Numeric vector of length two giving axis limits. Or `NULL` for
 #'   automatic limits that include 1 for reference (equal 50:50 mix of strains)
 #'   and span a minimum 10-fold range.
@@ -112,7 +104,7 @@ scale_x_initial_fraction <- function(
 #' fig
 #'
 #' # Automatically label axis
-#' fig + scale_x_initial_ratio(strain_names = var_names_smith_2010)
+#' fig + scale_x_initial_ratio()
 #'
 #' # Manually label axis
 #' fig + scale_x_initial_ratio(name = "Initial ratio evolved / ancestral")
@@ -121,18 +113,13 @@ scale_x_initial_fraction <- function(
 #'
 scale_x_initial_ratio <- function(
 	name = waiver(),
-	strain_names = c(name_A = "strain A", name_B = "strain B"),
 	limits = NULL,
 	breaks = waiver(),
 	labels = waiver(),
 	minor_breaks = NULL,
 	...
 ) {
-	if (is_waiver(name)) {
-		strain_names <- as.list(strain_names)
-		name <-
-			paste("Initial ratio", strain_names$name_A, "/", strain_names$name_B)
-	}
+	if (is_waiver(name)) {name <- "Initial ratio strains A/B"}
 	if (is.null(limits)) {limits <- expand_limits_log10}
 	if (is_waiver(breaks)) {breaks <- breaks_log10}
 	if (is_waiver(labels)) {labels <- labels_log10}
@@ -283,10 +270,8 @@ scale_y_fitness_total <- function(
 #'
 #' @inheritParams scale_y_fitness
 #' @param name Character vector (or expression) for axis title.
-#'   Or `waiver()` to automatically name axis using `strain_names`.
+#'   Or `waiver()` to automatically name axis`.
 #'   Or `NULL` for no title.
-#' @param strain_names Character vector or list used to automatically name axis
-#'   if `name = NA`
 #' @param limits Numeric vector of length two giving axis limits. Or `NULL` for
 #'   automatic limits that include 1 for reference (no change in relative
 #'   abundance) and span a minimum 10-fold range.
@@ -326,7 +311,7 @@ scale_y_fitness_total <- function(
 #'   scale_x_log10()
 #'
 #' fig + scale_y_log10()
-#' fig + scale_y_fitness_ratio(strain_names = var_names_smith_2010)
+#' fig + scale_y_fitness_ratio()
 #'
 #' # Axis options
 #' fig + scale_y_fitness_ratio(
@@ -338,19 +323,13 @@ scale_y_fitness_total <- function(
 #'
 scale_y_fitness_ratio <- function(
 	name = waiver(),
-	strain_names = c(name_A = "strain A", name_B = "strain B"),
 	limits = NULL,
 	breaks = waiver(),
 	labels = waiver(),
 	minor_breaks = waiver(),
 	...
 ) {
-	if (is_waiver(name)) {
-		strain_names <- as.list(strain_names)
-		name <- paste(
-			"Fitness ratio\n", strain_names$name_A, "/", strain_names$name_B
-		)
-	}
+	if (is_waiver(name)) {name <-	"Fitness ratio\n strain A / strain B"}
 	if (is.null(limits)) {limits <- expand_limits_log10}
 	if (is_waiver(breaks)) {breaks <- breaks_log10}
 	if (is_waiver(labels)) {labels <- labels_log10}

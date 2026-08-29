@@ -9,9 +9,6 @@ vignette: >
 
 ```{r, include = FALSE}
 knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
-library(microbimixr)
-library(ggplot2)
-library(patchwork)
 ```
 
 A common way to study interactions among microbes is to do mix experiments. You mix together different microbes (different strains of bacteria, for example) and then see how their behavior depends on mix frequency. How do they act differently together than on their own? How does mixing affect their survival and reproduction---their fitness?
@@ -38,6 +35,7 @@ The starting point for microbimixr is a data frame that has the observed abundan
 Here's an example with a dataset that's included in the package. This is from a small experiment mixing a wild-type strain of _Myxococcus_ bacteria with an experimentally-evolved cheater strain and letting them make multicellular fruiting bodies together (smith _et al._&nbsp;2010). The abundance quantities here are the number of cells from each strain before and after development. 
 
 ```{r data-smith-2010}
+library(microbimixr)
 head(data_smith_2010)
 ```
 
@@ -170,16 +168,19 @@ Once you know which fitness measures to focus on, you can use microbimixr to vis
 * `plot_total_group_fitness()` : Plot fitness of total group or subpopulation
 * `plot_within_group_fitness()` : Plot within-group ratio of strain fitnesses
 
-These functions let you reproduce the individual parts of the diagnostic plots. They're an easy way to plot fitness data with reasonable default settings. 
-<!-- They work best with simple mix experiments with two strains and no other treatment variables.  -->
+These functions let you reproduce the individual subplots from `plot_mix_fitness()`. They're a simple, straight-forward way to make figures designed for fitness data. 
+<!-- 
+They work best with simple mix experiments with two strains and no other treatment variables.  
+-->
 
 ```{r plot-smith2010, fig.width = 2.25, fig.height = 1.75, fig.align = "center", out.width = "50%"}
 plot_total_group_fitness(fitness_myxo)
 ```
 
-They also include some basic plotting options:
+They have some basic options:
 
 ```{r plot-options-smith2010, fig.width = 5.5, fig.height = 2.25, fig.align = "center", out.width = "100%"}
+library(patchwork)
 fig_total <- plot_total_group_fitness(
 	fitness_myxo,
 	xlab = "Initial frequency of evolved strain",
@@ -213,6 +214,7 @@ The fitness-plotting functions use graphics package ggplot2. You can also use mi
 These functions return custom plot elements for ggplot2 that have default settings appropriate for microbial mix experiments. 
 
 ```{r elements-smith, fig.width = 3, fig.height = 2.25, fig.align = "center", out.width = "50%"}
+library(ggplot2)
 fitness_myxo |>
 	ggplot(aes(x = initial_fraction_A, y = fitness_total)) +
 	scale_x_initial_fraction(name = "Initial frequency of evolved strain") +
@@ -225,7 +227,6 @@ fitness_myxo |>
 The plot elements are especially useful for more-complex figures with different experimental conditions or multiple strain combinations.
 
 ```{r elements-Yurtsev, fig.width = 6.25, fig.height = 2.25, out.width = "100%", align = "center"}
-names_Yurtsev <- c(name_A = "resistant", name_B = "sensitive")
 name_amp <- "Ampicillin\n(\u03BCg/mL)"
 fitness_ecoli |>
 	subset(
@@ -237,8 +238,11 @@ fitness_ecoli |>
 		fill = factor(ampicillin), color = factor(ampicillin))
 	) +
 	geom_point_overlap(na.rm = TRUE) +
-	scale_x_initial_fraction(strain_names = names_Yurtsev) +
-	scale_y_fitness_ratio(strain_names = names_Yurtsev, limits = c(1e-1, 1e4)) +
+	scale_x_initial_fraction(name = "Initial frequency resistant") +
+	scale_y_fitness_ratio(
+		name = "Fitness ratio\nresistant / sensitive", 
+		limits = c(1e-1, 1e4)
+	) +
 	scale_fill_viridis_d(name = name_amp, option = "magma", direction = -1, begin = 0.5, end = 1) +
 	scale_color_viridis_d(name = name_amp, option = "magma", direction = -1, begin = 0, end = 0.8) +
 	facet_wrap(~ dilution, labeller = as_labeller(function(x) paste0(x, "-fold dilution"))) 

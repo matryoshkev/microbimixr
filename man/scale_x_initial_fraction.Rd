@@ -6,7 +6,6 @@
 \usage{
 scale_x_initial_fraction(
   name = waiver(),
-  strain_names = c(name_A = "strain A", name_B = "strain B"),
   limits = NULL,
   breaks = waiver(),
   minor_breaks = NULL,
@@ -15,11 +14,8 @@ scale_x_initial_fraction(
 }
 \arguments{
 \item{name}{Character string or expression to label axis.
-Or \code{waiver()} to automatically name axis using \code{strain_names}.
+Or \code{waiver()} to automatically name axis.
 Or \code{NULL} for no title.}
-
-\item{strain_names}{Character vector or list used to automatically name axis
-if \code{name = NA}.}
 
 \item{limits}{Numeric vector of length two giving axis limits.
 Or \code{NULL} for automatic limits \code{c(0, 1)} showing the full range of possible
@@ -52,7 +48,7 @@ fig <- fitness_myxo |>
   scale_y_log10()
 
 fig
-fig + scale_x_initial_fraction(strain_names = var_names_smith_2010)
+fig + scale_x_initial_fraction()
 
 # Manually label axis
 fig + scale_x_initial_fraction(name = "Initial frequency of evolved strain")

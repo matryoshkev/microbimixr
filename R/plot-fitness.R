@@ -508,7 +508,12 @@ plot_within_group_fitness <- function(
 	# Axis options
 	mix_scale <- rlang::arg_match(mix_scale, c("fraction", "ratio"))
 	if (missing(xlab)) {xlab <- waiver()}
-	if (missing(ylab)) {ylab <- waiver()}
+	if (missing(ylab)) {
+		ylab <- paste(
+			"Fitness ratio\n",
+			strain_names[["name_A"]], "/", strain_names[["name_B"]]
+		)
+	}
 	if (missing(xlim)) {xlim <- NULL}
 	if (missing(ylim)) {ylim <- NULL}
 
@@ -538,9 +543,7 @@ plot_within_group_fitness <- function(
 		ggplot2::ggplot(data) +
 		ggplot2::aes(y = .data[[var_names$fitness_ratio_A_B]]) +
 		theme_microbimixr() +
-		scale_y_fitness_ratio(
-			 name = ylab, strain_names = strain_names, limits = ylim
-		) +
+		scale_y_fitness_ratio(name = ylab, limits = ylim) +
 		do.call(geom_point_overlap, point_args)
 	fig_output <- fig_output |>
 		add_mix_axis(
@@ -675,12 +678,26 @@ get_ylim_mix_fitness <- function(data, var_names) {
 	list(fitness = ylim_fitness, fitness_ratio = ylim_fitness_ratio)
 }
 
-# Get strain names from fitness vars or data
+# Get strain names from names object or data column
 get_strain_names <- function(data, var_names) {
 	name_A <- var_names[["name_A"]]
 	name_B <- var_names[["name_B"]]
-	if (utils::hasName(data, name_A)) { name_A <- data[[name_A]][[1]] }
-	if (utils::hasName(data, name_B)) { name_B <- data[[name_B]][[1]] }
+	is_multistrain <- FALSE
+	if (utils::hasName(data, name_A)) {
+		name_A <- unique(data[[name_A]])
+		if (length(name_A) > 1) {
+			is_multistrain <- TRUE
+			name_A <- "Strain A"
+		}
+	}
+	if (utils::hasName(data, name_B)) {
+		name_B <- unique(data[[name_B]])
+		if (length(name_B) > 1) {
+			is_multistrain <- TRUE
+			name_B <- "Strain B"
+		}
+	}
+	if (is_multistrain) message("Note: >1 strain combination in data")
 	list(name_A = name_A, name_B = name_B)
 }
 
@@ -693,19 +710,27 @@ add_mix_axis <- function(
 	xlab = waiver(),
 	xlim = NULL
 ) {
+	# Set default axis name using strain names
+	if (is_waiver(xlab)) {
+		if (mix_scale == "fraction") {
+			xlab <- paste("Initial fraction", strain_names[["name_A"]])
+		} else if (mix_scale == "ratio") {
+			xlab <- paste(
+				"Initial ratio",
+				strain_names[["name_A"]], "/", strain_names[["name_B"]]
+			)
+		}
+	}
+
 	fig_input + switch(
 		mix_scale,
 		fraction = list(
 			ggplot2::aes(.data[[var_names$initial_fraction_A]]),
-			scale_x_initial_fraction(
-				name = xlab, strain_names = strain_names, limits = xlim
-			)
+			scale_x_initial_fraction(name = xlab, limits = xlim)
 		),
 		ratio = list(
 			ggplot2::aes(.data[[var_names$initial_ratio_A_B]]),
-			scale_x_initial_ratio(
-				name = xlab, strain_names = strain_names, limits = xlim
-			)
+			scale_x_initial_ratio(name = xlab, limits = xlim)
 		)
 	)
 }
