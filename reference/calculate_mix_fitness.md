@@ -166,8 +166,8 @@ fitness_Yurtsev_2013 <- calculate_mix_fitness(
   ),
   keep = c("ampicillin", "dilution", "replicate")
 )
-#> Warning: Some fraction_resistant_initial values not in range [0, 1] -- Not biologically meaningful
-#> Warning: Some fraction_resistant_final values not in range [0, 1] -- Not biologically meaningful
+#> Warning: Some fraction_resistant_initial values not in range [0, 1] -- Not biologically meaningful.
+#> Warning: Some fraction_resistant_final values not in range [0, 1] -- Not biologically meaningful.
 # Warns of nonbiological values in data: some resistant fractions < 0
 # Artifact of subtracting background during flow cytometry?
 

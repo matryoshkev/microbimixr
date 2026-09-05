@@ -211,10 +211,10 @@ fitness of A to B within the same group.</p>
 <span>    <span class="op">)</span>, </span>
 <span>    keep <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ampicillin"</span>, <span class="st">"dilution"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt; Warning: Some fraction_resistant_initial values not in range [0, 1] -- Not</span></span>
-<span><span class="co">#&gt; biologically meaningful</span></span>
-<span><span class="co">#&gt; Warning: Some fraction_resistant_final values not in range [0, 1] -- Not</span></span>
-<span><span class="co">#&gt; biologically meaningful</span></span>
+<span><span class="co">#&gt; Warning in calculate_mix_fitness(): Some fraction_resistant_initial values not</span></span>
+<span><span class="co">#&gt; in range [0, 1] -- Not biologically meaningful.</span></span>
+<span><span class="co">#&gt; Warning in calculate_mix_fitness(): Some fraction_resistant_final values not in</span></span>
+<span><span class="co">#&gt; range [0, 1] -- Not biologically meaningful.</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">fitness_ecoli</span><span class="op">)</span></span>
 <span><span class="co">#&gt;   ampicillin dilution name_A name_B initial_fraction_A initial_ratio_A_B</span></span>
