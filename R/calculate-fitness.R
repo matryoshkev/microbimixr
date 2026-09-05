@@ -107,7 +107,7 @@
 #' @export
 #'
 calculate_mix_fitness <- function(data, var_names, keep = NULL) {
-	# Warn if any data not biologically meaningful
+	check_abundance_var_names(var_names)
 	check_abundance_data(data, var_names)
 
 	# TODO: Move this to plot_*_fitness() functions
@@ -129,7 +129,68 @@ calculate_mix_fitness <- function(data, var_names, keep = NULL) {
 }
 
 
-# Helper functions =============================================================
+# Check functions ==============================================================
+
+check_abundance_var_names <- function(var_names) {
+	# Require var_names
+	if (missing(var_names) || is.null(var_names)) {
+		rlang::abort(
+			"argument 'var_names' is missing, with no default",
+			call = call("calculate_mix_fitness")
+		)
+	}
+
+	# Require var_names be character vector or list
+	if (!(is.character(var_names) || is.list(var_names))) {
+		rlang::abort(
+			"'var_names' must be a named character vector or list",
+			call = call("calculate_mix_fitness")
+		)
+	}
+
+	# TODO: check var_names enough to calculate populations
+	# check_initial_var_names(var_names)
+	# check_final_var_names(var_names)
+
+	check_strain_names(var_names)
+}
+
+# Check that var_names includes enough for calculations
+# check_initial_var_names <- function() {
+# 	init_vars <- c("", )
+# "initial_number_A"
+# "initial_number_B"
+# "initial_number_total"
+# "initial_fraction_A"
+# "initial_fraction_B"
+# }
+
+check_strain_names <- function(var_names) {
+	if (!utils::hasName(var_names, "name_A")) {
+		rlang::abort(
+			"`name_A` is missing from `var_names`, with no default",
+			call = call("calculate_mix_fitness")
+		)
+	}
+	if (!utils::hasName(var_names, "name_B")) {
+		rlang::abort(
+			"`name_B` is missing from `var_names`, with no default",
+			call = call("calculate_mix_fitness")
+		)
+	}
+	if (!is.character(var_names[["name_A"]])) {
+		rlang::abort(
+			"`name_A` in `var_names` must be a character string",
+			call = call("calculate_mix_fitness")
+		)
+	}
+	if (!is.character(var_names[["name_B"]])) {
+		rlang::abort(
+			"`name_B` in `var_names` must be a character string",
+			call = call("calculate_mix_fitness")
+		)
+	}
+}
 
 # Warn if any abundance data are not biologically meaningful
 check_abundance_data <- function(data, var_names) {
@@ -193,10 +254,9 @@ check_abundance_data <- function(data, var_names) {
 # Warn if any count data not biologically meaningful
 check_counts <- function(data, var_name) {
 	if (any(data[[var_name]] < 0, na.rm = TRUE)) {
-		warning(
-			"Some ", var_name, " values < 0",
-			" -- Not biologically meaningful.",
-			call. = FALSE
+		rlang::warn(
+			paste("Some", var_name, "values < 0", "-- Not biologically meaningful."),
+			call = call("calculate_mix_fitness")
 		)
 	}
 }
@@ -204,10 +264,12 @@ check_counts <- function(data, var_name) {
 # Warn if any fraction data not biologically meaningful
 check_fractions <- function(data, var_name) {
 	if (any(c(data[[var_name]] < 0, data[[var_name]] > 1), na.rm = TRUE)) {
-		warning(
-			"Some ", var_name, " values not in range [0, 1]",
-			" -- Not biologically meaningful",
-			call. = FALSE
+		rlang::warn(
+			paste(
+				"Some", var_name,
+				"values not in range [0, 1] -- Not biologically meaningful."
+			),
+			call = call("calculate_mix_fitness")
 		)
 	}
 }
@@ -216,13 +278,18 @@ check_fractions <- function(data, var_name) {
 # not biologically meaningful
 check_count_differences <- function(data, var_name_strain, var_name_total) {
 	if (any(c(data[[var_name_strain]] > data[[var_name_total]]), na.rm = TRUE)) {
-		warning(
-			"Some ", var_name_strain, " values > ", var_name_total,
-			" -- Not biologically meaningful",
-			call. = FALSE
+		rlang::warn(
+			paste(
+				"Some", var_name_strain, "values >", var_name_total,
+				"-- Not biologically meaningful."
+			),
+			call = call("calculate_mix_fitness")
 		)
 	}
 }
+
+
+# Helper functions =============================================================
 
 # Set standardized variable names in abundance data
 rename_abundance_vars <- function(data, var_names) {

@@ -32,9 +32,8 @@ test_that("calculate_mix_fitness() works with included datasets", {
 	)
 })
 
-# TODO:
 test_that("calculate_mix_fitness() can use all valid data combos", {
-	my_data <- data.frame(
+	data <- data.frame(
 		num_A_init = 1,
 		num_B_init = 1,
 		num_total_init = 2,
@@ -47,7 +46,7 @@ test_that("calculate_mix_fitness() can use all valid data combos", {
 		freq_B_final = 2/4
 	)
 	expect_no_error(
-		calculate_mix_fitness(my_data, var_names = c(
+		calculate_mix_fitness(data, var_names = c(
 			initial_number_A = "num_A_init",
 			initial_number_B = "num_B_init",
 			final_number_A = "num_A_final",
@@ -57,7 +56,7 @@ test_that("calculate_mix_fitness() can use all valid data combos", {
 		))
 	)
 	expect_no_error(
-		calculate_mix_fitness(my_data, var_names = c(
+		calculate_mix_fitness(data, var_names = c(
 			initial_number_total = "num_total_init",
 			initial_fraction_A = "freq_A_init",
 			final_number_total = "num_total_final",
@@ -67,7 +66,7 @@ test_that("calculate_mix_fitness() can use all valid data combos", {
 		))
 	)
 	expect_no_error(
-		calculate_mix_fitness(my_data, var_names = c(
+		calculate_mix_fitness(data, var_names = c(
 			initial_number_total = "num_total_init",
 			initial_fraction_B = "freq_B_init",
 			final_number_total = "num_total_final",
@@ -77,7 +76,7 @@ test_that("calculate_mix_fitness() can use all valid data combos", {
 		))
 	)
 	expect_no_error(
-		calculate_mix_fitness(my_data, var_names = c(
+		calculate_mix_fitness(data, var_names = c(
 			initial_number_A = "num_A_init",
 			initial_number_total = "num_total_init",
 			final_number_A = "num_A_final",
@@ -87,7 +86,7 @@ test_that("calculate_mix_fitness() can use all valid data combos", {
 		))
 	)
 	expect_no_error(
-		calculate_mix_fitness(my_data, var_names = c(
+		calculate_mix_fitness(data, var_names = c(
 			initial_number_B = "num_B_init",
 			initial_number_total = "num_total_init",
 			final_number_B = "num_B_final",
@@ -98,9 +97,88 @@ test_that("calculate_mix_fitness() can use all valid data combos", {
 	)
 })
 
-# TODO:
-# test_that("calculate_mix_fitness() warns of nonbiological data values", {
-# })
+test_that("calculate_mix_fitness() warns of nonbiological data values", {
+	vars <- c(
+		initial_number_A = "nA_init",
+		initial_number_B = "nB_init",
+		initial_number_total = "N_init",
+		initial_fraction_A = "qA_init",
+		initial_fraction_B = "qB_init",
+		final_number_A = "nA",
+		final_number_B = "nB",
+		final_number_total = "N",
+		final_fraction_A = "qA",
+		final_fraction_B = "qB",
+		name_A = "name_A",
+		name_B = "name_B"
+	)
+
+	# Test positive number of individuals
+	expect_warning(calculate_mix_fitness(
+		data.frame(nA_init = -1, nB_init = 1, nA = 2, nB = 2), var_names = vars
+	))
+	expect_warning(calculate_mix_fitness(
+		data.frame(nA_init = 1, nB_init = -1, nA = 2, nB = 2), var_names = vars
+	))
+	expect_warning(calculate_mix_fitness(
+		data.frame(nA_init = 1, nB_init = 1, nA = -2, nB = 2), var_names = vars
+	))
+	expect_warning(calculate_mix_fitness(
+		data.frame(nA_init = 1, nB_init = 1, nA = 2, nB = -2), var_names = vars
+	))
+	expect_warning(calculate_mix_fitness(
+		data.frame(N_init = -2, qA_init = 0.5, N = 4, qA = 0.5), var_names = vars
+	))
+	expect_warning(calculate_mix_fitness(
+		data.frame(N_init = 2, qA_init = 0.5, N = -4, qA = 0.5), var_names = vars
+	))
+
+	# Test valid strain frequencies
+	expect_warning(calculate_mix_fitness(
+		data.frame(N_init = 2, qA_init = -0.5, N = 4, qA = 0.5), var_names = vars
+	))
+	expect_warning(calculate_mix_fitness(
+		data.frame(N_init = 2, qA_init = 0.5, N = 4, qA = -0.5), var_names = vars
+	))
+	expect_warning(calculate_mix_fitness(
+		data.frame(N_init = 2, qB_init = -0.5, N = 4, qB = 0.5), var_names = vars
+	))
+	expect_warning(calculate_mix_fitness(
+		data.frame(N_init = 2, qB_init = 0.5, N = 4, qB = -0.5), var_names = vars
+	))
+	expect_warning(calculate_mix_fitness(
+		data.frame(N_init = 2, qA_init = 1.5, N = 4, qA = 0.5), var_names = vars
+	))
+	expect_warning(calculate_mix_fitness(
+		data.frame(N_init = 2, qA_init = 0.5, N = 4, qA = 1.5), var_names = vars
+	))
+	expect_warning(calculate_mix_fitness(
+		data.frame(N_init = 2, qB_init = 1.5, N = 4, qB = 0.5), var_names = vars
+	))
+	expect_warning(calculate_mix_fitness(
+		data.frame(N_init = 2, qB_init = 0.5, N = 4, qB = 1.5), var_names = vars
+	))
+
+	# Test more strain than total
+	expect_warning(calculate_mix_fitness(
+		data.frame(nA_init = 2, N_init = 1, nA = 2, N = 2), var_names = vars
+	))
+	expect_warning(calculate_mix_fitness(
+		data.frame(nA_init = 1, N_init = 2, nA = 3, N = 2), var_names = vars
+	))
+	expect_warning(calculate_mix_fitness(
+		data.frame(nB_init = 2, N_init = 1, nB = 2, N = 2), var_names = vars
+	))
+	expect_warning(calculate_mix_fitness(
+		data.frame(nB_init = 1, N_init = 2, nB = 3, N = 2), var_names = vars
+	))
+})
+
+test_that("calculate_mix_fitness() errors if var_names invalid", {
+	data <- data.frame(init_A = 1, init_B = 2, final_A = 3, final_B = 4)
+	expect_error(calculate_mix_fitness(data))
+	expect_error(calculate_mix_fitness(data, var_names = "foo"))
+})
 
 # TODO: test that calculate_mix_fitness() errors if data is insufficient
 
@@ -135,5 +213,20 @@ test_that("calculate_mix_fitness() can use strain names from data", {
 	)
 })
 
-# TODO: test that calculate_mix_fitness() errors if strain names missing or invalid
+test_that("calculate_mix_fitness() errors if strain names missing or invalid", {
+	data <- data.frame(init_A = 1, init_B = 2, final_A = 3, final_B = 4)
+	vars <- c(
+		initial_number_A = "init_A",
+		initial_number_B = "init_B",
+		final_number_A = "final_A",
+		final_number_B = "final_B"
+		# No name_A or name_B
+	)
+	expect_error(
+		calculate_mix_fitness(data, var_names = c(names, name_A = "strain_A"))
+	)
+	expect_error(
+		calculate_mix_fitness(data, var_names = c(names, name_B = "strain_B"))
+	)
+})
 
