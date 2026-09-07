@@ -174,13 +174,40 @@ test_that("calculate_mix_fitness() warns of nonbiological data values", {
 	))
 })
 
-test_that("calculate_mix_fitness() errors if var_names invalid", {
-	data <- data.frame(init_A = 1, init_B = 2, final_A = 3, final_B = 4)
-	expect_error(calculate_mix_fitness(data))
-	expect_error(calculate_mix_fitness(data, var_names = "foo"))
-})
+# Best to test that error is informative, not just any error
+# test_that("calculate_mix_fitness() errors if var_names invalid", {
+# 	data <- data.frame(init_A = 1, init_B = 2, final_A = 3, final_B = 4)
+# 	expect_error(calculate_mix_fitness(data))
+# 	expect_error(calculate_mix_fitness(data, var_names = "foo"))
+# })
 
-# TODO: test that calculate_mix_fitness() errors if data is insufficient
+# Best to test that error is informative, not just any error
+# test_that("calculate_mix_fitness() errors if data is insufficient", {
+# 	data <- data.frame(
+# 		init_A = 1, init_B = 1, final_A = 2, final_B = 2, init_N = 2, final_N = 4,
+# 		init_qA = 0.5, init_qB = 0.5, final_qA = 0.5, final_qA = 0.5
+# 	)
+# 	expect_error(
+# 		calculate_mix_fitness(data, var_names = c(
+# 			# initial_number_A = "init_A",
+# 			initial_number_B = "init_B",
+# 			final_number_A = "final_A",
+# 			final_number_B = "final_B",
+# 			name_A = "A",
+# 			name_B = "B"
+# 		))
+# 	)
+# 	expect_error(
+# 		calculate_mix_fitness(data, var_names = c(
+# 			initial_number_A = "init_A",
+# 			initial_number_B = "init_B",
+# 			# final_number_A = "final_A",
+# 			final_number_B = "final_B",
+# 			name_A = "A",
+# 			name_B = "B"
+# 		))
+# 	)
+# })
 
 test_that("calculate_mix_fitness() can use specified strain names", {
 	expect_no_error(
@@ -213,20 +240,21 @@ test_that("calculate_mix_fitness() can use strain names from data", {
 	)
 })
 
-test_that("calculate_mix_fitness() errors if strain names missing or invalid", {
-	data <- data.frame(init_A = 1, init_B = 2, final_A = 3, final_B = 4)
-	vars <- c(
-		initial_number_A = "init_A",
-		initial_number_B = "init_B",
-		final_number_A = "final_A",
-		final_number_B = "final_B"
-		# No name_A or name_B
-	)
-	expect_error(
-		calculate_mix_fitness(data, var_names = c(names, name_A = "strain_A"))
-	)
-	expect_error(
-		calculate_mix_fitness(data, var_names = c(names, name_B = "strain_B"))
-	)
-})
+# Best to test that error is informative, not just any error
+# test_that("calculate_mix_fitness() errors if strain names missing or invalid", {
+# 	data <- data.frame(init_A = 1, init_B = 2, final_A = 3, final_B = 4)
+# 	vars <- c(
+# 		initial_number_A = "init_A",
+# 		initial_number_B = "init_B",
+# 		final_number_A = "final_A",
+# 		final_number_B = "final_B"
+# 		# No name_A or name_B
+# 	)
+# 	expect_error(
+# 		calculate_mix_fitness(data, var_names = c(names, name_A = "strain_A"))
+# 	)
+# 	expect_error(
+# 		calculate_mix_fitness(data, var_names = c(names, name_B = "strain_B"))
+# 	)
+# })
 

@@ -107,20 +107,11 @@
 #' @export
 #'
 calculate_mix_fitness <- function(data, var_names, keep = NULL) {
-	check_abundance_var_names(var_names)
-	check_abundance_data(data, var_names)
-
-	# TODO: Move this to plot_*_fitness() functions
-	# # Warn about fitness zeroes
-	# if (any(c(output$fitness_A == 0, output$fitness_B == 0), na.rm = TRUE)) {
-	# 	warning(
-	# 		"Some fitness values are zero. Undefined on log scale.",
-	# 		call. = FALSE
-	# 	)
-	# }
+	check_data_names(var_names)
+	check_data_values(data, var_names)
 
 	data |>
-	rename_abundance_vars(var_names) |>
+	rename_data_vars(var_names) |>
 	set_strain_names(var_names) |>
 	calculate_population("initial") |>
 	calculate_population("final") |>
@@ -131,7 +122,7 @@ calculate_mix_fitness <- function(data, var_names, keep = NULL) {
 
 # Check functions ==============================================================
 
-check_abundance_var_names <- function(var_names) {
+check_data_names <- function(var_names) {
 	# Require var_names
 	if (missing(var_names) || is.null(var_names)) {
 		rlang::abort(
@@ -148,52 +139,49 @@ check_abundance_var_names <- function(var_names) {
 		)
 	}
 
-	# TODO: check var_names enough to calculate populations
-	# check_initial_var_names(var_names)
-	# check_final_var_names(var_names)
-
+	check_data_sufficient(var_names, "initial")
+	check_data_sufficient(var_names, "final")
 	check_strain_names(var_names)
 }
 
-# Check that var_names includes enough for calculations
-# check_initial_var_names <- function() {
-# 	init_vars <- c("", )
-# "initial_number_A"
-# "initial_number_B"
-# "initial_number_total"
-# "initial_fraction_A"
-# "initial_fraction_B"
-# }
+# Check if var_names has enough to calculate population state
+check_data_sufficient <- function(var_names, time_point) {
+	possible <-
+		c("_number_A", "_number_B", "_number_total", "_fraction_A", "_fraction_B") |>
+		sapply(function(x) paste0(time_point, x), USE.NAMES = FALSE)
+	provided <- possible[utils::hasName(var_names, possible)]
+	if (length(provided) < 2) {
+		rlang::abort(
+			paste(
+				"Too few data columns listed in `var_names` to calculate",
+				time_point, "population state"
+			),
+			call = call("calculate_mix_fitness"),
+			body = paste("* Variables listed:", provided)
+		)
+	}
+}
 
+# Require strain names
 check_strain_names <- function(var_names) {
-	if (!utils::hasName(var_names, "name_A")) {
-		rlang::abort(
-			"`name_A` is missing from `var_names`, with no default",
-			call = call("calculate_mix_fitness")
-		)
-	}
-	if (!utils::hasName(var_names, "name_B")) {
-		rlang::abort(
-			"`name_B` is missing from `var_names`, with no default",
-			call = call("calculate_mix_fitness")
-		)
-	}
-	if (!is.character(var_names[["name_A"]])) {
-		rlang::abort(
-			"`name_A` in `var_names` must be a character string",
-			call = call("calculate_mix_fitness")
-		)
-	}
-	if (!is.character(var_names[["name_B"]])) {
-		rlang::abort(
-			"`name_B` in `var_names` must be a character string",
-			call = call("calculate_mix_fitness")
-		)
+	for (name_var in c("name_A", "name_B")) {
+		if (!utils::hasName(var_names, name_var)) {
+			rlang::abort(
+				paste0("`", name_var,"` missing from `var_names` with no default"),
+				call = call("calculate_mix_fitness")
+			)
+	  }
+		if (!is.character(var_names[[name_var]])) {
+			rlang::abort(
+				paste0("`", name_var,"` in `var_names` must be a character string"),
+				call = call("calculate_mix_fitness")
+			)
+		}
 	}
 }
 
 # Warn if any abundance data are not biologically meaningful
-check_abundance_data <- function(data, var_names) {
+check_data_values <- function(data, var_names) {
 	var_names <- as.list(var_names)
 
 	# Initial population
@@ -274,8 +262,8 @@ check_fractions <- function(data, var_name) {
 	}
 }
 
-# Warn if difference between strain count and total count
-# not biologically meaningful
+# Warn if any differences between strain count and total count
+#   not biologically meaningful (total < strain)
 check_count_differences <- function(data, var_name_strain, var_name_total) {
 	if (any(c(data[[var_name_strain]] > data[[var_name_total]]), na.rm = TRUE)) {
 		rlang::warn(
@@ -291,8 +279,8 @@ check_count_differences <- function(data, var_name_strain, var_name_total) {
 
 # Helper functions =============================================================
 
-# Set standardized variable names in abundance data
-rename_abundance_vars <- function(data, var_names) {
+# Set standardized names for abundance data
+rename_data_vars <- function(data, var_names) {
 	for (new_name in names(var_names)) {
 		names(data)[names(data) == var_names[new_name]] <- new_name
 	}
@@ -325,7 +313,10 @@ calculate_population <- function(data, time_point) {
 		data[number_A]     <- data[number_total] - data[number_B]
 		data[fraction_A]   <- data[number_A] / data[number_total]
 	} else {
-		stop("Not enough information in data to calculate fitness")
+		rlang::abort(
+			paste("Unable to calculate", time_point, "population state"),
+			call = call("calculate_mix_fitness")
+		)
 	}
 
 	if (time_point == "initial") {

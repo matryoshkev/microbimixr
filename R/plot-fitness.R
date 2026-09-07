@@ -638,6 +638,17 @@ plot_fitness_strain_total <- function(
 	fig_output
 }
 
+# TODO
+# check_fitness_data <- function(data, var_names) {
+# 	# Warn about fitness zeroes
+# 	if (any(c(output$fitness_A == 0, output$fitness_B == 0), na.rm = TRUE)) {
+# 		warning(
+# 			"Some fitness values are zero. Undefined on log scale.",
+# 			call. = FALSE
+# 		)
+# 	}
+# }
+
 # Get shared y-axis limits for fitness & fitness_ratio
 #   So log10(fitness) and log10(fitness_ratio) are visually comparable
 #   Used by plot_mix_fitness()
