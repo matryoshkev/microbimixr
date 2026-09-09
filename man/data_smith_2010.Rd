@@ -14,6 +14,11 @@
 \item{final_spores_ancestral}{Final number of GJV10 spores (colony-forming units per plate)}
 }
 }
+\source{
+smith j, Van Dyken JD, and Zee PC (2010) A generalization of Hamilton's rule
+for the evolution of microbial cooperation. Science 328:1700-1703.
+\url{https://doi.org/10.1126/science.1189675}
+}
 \usage{
 data_smith_2010
 }
@@ -21,10 +26,5 @@ data_smith_2010
 This data describes the sporulation success of \emph{Myxococcus xanthus}
 bacteria in mixed-genotype fruiting bodies. GVB206.3 is an experimentally
 evolved genotype. GJV10 is an ancestral genotoype.
-}
-\references{
-smith j, Van Dyken JD, and Zee PC (2010) A generalization of Hamilton's rule
-for the evolution of microbial cooperation. Science 328:1700-1703.
-\url{https://doi.org/10.1126/science.1189675}
 }
 \keyword{datasets}

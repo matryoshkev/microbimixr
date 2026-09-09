@@ -18,6 +18,11 @@
 }
 }
 \source{
+Yurtsev EA, Chao HX, Datta MS, Artemova T, and Gore J (2013) Bacterial
+cheating drives the population dynamics of cooperative antibiotic resistance
+plasmids. Molecular Systems Biology 9:683.
+\url{https://doi.org/10.1038/msb.2013.39}
+
 \url{https://bitbucket.org/eugene_yurtsev/bacterialcheatingproject}
 }
 \usage{
@@ -29,11 +34,5 @@ cycle in a variety of environments (different ampicillin concentrations)
 from a variety of initial starting conditions (changing both the total
 initial cell density and the relative abundance of resistant and sensitive
 bacteria).
-}
-\references{
-Yurtsev EA, Chao HX, Datta MS, Artemova T, and Gore J (2013) Bacterial
-cheating drives the population dynamics of cooperative antibiotic resistance
-plasmids. Molecular Systems Biology 9:683.
-\url{https://doi.org/10.1038/msb.2013.39}
 }
 \keyword{datasets}

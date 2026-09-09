@@ -14,7 +14,7 @@
 #'   \item{final_spores_ancestral}{Final number of GJV10 spores (colony-forming units per plate)}
 #' }
 #'
-#' @references
+#' @source
 #' smith j, Van Dyken JD, and Zee PC (2010) A generalization of Hamilton's rule
 #' for the evolution of microbial cooperation. Science 328:1700-1703.
 #' <https://doi.org/10.1126/science.1189675>
@@ -39,6 +39,11 @@
 #' )
 #' ```
 #'
+#' @source
+#' smith j, Van Dyken JD, and Zee PC (2010) A generalization of Hamilton's rule
+#' for the evolution of microbial cooperation. Science 328:1700-1703.
+#' <https://doi.org/10.1126/science.1189675>
+#'
 "var_names_smith_2010"
 
 #' Social exploitation of antibiotic resistance by _E. coli_
@@ -62,13 +67,12 @@
 #'   \item{fraction_resistant_final}{Final fraction of resistant cells (measured using flow cytometry), fraction of resistant cells at end of growth cycle}
 #' }
 #'
-#' @references
+#' @source
 #' Yurtsev EA, Chao HX, Datta MS, Artemova T, and Gore J (2013) Bacterial
 #' cheating drives the population dynamics of cooperative antibiotic resistance
 #' plasmids. Molecular Systems Biology 9:683.
 #' <https://doi.org/10.1038/msb.2013.39>
 #'
-#' @source
 #' <https://bitbucket.org/eugene_yurtsev/bacterialcheatingproject>
 #'
 "data_Yurtsev_2013"
@@ -90,7 +94,7 @@
 #'   \item{spores_total}{total number of spores produced (measured using hemocytometer)}
 #' }
 #'
-#' @references
+#' @source
 #' Madgwick PG, Stewart B, Belcher LJ, Thompson CRL, and Wolf JB (2018)
 #' Strategic investment explains patterns of cooperation and cheating in a
 #' microbe. Proceedings of the National Academy of Science USA 115:
