@@ -122,6 +122,19 @@ calculate_mix_fitness <- function(data, var_names, keep = NULL) {
 
 # Check functions ==============================================================
 
+vars_possible <- function() {c(
+	"initial_number_A",
+	"initial_number_B",
+	"initial_number_total",
+	"initial_fraction_A",
+	"initial_fraction_B",
+	"final_number_A",
+	"final_number_B",
+	"final_number_total",
+	"final_fraction_A",
+	"final_fraction_B"
+)}
+
 check_data_names <- function(var_names) {
 	# Require var_names
 	if (missing(var_names) || is.null(var_names)) {
@@ -146,9 +159,8 @@ check_data_names <- function(var_names) {
 
 # Check if var_names has enough to calculate population state
 check_data_sufficient <- function(var_names, time_point) {
-	possible <-
-		c("_number_A", "_number_B", "_number_total", "_fraction_A", "_fraction_B") |>
-		sapply(function(x) paste0(time_point, x), USE.NAMES = FALSE)
+	time_point <- rlang::arg_match(time_point, c("initial", "final"))
+	possible <- vars_possible()[grepl(time_point, vars_possible())]
 	provided <- possible[utils::hasName(var_names, possible)]
 	if (length(provided) < 2) {
 		rlang::abort(
@@ -185,17 +197,11 @@ check_data_values <- function(data, var_names) {
 	var_names <- as.list(var_names)
 
 	# Counts and densities
-	count_vars <- c(
-		"initial_number_A", "initial_number_B", "initial_number_total",
-		"final_number_A", "final_number_B", "final_number_total"
-	)
+	count_vars <- vars_possible()[grepl("number", vars_possible())]
 	for (count_var in count_vars) check_counts(data, var_names[[count_var]])
 
 	# Fractions/proportions/frequencies
-	freq_vars <- c(
-		"initial_fraction_A", "initial_fraction_B",
-		"final_fraction_A", "final_fraction_B"
-	)
+	freq_vars <- vars_possible()[grepl("fraction", vars_possible())]
 	for (freq_var in freq_vars) check_fractions(data, var_names[[freq_var]])
 
 	# Strain vs total count/density
@@ -253,17 +259,19 @@ check_differences <- function(data, strain_var, total_var) {
 
 # Helper functions =============================================================
 
-# Set standardized names for abundance data
+# Set standardized variable names in abundance data
 rename_data_vars <- function(data, var_names) {
-	for (new_name in names(var_names)) {
-		names(data)[names(data) == var_names[new_name]] <- new_name
+	for (new_name in vars_possible()) {
+		if (utils::hasName(var_names, new_name)) {
+			names(data)[names(data) == var_names[[new_name]]] <- new_name
+		}
 	}
 	data
 }
 
 # Calculate unknown abundance variables from the two that are known
 calculate_population <- function(data, time_point) {
-	time_point   <- match.arg(time_point, c("initial", "final"))
+	time_point   <- rlang::arg_match(time_point, c("initial", "final"))
 	number_A     <- paste0(time_point, "_number_A")
 	number_B     <- paste0(time_point, "_number_B")
 	number_total <- paste0(time_point, "_number_total")
