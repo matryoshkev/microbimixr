@@ -184,63 +184,36 @@ check_strain_names <- function(var_names) {
 check_data_values <- function(data, var_names) {
 	var_names <- as.list(var_names)
 
-	# Initial population
-	if (!is.null(var_names$initial_number_A)) {
-		check_counts(data, var_names$initial_number_A)
-	}
-	if (!is.null(var_names$initial_number_B)) {
-		check_counts(data, var_names$initial_number_B)
-	}
-	if (!is.null(var_names$initial_fraction_A)) {
-		check_fractions(data, var_names$initial_fraction_A)
-	}
-	if (!is.null(var_names$initial_fraction_B)) {
-		check_fractions(data, var_names$initial_fraction_B)
-	}
-	if (!is.null(var_names$initial_number_total)) {
-		check_counts(data, var_names$initial_number_total)
-		if (!is.null(var_names$initial_number_A)) {
-			check_count_differences(
-				data, var_names$initial_number_A, var_names$initial_number_total
-			)
-		}
-		if (!is.null(var_names$initial_number_B)) {
-			check_count_differences(
-				data, var_names$initial_number_B, var_names$initial_number_total
-			)
-		}
-	}
+	# Counts and densities
+	count_vars <- c(
+		"initial_number_A", "initial_number_B", "initial_number_total",
+		"final_number_A", "final_number_B", "final_number_total"
+	)
+	for (count_var in count_vars) check_counts(data, var_names[[count_var]])
 
-	# Final population
-	if (!is.null(var_names$final_number_A)) {
-		check_counts(data, var_names$final_number_A)
-	}
-	if (!is.null(var_names$final_number_B)) {
-		check_counts(data, var_names$final_number_B)
-	}
-	if (!is.null(var_names$final_fraction_A)) {
-		check_fractions(data, var_names$final_fraction_A)
-	}
-	if (!is.null(var_names$final_fraction_B)) {
-		check_fractions(data, var_names$final_fraction_B)
-	}
-	if (!is.null(var_names$final_number_total)) {
-		check_counts(data, var_names$final_number_total)
-		if (!is.null(var_names$final_number_A)) {
-			check_count_differences(
-				data, var_names$final_number_A, var_names$final_number_total
+	# Fractions/proportions/frequencies
+	freq_vars <- c(
+		"initial_fraction_A", "initial_fraction_B",
+		"final_fraction_A", "final_fraction_B"
+	)
+	for (freq_var in freq_vars) check_fractions(data, var_names[[freq_var]])
+
+	# Strain vs total count/density
+	for (strain_var in c("initial_number_A", "initial_number_B")) {
+			check_differences(
+				data, var_names[[strain_var]], var_names[["initial_number_total"]]
 			)
-		}
-		if (!is.null(var_names$final_number_B)) {
-			check_count_differences(
-				data, var_names$final_number_B, var_names$final_number_total
+	}
+	for (strain_var in c("final_number_A", "final_number_B")) {
+			check_differences(
+				data, var_names[[strain_var]], var_names[["final_number_total"]]
 			)
-		}
 	}
 }
 
-# Warn if any count data not biologically meaningful
+# Warn if any count/density data not biologically meaningful
 check_counts <- function(data, var_name) {
+	if (is.null(var_name)) return()
 	if (any(data[[var_name]] < 0, na.rm = TRUE)) {
 		rlang::warn(
 			paste("Some", var_name, "values < 0", "-- Not biologically meaningful."),
@@ -249,8 +222,9 @@ check_counts <- function(data, var_name) {
 	}
 }
 
-# Warn if any fraction data not biologically meaningful
+# Warn if any fraction/frequency data not biologically meaningful
 check_fractions <- function(data, var_name) {
+	if (is.null(var_name)) return()
 	if (any(c(data[[var_name]] < 0, data[[var_name]] > 1), na.rm = TRUE)) {
 		rlang::warn(
 			paste(
@@ -262,13 +236,13 @@ check_fractions <- function(data, var_name) {
 	}
 }
 
-# Warn if any differences between strain count and total count
-#   not biologically meaningful (total < strain)
-check_count_differences <- function(data, var_name_strain, var_name_total) {
-	if (any(c(data[[var_name_strain]] > data[[var_name_total]]), na.rm = TRUE)) {
+# Warn if strain count/density > total count/density
+check_differences <- function(data, strain_var, total_var) {
+	if (is.null(strain_var) || is.null(total_var)) return()
+	if (any(c(data[[strain_var]] > data[[total_var]]), na.rm = TRUE)) {
 		rlang::warn(
 			paste(
-				"Some", var_name_strain, "values >", var_name_total,
+				"Some", strain_var, "values >", total_var,
 				"-- Not biologically meaningful."
 			),
 			call = call("calculate_mix_fitness")
