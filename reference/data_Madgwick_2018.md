@@ -43,7 +43,7 @@ data_Madgwick_2018
 
   total number of spores produced (measured using hemocytometer)
 
-## References
+## Source
 
 Madgwick PG, Stewart B, Belcher LJ, Thompson CRL, and Wolf JB (2018)
 Strategic investment explains patterns of cooperation and cheating in a

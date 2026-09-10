@@ -34,7 +34,7 @@ data_smith_2010
 
   Final number of GJV10 spores (colony-forming units per plate)
 
-## References
+## Source
 
 smith j, Van Dyken JD, and Zee PC (2010) A generalization of Hamilton's
 rule for the evolution of microbial cooperation. Science 328:1700-1703.

@@ -57,11 +57,9 @@ data_Yurtsev_2013
 
 ## Source
 
-<https://bitbucket.org/eugene_yurtsev/bacterialcheatingproject>
-
-## References
-
 Yurtsev EA, Chao HX, Datta MS, Artemova T, and Gore J (2013) Bacterial
 cheating drives the population dynamics of cooperative antibiotic
 resistance plasmids. Molecular Systems Biology 9:683.
 <https://doi.org/10.1038/msb.2013.39>
+
+<https://bitbucket.org/eugene_yurtsev/bacterialcheatingproject>
