@@ -5,6 +5,8 @@ microbimixr
 <!-- badges: start -->
 
 [![R-CMD-check](https://github.com/matryoshkev/microbimixr/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/matryoshkev/microbimixr/actions/workflows/R-CMD-check.yaml)
+[![Codecov test
+coverage](https://codecov.io/gh/matryoshkev/microbimixr/graph/badge.svg)](https://app.codecov.io/gh/matryoshkev/microbimixr)
 <!-- badges: end -->
 
 microbimixr is an R package for analyzing microbial interactions in mix
