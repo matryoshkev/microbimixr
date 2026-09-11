@@ -279,10 +279,8 @@ plot_strain_fitness <- function(
 		point_args <- c(point_args, list(size = size))
 	}
 
-	# Drop single-strain data for log mixing scales
-	if (mix_scale == "ratio") {
-		data <- data[is.finite(log(data[[var_names$initial_ratio_A_B]])), ]
-	}
+	# Drop single-strain data if using ratio mixing scale
+	if (mix_scale == "ratio") {data <- drop_unmixed_ratio(data, var_names)}
 
 	# Make long-format data frame for plot
 	data_to_plot <- stats::reshape(
@@ -410,10 +408,8 @@ plot_total_group_fitness <- function(
 		point_args <- c(point_args, list(size = size))
 	}
 
-	# Drop single-strain data for log mixing scales
-	if (mix_scale == "ratio") {
-		data <- data[is.finite(log(data[[var_names$initial_ratio_A_B]])), ]
-	}
+	# Drop single-strain data if using ratio mixing scale
+	if (mix_scale == "ratio") {data <- drop_unmixed_ratio(data, var_names)}
 
 	# Make plot
 	fig_output <-
@@ -529,13 +525,11 @@ plot_within_group_fitness <- function(
 		point_args <- c(point_args, list(size = size))
 	}
 
-	# Filter out single-strain data
+	# Drop single-strain data
 	if (mix_scale == "fraction") {
-		mixvar <- var_names$initial_fraction_A
-		data <- data[(data[[mixvar]] > 0) & (data[[mixvar]] < 1), ]
+		data <- drop_unmixed_fraction(data, var_names)
 	} else if (mix_scale == "ratio") {
-		mixvar <- var_names$initial_ratio_A_B
-		data <- data[(is.finite(data[[mixvar]])) & (data[[mixvar]] > 0), ]
+		data <- drop_unmixed_ratio(data, var_names)
 	}
 
 	# Make plot
@@ -595,10 +589,8 @@ plot_fitness_strain_total <- function(
 	if (!is_waiver(shape)) {point_args <- c(point_args, list(shape = shape))}
 	if (!is_waiver(size)) {point_args <- c(point_args, list(size = size))}
 
-	# Drop single-strain data for log mixing scales
-	if (mix_scale == "ratio") {
-		data <- data[is.finite(log(data[[var_names$initial_ratio_A_B]])), ]
-	}
+	# Drop single-strain data if using ratio mixing scale
+	if (mix_scale == "ratio") {data <- drop_unmixed_ratio(data, var_names)}
 
 	# Make long-format data
 	data_for_plot <- stats::reshape(
@@ -710,6 +702,16 @@ get_strain_names <- function(data, var_names) {
 	}
 	if (is_multistrain) message("Note: >1 strain combination in data")
 	list(name_A = name_A, name_B = name_B)
+}
+
+# Drop single-strain data
+drop_unmixed_fraction <- function(data, var_names) {
+	mixvar <- var_names[["initial_fraction_A"]]
+	data[(data[[mixvar]] > 0) & (data[[mixvar]] < 1), ]
+}
+drop_unmixed_ratio <- function(data, var_names) {
+	mixvar <- var_names[["initial_ratio_A_B"]]
+	data[(data[[mixvar]] > 0) & (is.finite(data[[mixvar]])), ]
 }
 
 # Add x-axis mixing scale to ggplot object
