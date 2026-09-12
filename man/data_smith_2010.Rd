@@ -24,7 +24,7 @@ data_smith_2010
 }
 \description{
 This data describes the sporulation success of \emph{Myxococcus xanthus}
-bacteria in mixed-genotype fruiting bodies. GVB206.3 is an experimentally
-evolved genotype. GJV10 is an ancestral genotoype.
+bacteria in mixed-genotype fruiting bodies. GJV10 is an ancestral genotoype.
+GVB206.3 is an experimentally evolved "cheater" genotype.
 }
 \keyword{datasets}
