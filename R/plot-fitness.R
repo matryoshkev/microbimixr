@@ -397,16 +397,9 @@ plot_total_group_fitness <- function(
 	if (missing(ylim)) {ylim <- NULL}
 
 	# Point options
-	point_args <- list(na.rm = drop_NA)
-	if (missing(color) | is_waiver(color)) {color <- color_group()}
-	if (missing(fill) | is_waiver(fill)) {fill <- fill_group()}
-	point_args <- c(point_args, list(color = color, fill = fill))
-	if (!missing(shape) & !is_waiver(shape)) {
-		point_args <- c(point_args, list(shape = shape))
-	}
-	if (!missing(size) & !is_waiver(size)) {
-		point_args <- c(point_args, list(size = size))
-	}
+	point_args <- get_point_args(
+		color = color, fill = fill, shape = shape, size = size, drop_NA = drop_NA
+	)
 
 	# Drop single-strain data if using ratio mixing scale
 	if (mix_scale == "ratio") {data <- drop_unmixed_ratio(data, var_names)}
@@ -514,16 +507,9 @@ plot_within_group_fitness <- function(
 	if (missing(ylim)) {ylim <- NULL}
 
 	# Point options
-	point_args <- list(na.rm = drop_NA)
-	if (missing(color) | is_waiver(color)) {color <- color_group()}
-	if (missing(fill) | is_waiver(fill)) {fill <- fill_group()}
-	point_args <- c(point_args, list(color = color, fill = fill))
-	if (!missing(shape) & !is_waiver(shape)) {
-		point_args <- c(point_args, list(shape = shape))
-	}
-	if (!missing(size) & !is_waiver(size)) {
-		point_args <- c(point_args, list(size = size))
-	}
+	point_args <- get_point_args(
+		color = color, fill = fill, shape = shape, size = size, drop_NA = drop_NA
+	)
 
 	# Drop single-strain data
 	if (mix_scale == "fraction") {
@@ -679,6 +665,29 @@ get_ylim_mix_fitness <- function(data, var_names) {
 	)
 
 	list(fitness = ylim_fitness, fitness_ratio = ylim_fitness_ratio)
+}
+
+# Collect arguments for geom_point_overlap()
+# Don't include if not given so we can use ggplot scale instead
+get_point_args <- function(
+	color = waiver(),
+	fill = waiver(),
+	shape = waiver(),
+	size = waiver(),
+	drop_NA = waiver()
+) {
+	args <- mget(ls())  # List of arguments to this function
+	point_args <- list()
+	for (arg_name in c("color", "fill", "shape", "size")) {
+		arg_value <- args[[arg_name]]
+		if (!is_waiver(arg_value) && !is.null(arg_value)) {
+			point_args[[arg_name]] <- arg_value
+		}
+	}
+	if (!is_waiver(drop_NA) && !is.null(drop_NA)) {
+		point_args[["na.rm"]] <- drop_NA
+	}
+	point_args
 }
 
 # Get strain names from names object or data column
