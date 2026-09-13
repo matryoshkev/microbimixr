@@ -84,25 +84,23 @@ plot_mix_fitness <- function(
 	)
 	ylim <- get_ylim_mix_fitness(data, var_names)
 
-	# Point color and fill
-	if (missing(color)) {
+	# Point options
+	if (is.null(color)) {
 		color_strain_group <- waiver()
 		color_group <- waiver()
 	} else {
 		color_strain_group <- color
 		color_group <- color[[3]]
 	}
-	if (missing(fill)) {
+	if (is.null(fill)) {
 		fill_strain_group <- waiver()
 		fill_group <- waiver()
 	} else {
 		fill_strain_group <- fill
 		fill_group <- fill[[3]]
 	}
-
-	# Other point options
-	if (missing(shape)) {shape <- waiver()}
-	if (missing(size)) {size <- waiver()}
+	if (is.null(shape)) {shape <- waiver()}
+	if (is.null(size)) {size <- waiver()}
 
 	# Make subplots
 	figA <- plot_fitness_strain_total(
@@ -262,22 +260,14 @@ plot_strain_fitness <- function(
 	if (missing(xlim)) {xlim <- NULL}
 	if (missing(ylim)) {ylim <- NULL}
 
-	# Point color and fill
-	if (missing(color) | is_waiver(color)) {
+	# Point options
+	if (is.null(color) || is_waiver(color)) {
 		color <- c(color_strain_A(), color_strain_B())
 	}
-	if (missing(fill) | is_waiver(fill)) {
+	if (is.null(fill) || is_waiver(fill)) {
 		fill <- c(fill_strain_A(), fill_strain_B())
 	}
-
-	# Other point options
-	point_args <- list(na.rm = drop_NA)
-	if (!missing(shape) & !is_waiver(shape)) {
-		point_args <- c(point_args, list(shape = shape))
-	}
-	if (!missing(size) & !is_waiver(size)) {
-		point_args <- c(point_args, list(size = size))
-	}
+	point_args <- get_point_args(shape = shape, size = size, drop_NA = drop_NA)
 
 	# Drop single-strain data if using ratio mixing scale
 	if (mix_scale == "ratio") {data <- drop_unmixed_ratio(data, var_names)}
@@ -499,8 +489,7 @@ plot_within_group_fitness <- function(
 	if (missing(xlab)) {xlab <- waiver()}
 	if (missing(ylab)) {
 		ylab <- paste(
-			"Fitness ratio\n",
-			strain_names[["name_A"]], "/", strain_names[["name_B"]]
+			"Fitness ratio\n", strain_names[["name_A"]], "/", strain_names[["name_B"]]
 		)
 	}
 	if (missing(xlim)) {xlim <- NULL}
@@ -562,18 +551,14 @@ plot_fitness_strain_total <- function(
 	# Axis options
 	mix_scale <- rlang::arg_match(mix_scale, c("fraction", "ratio"))
 
-	# Point color and fill
-	if (is_waiver(color)) {
+	# Point options
+	if (is_waiver(color) || is.null(color)) {
 		color <- c(color_strain_A(), color_strain_B(), color_group())
 	}
-	if (is_waiver(fill)) {
+	if (is_waiver(fill) || is.null(fill)) {
 		fill <- c(fill_strain_A(), fill_strain_B(), fill_group())
 	}
-
-	# Other point options
-	point_args <- list(na.rm = drop_NA)
-	if (!is_waiver(shape)) {point_args <- c(point_args, list(shape = shape))}
-	if (!is_waiver(size)) {point_args <- c(point_args, list(size = size))}
+	point_args <- get_point_args(shape = shape, size = size, drop_NA = drop_NA)
 
 	# Drop single-strain data if using ratio mixing scale
 	if (mix_scale == "ratio") {data <- drop_unmixed_ratio(data, var_names)}
