@@ -77,6 +77,7 @@ plot_mix_fitness <- function(
 ) {
 	# Get variable names
 	if (is.null(var_names)) {var_names <- fitness_vars_default()}
+	# Names get checked by subplot functions
 
 	# Axis options
 	mix_scale <- rlang::arg_match(
@@ -248,7 +249,16 @@ plot_strain_fitness <- function(
 	drop_NA = TRUE
 ) {
 	# Get variable and strain names
-	if (is.null(var_names)) {var_names <- fitness_vars_default()}
+	if (is.null(var_names)) {
+		var_names <- fitness_vars_default()
+	} else {
+		check_fitness_names(
+			var_names = var_names,
+			vars = c("fitness_A", "fitness_B"),
+			mix_scale = mix_scale,
+			caller = "plot_strain_fitness"
+		)
+	}
 	var_names <- as.list(var_names)
 	var_names$fitness <- "fitness"
 	strain_names <- get_strain_names(data, var_names)
@@ -375,7 +385,16 @@ plot_total_group_fitness <- function(
 	drop_NA = TRUE
 ) {
 	# Get variable and strain names
-	if (is.null(var_names)) {var_names <- fitness_vars_default()}
+	if (is.null(var_names)) {
+		var_names <- fitness_vars_default()
+	} else {
+		check_fitness_names(
+			var_names = var_names,
+			vars = "fitness_total",
+			mix_scale = mix_scale,
+			caller = "plot_total_group_fitness"
+		)
+	}
 	var_names <- as.list(var_names)
 	strain_names <- get_strain_names(data, var_names)
 
@@ -480,7 +499,16 @@ plot_within_group_fitness <- function(
 	drop_NA = TRUE
 ) {
 	# Get variable and strain names
-	if (is.null(var_names)) {var_names <- fitness_vars_default()}
+	if (is.null(var_names)) {
+		var_names <- fitness_vars_default()
+	} else {
+		check_fitness_names(
+			var_names = var_names,
+			vars = "fitness_ratio_A_B",
+			mix_scale = mix_scale,
+			caller = "plot_within_group_fitness"
+		)
+	}
 	var_names <- as.list(var_names)
 	strain_names <- get_strain_names(data, var_names)
 
@@ -599,6 +627,30 @@ plot_fitness_strain_total <- function(
 		)
 
 	fig_output
+}
+
+# Check that var_names lists the variables we want to plot
+check_fitness_names <- function(var_names, vars, mix_scale, caller) {
+	missing <- NULL
+	for (var in vars) {
+		if (!utils::hasName(var_names, var)) {missing <- c(missing, var)}
+	}
+	if (
+		mix_scale == "fraction" &&
+		!utils::hasName(var_names, "initial_fraction_A")
+	) {
+		missing <- c(missing, "initial_fraction_A")
+	} else if (
+		mix_scale == "ratio" &&
+		!utils::hasName(var_names, "initial_ratio_A_B")
+	) {
+		missing <- c(missing, "initial_ratio_A_B")
+	}
+	if (!is.null(missing)) {
+		rlang::abort(
+			paste(missing, "missing in var_names"), call = call(caller)
+		)
+	}
 }
 
 # TODO
