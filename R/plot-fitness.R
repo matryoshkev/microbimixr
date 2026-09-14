@@ -75,9 +75,13 @@ plot_mix_fitness <- function(
 	size = NULL,
 	drop_NA = TRUE
 ) {
-	# Get variable names
-	if (is.null(var_names)) {var_names <- fitness_vars_default()}
-	# Names get checked by subplot functions
+	# Variable names
+	var_names <- check_fitness_names(
+		var_names = var_names,
+		vars = c("fitness_A", "fitness_B", "fitness_total", "fitness_ratio_A_B"),
+		mix_scale = mix_scale,
+		caller = "plot_mix_fitness"
+	)
 
 	# Axis options
 	mix_scale <- rlang::arg_match(
@@ -248,18 +252,13 @@ plot_strain_fitness <- function(
 	size = NULL,
 	drop_NA = TRUE
 ) {
-	# Get variable and strain names
-	if (is.null(var_names)) {
-		var_names <- fitness_vars_default()
-	} else {
-		check_fitness_names(
-			var_names = var_names,
-			vars = c("fitness_A", "fitness_B"),
-			mix_scale = mix_scale,
-			caller = "plot_strain_fitness"
-		)
-	}
-	var_names <- as.list(var_names)
+	# Variable and strain names
+	var_names <- check_fitness_names(
+		var_names = var_names,
+		vars = c("fitness_A", "fitness_B"),
+		mix_scale = mix_scale,
+		caller = "plot_strain_fitness"
+	)
 	var_names$fitness <- "fitness"
 	strain_names <- get_strain_names(data, var_names)
 
@@ -384,18 +383,13 @@ plot_total_group_fitness <- function(
 	size = NULL,
 	drop_NA = TRUE
 ) {
-	# Get variable and strain names
-	if (is.null(var_names)) {
-		var_names <- fitness_vars_default()
-	} else {
-		check_fitness_names(
-			var_names = var_names,
-			vars = "fitness_total",
-			mix_scale = mix_scale,
-			caller = "plot_total_group_fitness"
-		)
-	}
-	var_names <- as.list(var_names)
+	# Variable and strain names
+	var_names <- check_fitness_names(
+		var_names = var_names,
+		vars = "fitness_total",
+		mix_scale = mix_scale,
+		caller = "plot_total_group_fitness"
+	)
 	strain_names <- get_strain_names(data, var_names)
 
 	# Axis options
@@ -498,18 +492,13 @@ plot_within_group_fitness <- function(
 	size = NULL,
 	drop_NA = TRUE
 ) {
-	# Get variable and strain names
-	if (is.null(var_names)) {
-		var_names <- fitness_vars_default()
-	} else {
-		check_fitness_names(
-			var_names = var_names,
-			vars = "fitness_ratio_A_B",
-			mix_scale = mix_scale,
-			caller = "plot_within_group_fitness"
-		)
-	}
-	var_names <- as.list(var_names)
+	# Variable and strain names
+	var_names <- check_fitness_names(
+		var_names = var_names,
+		vars = "fitness_ratio_A_B",
+		mix_scale = mix_scale,
+		caller = "plot_within_group_fitness"
+	)
 	strain_names <- get_strain_names(data, var_names)
 
 	# Axis options
@@ -571,7 +560,12 @@ plot_fitness_strain_total <- function(
 	drop_NA = TRUE
 ) {
 	# Variable names
-	var_names <- as.list(var_names)
+	var_names <- check_fitness_names(
+		var_names = var_names,
+		vars = c("fitness_A", "fitness_B", "fitness_total"),
+		mix_scale = mix_scale,
+		caller = "plot_within_group_fitness"
+	)
 	var_names$fitness <- "fitness"
 	strain_names <- get_strain_names(data, var_names)
 	name_total <- "Total group"
@@ -628,41 +622,6 @@ plot_fitness_strain_total <- function(
 
 	fig_output
 }
-
-# Check that var_names lists the variables we want to plot
-check_fitness_names <- function(var_names, vars, mix_scale, caller) {
-	missing <- NULL
-	for (var in vars) {
-		if (!utils::hasName(var_names, var)) {missing <- c(missing, var)}
-	}
-	if (
-		mix_scale == "fraction" &&
-		!utils::hasName(var_names, "initial_fraction_A")
-	) {
-		missing <- c(missing, "initial_fraction_A")
-	} else if (
-		mix_scale == "ratio" &&
-		!utils::hasName(var_names, "initial_ratio_A_B")
-	) {
-		missing <- c(missing, "initial_ratio_A_B")
-	}
-	if (!is.null(missing)) {
-		rlang::abort(
-			paste(missing, "missing in var_names"), call = call(caller)
-		)
-	}
-}
-
-# TODO
-# check_fitness_data <- function(data, var_names) {
-# 	# Warn about fitness zeroes
-# 	if (any(c(output$fitness_A == 0, output$fitness_B == 0), na.rm = TRUE)) {
-# 		warning(
-# 			"Some fitness values are zero. Undefined on log scale.",
-# 			call. = FALSE
-# 		)
-# 	}
-# }
 
 # Get shared y-axis limits for fitness & fitness_ratio
 #   So log10(fitness) and log10(fitness_ratio) are visually comparable
@@ -845,4 +804,47 @@ add_mix_axis <- function(
 #
 # 	output
 # }
+
+
+# Check functions ==============================================================
+
+# Check var_names lists variables we want to plot
+check_fitness_names <- function(var_names, vars, mix_scale, caller) {
+	# Use default names if none given
+	if (is.null(var_names)) return(as.list(fitness_vars_default()))
+
+	# Validate given var_names and report missing items
+	missing <- NULL
+	for (var in vars) {
+		if (!utils::hasName(var_names, var)) {missing <- c(missing, var)}
+	}
+	if (
+		"fraction" %in% mix_scale &&
+		!utils::hasName(var_names, "initial_fraction_A")
+	) {
+		missing <- c(missing, "initial_fraction_A")
+	} else if (
+		"ratio" %in% mix_scale &&
+		!utils::hasName(var_names, "initial_ratio_A_B")
+	) {
+		missing <- c(missing, "initial_ratio_A_B")
+	}
+	if (!is.null(missing)) {
+		rlang::abort(paste(missing, "missing in var_names"), call = call(caller))
+	}
+	as.list(var_names)
+}
+
+# TODO
+# check_fitness_data <- function(data, var_names) {
+# 	# Warn about fitness zeroes
+# 	if (any(c(output$fitness_A == 0, output$fitness_B == 0), na.rm = TRUE)) {
+# 		warning(
+# 			"Some fitness values are zero. Undefined on log scale.",
+# 			call. = FALSE
+# 		)
+# 	}
+# }
+
+
 

@@ -31,6 +31,74 @@ test_that("plot functions list variables missing in var_names", {
 	)
 	strains <- c(name_A = "A", name_B = "B")
 
+	# Compare fitness measures
+	expect_snapshot(
+		plot_mix_fitness(fitness, var_names = c(strains,
+			# initial_fraction_A = "initial_fraction_A",
+			initial_ratio_A_B = "initial_ratio_A_B",
+			fitness_A = "fitness_A",
+			fitness_B = "fitness_B",
+			fitness_total = "fitness_total",
+			fitness_ratio_A_B = "fitness_ratio_A_B"
+		)),
+		error = TRUE
+	)
+	expect_snapshot(
+		plot_mix_fitness(fitness, var_names = c(strains,
+			initial_fraction_A = "initial_fraction_A",
+			# initial_ratio_A_B = "initial_ratio_A_B",
+			fitness_A = "fitness_A",
+			fitness_B = "fitness_B",
+			fitness_total = "fitness_total",
+			fitness_ratio_A_B = "fitness_ratio_A_B"
+		)),
+		error = TRUE
+	)
+	expect_snapshot(
+		plot_mix_fitness(fitness, var_names = c(strains,
+			initial_fraction_A = "initial_fraction_A",
+			initial_ratio_A_B = "initial_ratio_A_B",
+			# fitness_A = "fitness_A",
+			fitness_B = "fitness_B",
+			fitness_total = "fitness_total",
+			fitness_ratio_A_B = "fitness_ratio_A_B"
+		)),
+		error = TRUE
+	)
+	expect_snapshot(
+		plot_mix_fitness(fitness, var_names = c(strains,
+			initial_fraction_A = "initial_fraction_A",
+			initial_ratio_A_B = "initial_ratio_A_B",
+			fitness_A = "fitness_A",
+			# fitness_B = "fitness_B",
+			fitness_total = "fitness_total",
+			fitness_ratio_A_B = "fitness_ratio_A_B"
+		)),
+		error = TRUE
+	)
+	expect_snapshot(
+		plot_mix_fitness(fitness, var_names = c(strains,
+			initial_fraction_A = "initial_fraction_A",
+			initial_ratio_A_B = "initial_ratio_A_B",
+			fitness_A = "fitness_A",
+			fitness_B = "fitness_B",
+			# fitness_total = "fitness_total",
+			fitness_ratio_A_B = "fitness_ratio_A_B"
+		)),
+		error = TRUE
+	)
+	expect_snapshot(
+		plot_mix_fitness(fitness, var_names = c(strains,
+			initial_fraction_A = "initial_fraction_A",
+			initial_ratio_A_B = "initial_ratio_A_B",
+			fitness_A = "fitness_A",
+			fitness_B = "fitness_B",
+			fitness_total = "fitness_total"
+			# fitness_ratio_A_B = "fitness_ratio_A_B"
+		)),
+		error = TRUE
+	)
+
 	# Strain fitness
 	expect_snapshot(
 		plot_strain_fitness(fitness, var_names = c(strains,
