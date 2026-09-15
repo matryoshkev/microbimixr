@@ -1,3 +1,5 @@
+# Basic plotting ---------------------------------------------------------------
+
 test_that("plot functions run defaults", {
 	fitness_myxo <- calculate_mix_fitness(data_smith_2010, var_names_smith_2010)
 	expect_no_error(plot_mix_fitness(fitness_myxo))
@@ -6,7 +8,7 @@ test_that("plot functions run defaults", {
 	expect_no_error(plot_within_group_fitness(fitness_myxo))
 })
 
-test_that("plot functions accept mixing ratio x-axis", {
+test_that("plot functions accept mixing ratio for x-axis scale", {
 	fitness_myxo <- calculate_mix_fitness(data_smith_2010, var_names_smith_2010)
 	expect_no_error(plot_mix_fitness(fitness_myxo, mix_scale = "ratio"))
 	expect_no_error(plot_strain_fitness(fitness_myxo, mix_scale = "ratio"))
@@ -19,6 +21,10 @@ test_that("plot_mix_fitness() accepts single mixing scale", {
 	expect_no_error(plot_mix_fitness(fitness_myxo, mix_scale = "fraction"))
 	expect_no_error(plot_mix_fitness(fitness_myxo, mix_scale = "ratio"))
 })
+
+
+# Input validation -------------------------------------------------------------
+# and informative error messages
 
 test_that("plot functions list variables missing in var_names", {
 	fitness <- data.frame(
@@ -174,9 +180,170 @@ test_that("plot functions list variables missing in var_names", {
 	)
 })
 
+test_that("plot functions report missing data columns", {
+	# Compare fitness measures
+	expect_snapshot(
+		{
+			plot_mix_fitness(
+				data.frame(
+					# initial_fraction_A = 0.5,
+					initial_ratio_A_B = 1,
+					fitness_A = 5,
+					fitness_B = 10,
+					fitness_total = 10,
+					fitness_ratio_A_B = 10
+				),
+				var_names = fitness_vars_default()
+			)
+			plot_mix_fitness(
+				data.frame(
+					initial_fraction_A = 0.5,
+					# initial_ratio_A_B = 1,
+					fitness_A = 5,
+					fitness_B = 10,
+					fitness_total = 10,
+					fitness_ratio_A_B = 10
+				),
+				var_names = fitness_vars_default()
+			)
+			plot_mix_fitness(
+				data.frame(
+					initial_fraction_A = 0.5,
+					initial_ratio_A_B = 1,
+					# fitness_A = 5,
+					fitness_B = 10,
+					fitness_total = 10,
+					fitness_ratio_A_B = 10
+				),
+				var_names = fitness_vars_default()
+			)
+			plot_mix_fitness(
+				data.frame(
+					initial_fraction_A = 0.5,
+					initial_ratio_A_B = 1,
+					fitness_A = 5,
+					# fitness_B = 10,
+					fitness_total = 10,
+					fitness_ratio_A_B = 10
+				),
+				var_names = fitness_vars_default()
+			)
+			plot_mix_fitness(
+				data.frame(
+					initial_fraction_A = 0.5,
+					initial_ratio_A_B = 1,
+					fitness_A = 5,
+					fitness_B = 10,
+					# fitness_total = 10,
+					fitness_ratio_A_B = 10
+				),
+				var_names = fitness_vars_default()
+			)
+			plot_mix_fitness(
+				data.frame(
+					initial_fraction_A = 0.5,
+					initial_ratio_A_B = 1,
+					fitness_A = 5,
+					fitness_B = 10,
+					fitness_total = 10
+					# fitness_ratio_A_B = 10
+				),
+				var_names = fitness_vars_default()
+			)
+		},
+		error = TRUE
+	)
+
+	# Strain fitness
+	expect_snapshot(
+		{
+			plot_strain_fitness(
+				data.frame(fitness_A = 5, fitness_B = 10),
+				var_names = fitness_vars_default()
+			)
+			plot_strain_fitness(
+				data.frame(fitness_A = 5, fitness_B = 10),
+				var_names = fitness_vars_default(),
+				mix_scale = "ratio"
+			)
+			plot_strain_fitness(
+				data.frame(fitness_B = 10, initial_fraction_A = 0.5),
+				var_names = fitness_vars_default()
+			)
+			plot_strain_fitness(
+				data.frame(fitness_A = 5, initial_fraction_A = 0.5),
+				var_names = fitness_vars_default()
+			)
+			plot_strain_fitness(
+				data.frame(),
+				var_names = fitness_vars_default()
+			)
+		},
+		error = TRUE
+	)
+
+	# Total fitness
+	expect_snapshot(
+		{
+			plot_total_group_fitness(
+				data.frame(fitness_total = 10),
+				var_names = fitness_vars_default()
+			)
+			plot_total_group_fitness(
+				data.frame(fitness_total = 10),
+				var_names = fitness_vars_default(),
+				mix_scale = "ratio"
+			)
+			plot_total_group_fitness(
+				data.frame(initial_fraction_A = 0.5),
+				var_names = fitness_vars_default()
+			)
+			plot_total_group_fitness(
+				data.frame(),
+				var_names = fitness_vars_default())
+		},
+		error = TRUE
+	)
+
+	# Fitness ratio
+	expect_snapshot(
+		{
+			plot_within_group_fitness(
+				data.frame(fitness_ratio_A_B = 5),
+				var_names = fitness_vars_default()
+			)
+			plot_within_group_fitness(
+				data.frame(fitness_ratio_A_B = 0.5),
+				var_names = fitness_vars_default(),
+				mix_scale = "ratio"
+			)
+			plot_within_group_fitness(
+				data.frame(initial_fraction_A = 0.5),
+				var_names = fitness_vars_default()
+			)
+			plot_within_group_fitness(
+				data.frame(),
+				var_names = fitness_vars_default()
+			)
+		},
+		error = TRUE
+	)
+})
+
+# # TODO
+# test_that("plot functions indicate unplottable fitness values"), {
+# 	# inform() zeroes undefined on log scale
+# 	# inform() Inf undefined on log scale
+# 	# warn() < 0 not biologically meaningful
+# 	# warn() NaN not biologically meaningful
+# }
+
+
+# Plot customization -----------------------------------------------------------
+
 test_that("plot functions accept expression() axis labels", {
 	fitness_myxo <- calculate_mix_fitness(data_smith_2010, var_names_smith_2010)
-	label <- expression(label)
+	label <- expression("label")
 	expect_no_error(plot_strain_fitness(
 		fitness_myxo, xlab = label, ylab = label
 	))

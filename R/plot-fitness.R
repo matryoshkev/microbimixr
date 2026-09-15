@@ -75,6 +75,10 @@ plot_mix_fitness <- function(
 	size = NULL,
 	drop_NA = TRUE
 ) {
+	mix_scale <- rlang::arg_match(
+		mix_scale, c("fraction", "ratio"), multiple = TRUE
+	)
+
 	# Variable names
 	var_names <- check_fitness_names(
 		var_names = var_names,
@@ -82,11 +86,20 @@ plot_mix_fitness <- function(
 		mix_scale = mix_scale,
 		caller = "plot_mix_fitness"
 	)
+	check_fitness_data(
+		data,
+		var_names = var_names,
+		vars = c(
+			var_names[["fitness_A"]],
+			var_names[["fitness_B"]],
+			var_names[["fitness_total"]],
+			var_names[["fitness_ratio_A_B"]]
+		),
+		mix_scale = mix_scale,
+		caller = "plot_mix_fitness"
+	)
 
 	# Axis options
-	mix_scale <- rlang::arg_match(
-		mix_scale, c("fraction", "ratio"), multiple = TRUE
-	)
 	ylim <- get_ylim_mix_fitness(data, var_names)
 
 	# Point options
@@ -252,6 +265,8 @@ plot_strain_fitness <- function(
 	size = NULL,
 	drop_NA = TRUE
 ) {
+	mix_scale <- rlang::arg_match(mix_scale, c("fraction", "ratio"))
+
 	# Variable and strain names
 	var_names <- check_fitness_names(
 		var_names = var_names,
@@ -259,11 +274,17 @@ plot_strain_fitness <- function(
 		mix_scale = mix_scale,
 		caller = "plot_strain_fitness"
 	)
+	check_fitness_data(
+		data,
+		var_names = var_names,
+		vars = c(var_names[["fitness_A"]], var_names[["fitness_B"]]),
+		mix_scale = mix_scale,
+		caller = "plot_strain_fitness"
+	)
 	var_names$fitness <- "fitness"
 	strain_names <- get_strain_names(data, var_names)
 
 	# Axis options
-	mix_scale <- rlang::arg_match(mix_scale, c("fraction", "ratio"))
 	if (missing(xlab)) {xlab <- waiver()}
 	if (missing(ylab)) {ylab <- waiver()}
 	if (missing(xlim)) {xlim <- NULL}
@@ -383,6 +404,8 @@ plot_total_group_fitness <- function(
 	size = NULL,
 	drop_NA = TRUE
 ) {
+	mix_scale <- rlang::arg_match(mix_scale, c("fraction", "ratio"))
+
 	# Variable and strain names
 	var_names <- check_fitness_names(
 		var_names = var_names,
@@ -390,10 +413,16 @@ plot_total_group_fitness <- function(
 		mix_scale = mix_scale,
 		caller = "plot_total_group_fitness"
 	)
+	check_fitness_data(
+		data,
+		var_names = var_names,
+		vars = var_names[["fitness_total"]],
+		mix_scale = mix_scale,
+		caller = "plot_total_group_fitness"
+	)
 	strain_names <- get_strain_names(data, var_names)
 
 	# Axis options
-	mix_scale <- rlang::arg_match(mix_scale, c("fraction", "ratio"))
 	if (missing(xlab)) {xlab <- waiver()}
 	if (missing(ylab)) {ylab <- waiver()}
 	if (missing(xlim)) {xlim <- NULL}
@@ -492,6 +521,8 @@ plot_within_group_fitness <- function(
 	size = NULL,
 	drop_NA = TRUE
 ) {
+	mix_scale <- rlang::arg_match(mix_scale, c("fraction", "ratio"))
+
 	# Variable and strain names
 	var_names <- check_fitness_names(
 		var_names = var_names,
@@ -499,10 +530,16 @@ plot_within_group_fitness <- function(
 		mix_scale = mix_scale,
 		caller = "plot_within_group_fitness"
 	)
+	check_fitness_data(
+		data,
+		var_names = var_names,
+		vars = var_names[["fitness_ratio_A_B"]],
+		mix_scale = mix_scale,
+		caller = "plot_within_group_fitness"
+	)
 	strain_names <- get_strain_names(data, var_names)
 
 	# Axis options
-	mix_scale <- rlang::arg_match(mix_scale, c("fraction", "ratio"))
 	if (missing(xlab)) {xlab <- waiver()}
 	if (missing(ylab)) {
 		ylab <- paste(
@@ -546,8 +583,7 @@ plot_within_group_fitness <- function(
 
 # Helper functions =============================================================
 
-# Plot strain and total-group fitness
-#   Used by plot_mix_fitness()
+# Plot strain and total-group fitness. Called by plot_mix_fitness()
 plot_fitness_strain_total <- function(
 	data,
 	var_names = fitness_vars_default(),
@@ -559,19 +595,18 @@ plot_fitness_strain_total <- function(
 	size = waiver(),
 	drop_NA = TRUE
 ) {
+	mix_scale <- rlang::arg_match(mix_scale, c("fraction", "ratio"))
+
 	# Variable names
 	var_names <- check_fitness_names(
 		var_names = var_names,
 		vars = c("fitness_A", "fitness_B", "fitness_total"),
 		mix_scale = mix_scale,
-		caller = "plot_within_group_fitness"
+		caller = "plot_fitness_strain_total"
 	)
 	var_names$fitness <- "fitness"
 	strain_names <- get_strain_names(data, var_names)
 	name_total <- "Total group"
-
-	# Axis options
-	mix_scale <- rlang::arg_match(mix_scale, c("fraction", "ratio"))
 
 	# Point options
 	if (is_waiver(color) || is.null(color)) {
@@ -818,14 +853,13 @@ check_fitness_names <- function(var_names, vars, mix_scale, caller) {
 	for (var in vars) {
 		if (!utils::hasName(var_names, var)) {missing <- c(missing, var)}
 	}
-	if (
-		"fraction" %in% mix_scale &&
-		!utils::hasName(var_names, "initial_fraction_A")
+	if ("fraction" %in% mix_scale &&
+		  !utils::hasName(var_names, "initial_fraction_A")
 	) {
 		missing <- c(missing, "initial_fraction_A")
-	} else if (
-		"ratio" %in% mix_scale &&
-		!utils::hasName(var_names, "initial_ratio_A_B")
+	}
+	if ("ratio" %in% mix_scale &&
+			!utils::hasName(var_names, "initial_ratio_A_B")
 	) {
 		missing <- c(missing, "initial_ratio_A_B")
 	}
@@ -835,8 +869,32 @@ check_fitness_names <- function(var_names, vars, mix_scale, caller) {
 	as.list(var_names)
 }
 
-# TODO
-# check_fitness_data <- function(data, var_names) {
+check_fitness_data <- function(data, var_names, vars, mix_scale, caller) {
+	if ("fraction" %in% mix_scale) {
+		vars <- c(vars, var_names[["initial_fraction_A"]])
+	}
+	if ("ratio" %in% mix_scale) {
+		vars <- c(vars, var_names[["initial_ratio_A_B"]])
+	}
+  check_fitness_columns(data, vars, caller)
+	# check_fitness_values()
+}
+
+# Check variables we want to plot are columns in data
+check_fitness_columns <- function(data, vars, caller) {
+	missing <- NULL
+	for (var in vars) {
+		if (!utils::hasName(data, var)) {missing <- c(missing, var)}
+	}
+	if (!is.null(missing)) {
+		rlang::abort(
+			paste0("Column `", missing, "` not found in data"), call = call(caller)
+		)
+	}
+}
+
+# TODO:
+# check_fitness_values <- function(data, var_names) {}
 # 	# Warn about fitness zeroes
 # 	if (any(c(output$fitness_A == 0, output$fitness_B == 0), na.rm = TRUE)) {
 # 		warning(
@@ -844,7 +902,8 @@ check_fitness_names <- function(var_names, vars, mix_scale, caller) {
 # 			call. = FALSE
 # 		)
 # 	}
-# }
 
+# TODO:
+# check_strain_names <- function(var_names) {}
 
 
