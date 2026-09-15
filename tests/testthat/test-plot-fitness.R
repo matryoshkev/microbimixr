@@ -2,24 +2,51 @@
 
 test_that("plot functions run defaults", {
 	fitness_myxo <- calculate_mix_fitness(data_smith_2010, var_names_smith_2010)
-	expect_no_error(plot_mix_fitness(fitness_myxo))
-	expect_no_error(plot_strain_fitness(fitness_myxo))
-	expect_no_error(plot_total_group_fitness(fitness_myxo))
-	expect_no_error(plot_within_group_fitness(fitness_myxo))
+	expect_no_error({
+		plot_strain_fitness(fitness_myxo)
+		plot_total_group_fitness(fitness_myxo)
+		plot_within_group_fitness(fitness_myxo)
+		plot_mix_fitness(fitness_myxo)
+	})
 })
 
-test_that("plot functions accept mixing ratio for x-axis scale", {
+test_that("plot functions accept initial ratio as x-axis scale", {
 	fitness_myxo <- calculate_mix_fitness(data_smith_2010, var_names_smith_2010)
-	expect_no_error(plot_mix_fitness(fitness_myxo, mix_scale = "ratio"))
-	expect_no_error(plot_strain_fitness(fitness_myxo, mix_scale = "ratio"))
-	expect_no_error(plot_total_group_fitness(fitness_myxo, mix_scale = "ratio"))
-	expect_no_error(plot_within_group_fitness(fitness_myxo, mix_scale = "ratio"))
+	expect_no_error({
+		plot_mix_fitness(fitness_myxo, mix_scale = "ratio")
+		plot_strain_fitness(fitness_myxo, mix_scale = "ratio")
+		plot_total_group_fitness(fitness_myxo, mix_scale = "ratio")
+		plot_within_group_fitness(fitness_myxo, mix_scale = "ratio")
+	})
 })
 
 test_that("plot_mix_fitness() accepts single mixing scale", {
 	fitness_myxo <- calculate_mix_fitness(data_smith_2010, var_names_smith_2010)
-	expect_no_error(plot_mix_fitness(fitness_myxo, mix_scale = "fraction"))
-	expect_no_error(plot_mix_fitness(fitness_myxo, mix_scale = "ratio"))
+	expect_no_error({
+		plot_mix_fitness(fitness_myxo, mix_scale = "fraction")
+		plot_mix_fitness(fitness_myxo, mix_scale = "ratio")
+	})
+})
+
+test_that("plot functions can use custom variable names", {
+	fitness_data <-
+		data.frame(qA = 0.5, qAqB = 1, wA = 10, wB = 20, W = 15, wAwB = 10/20)
+	my_names <- c(
+		initial_fraction_A = "qA",
+		initial_ratio_A_B = "qAqB",
+		fitness_A	= "wA",
+		fitness_B	= "wB",
+		fitness_total = "W",
+		fitness_ratio_A_B = "wAwB",
+		name_A = "A",
+		name_B = "B"
+	)
+	expect_no_error({
+		plot_mix_fitness(fitness_data, var_names = my_names)
+		plot_strain_fitness(fitness_data, var_names = my_names)
+		plot_total_group_fitness(fitness_data, var_names = my_names)
+		plot_within_group_fitness(fitness_data, var_names = my_names)
+	})
 })
 
 
@@ -343,16 +370,12 @@ test_that("plot_mix_fitness() accepts single mixing scale", {
 
 test_that("plot functions accept expression() axis labels", {
 	fitness_myxo <- calculate_mix_fitness(data_smith_2010, var_names_smith_2010)
-	label <- expression("label")
-	expect_no_error(plot_strain_fitness(
-		fitness_myxo, xlab = label, ylab = label
-	))
-	expect_no_error(plot_total_group_fitness(
-		fitness_myxo, xlab = label, ylab = label
-	))
-	expect_no_error(plot_within_group_fitness(
-		fitness_myxo, xlab = label, ylab = label
-	))
+	label <- expression("axis label")
+	expect_no_error({
+		plot_strain_fitness(fitness_myxo, xlab = label, ylab = label)
+		plot_total_group_fitness(fitness_myxo, xlab = label, ylab = label)
+		plot_within_group_fitness(fitness_myxo, xlab = label, ylab = label)
+	})
 })
 
 test_that("plot functions accept point args", {
@@ -361,17 +384,19 @@ test_that("plot functions accept point args", {
 	fill <- c("grey45", "white", "grey75")
 	shape <- 23
 	size <- 2
-	expect_no_error(plot_mix_fitness(
-		fitness_myxo, color = color, fill = fill, shape = shape, size = size
-	))
-	expect_no_error(plot_strain_fitness(
-		fitness_myxo, color = color, fill = fill, shape = shape, size = size
-	))
-	expect_no_error(plot_total_group_fitness(
-		fitness_myxo, color = color, fill = fill, shape = shape, size = size
-	))
-	expect_no_error(plot_within_group_fitness(
-		fitness_myxo, color = color, fill = fill, shape = shape, size = size
-	))
+	expect_no_error({
+		plot_mix_fitness(
+			fitness_myxo, color = color, fill = fill, shape = shape, size = size
+		)
+		plot_strain_fitness(
+			fitness_myxo, color = color, fill = fill, shape = shape, size = size
+		)
+		plot_total_group_fitness(
+			fitness_myxo, color = color, fill = fill, shape = shape, size = size
+		)
+		plot_within_group_fitness(
+			fitness_myxo, color = color, fill = fill, shape = shape, size = size
+		)
+	})
 })
 
