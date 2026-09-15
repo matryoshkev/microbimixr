@@ -864,7 +864,9 @@ check_fitness_names <- function(var_names, vars, mix_scale, caller) {
 		missing <- c(missing, "initial_ratio_A_B")
 	}
 	if (!is.null(missing)) {
-		rlang::abort(paste(missing, "missing in var_names"), call = call(caller))
+		rlang::abort(
+			paste0("'", missing, "' not found in var_names"), call = call(caller)
+		)
 	}
 	as.list(var_names)
 }
