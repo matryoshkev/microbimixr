@@ -1,27 +1,9 @@
-test_that("calculate_mix_fitness() works with included datasets", {
-	expect_no_error(
-		calculate_mix_fitness(data_smith_2010, var_names = c(
-			initial_number_A = "initial_cells_evolved",
-			initial_number_B = "initial_cells_ancestral",
-			final_number_A = "final_spores_evolved",
-			final_number_B = "final_spores_ancestral",
-			name_A = "GVB206.3",
-			name_B = "GJV10"
-		))
-	)
-	expect_warning(expect_warning(
-		# Two warnings: nonbio values for initial & final fraction
-		calculate_mix_fitness(data_Yurtsev_2013, var_names = c(
-			initial_number_total = "OD_initial",
-			initial_fraction_A = "fraction_resistant_initial",
-			final_number_total = "OD_final",
-			final_fraction_A = "fraction_resistant_final",
-			name_A = "AmpR",
-			name_B = "AmpS"
-		))
-	))
-	expect_no_error(
-		calculate_mix_fitness(data_Madgwick_2018, var_names = c(
+# Basic functionality ----------------------------------------------------------
+
+test_that("calculate_mix_fitness() works as expected with included datasets", {
+	expect_no_error({
+		data_smith_2010 |> calculate_mix_fitness(var_names = var_names_smith_2010)
+		data_Madgwick_2018 |> calculate_mix_fitness(var_names = c(
 			initial_number_total = "input_cells_total",
 			initial_fraction_A = "input_freq_i",
 			final_number_total = "spores_total",
@@ -29,9 +11,22 @@ test_that("calculate_mix_fitness() works with included datasets", {
 			name_A = "strain_i",
 			name_B = "strain_j"
 		))
-	)
+	})
+	expect_warning(regexp = "biologically meaningful",
+		expect_warning(regexp = "biologically meaningful",{
+			data_Yurtsev_2013 |> calculate_mix_fitness(var_names = c(
+				initial_number_total = "OD_initial",
+				initial_fraction_A = "fraction_resistant_initial",
+				final_number_total = "OD_final",
+				final_fraction_A = "fraction_resistant_final",
+				name_A = "AmpR",
+				name_B = "AmpS"
+			))
+		}
+	))
 })
 
+# TODO: Test calculations correct with expect_equal()
 test_that("calculate_mix_fitness() can use all valid data combos", {
 	data <- data.frame(
 		num_A_init = 1,
@@ -45,7 +40,7 @@ test_that("calculate_mix_fitness() can use all valid data combos", {
 		freq_A_final = 2/4,
 		freq_B_final = 2/4
 	)
-	expect_no_error(
+	expect_no_error({
 		calculate_mix_fitness(data, var_names = c(
 			initial_number_A = "num_A_init",
 			initial_number_B = "num_B_init",
@@ -54,8 +49,6 @@ test_that("calculate_mix_fitness() can use all valid data combos", {
 			name_A = "A",
 			name_B = "B"
 		))
-	)
-	expect_no_error(
 		calculate_mix_fitness(data, var_names = c(
 			initial_number_total = "num_total_init",
 			initial_fraction_A = "freq_A_init",
@@ -64,8 +57,6 @@ test_that("calculate_mix_fitness() can use all valid data combos", {
 			name_A = "A",
 			name_B = "B"
 		))
-	)
-	expect_no_error(
 		calculate_mix_fitness(data, var_names = c(
 			initial_number_total = "num_total_init",
 			initial_fraction_B = "freq_B_init",
@@ -74,8 +65,6 @@ test_that("calculate_mix_fitness() can use all valid data combos", {
 			name_A = "A",
 			name_B = "B"
 		))
-	)
-	expect_no_error(
 		calculate_mix_fitness(data, var_names = c(
 			initial_number_A = "num_A_init",
 			initial_number_total = "num_total_init",
@@ -84,8 +73,6 @@ test_that("calculate_mix_fitness() can use all valid data combos", {
 			name_A = "A",
 			name_B = "B"
 		))
-	)
-	expect_no_error(
 		calculate_mix_fitness(data, var_names = c(
 			initial_number_B = "num_B_init",
 			initial_number_total = "num_total_init",
@@ -94,8 +81,40 @@ test_that("calculate_mix_fitness() can use all valid data combos", {
 			name_A = "A",
 			name_B = "B"
 		))
-	)
+	})
 })
+
+test_that("calculate_mix_fitness() can use strain names given in var_names", {
+	fitness <- calculate_mix_fitness(
+		data.frame(init_A = 1, init_B = 2, final_A = 3, final_B = 4),
+		var_names = c(
+			initial_number_A = "init_A", initial_number_B = "init_B",
+			final_number_A = "final_A", final_number_B = "final_B",
+			name_A = "My strain A", name_B = "My strain B"
+		)
+	)
+	expect_equal(fitness$name_A, "My strain A")
+	expect_equal(fitness$name_B, "My strain B")
+})
+
+test_that("calculate_mix_fitness() can use strain names in data", {
+	fitness <- calculate_mix_fitness(
+		data.frame(
+			init_A = 1, init_B = 2, final_A = 3, final_B = 4,
+			strain_A = "My strain A", strain_B = "My strain B"
+		),
+		var_names = c(
+			initial_number_A = "init_A", initial_number_B = "init_B",
+			final_number_A = "final_A", final_number_B = "final_B",
+			name_A = "strain_A", name_B = "strain_B"
+		)
+	)
+	expect_equal(fitness$name_A, "My strain A")
+	expect_equal(fitness$name_B, "My strain B")
+})
+
+
+# Input validation -------------------------------------------------------------
 
 test_that("calculate_mix_fitness() warns of nonbiological data values", {
 	vars <- c(
@@ -114,147 +133,137 @@ test_that("calculate_mix_fitness() warns of nonbiological data values", {
 	)
 
 	# Test positive number of individuals
-	expect_warning(calculate_mix_fitness(
-		data.frame(nA_init = -1, nB_init = 1, nA = 2, nB = 2), var_names = vars
-	))
-	expect_warning(calculate_mix_fitness(
-		data.frame(nA_init = 1, nB_init = -1, nA = 2, nB = 2), var_names = vars
-	))
-	expect_warning(calculate_mix_fitness(
-		data.frame(nA_init = 1, nB_init = 1, nA = -2, nB = 2), var_names = vars
-	))
-	expect_warning(calculate_mix_fitness(
-		data.frame(nA_init = 1, nB_init = 1, nA = 2, nB = -2), var_names = vars
-	))
-	expect_warning(calculate_mix_fitness(
-		data.frame(N_init = -2, qA_init = 0.5, N = 4, qA = 0.5), var_names = vars
-	))
-	expect_warning(calculate_mix_fitness(
-		data.frame(N_init = 2, qA_init = 0.5, N = -4, qA = 0.5), var_names = vars
-	))
+	expect_warning(regexp = "biologically meaningful",
+		calculate_mix_fitness(var_names = vars,
+			data.frame(nA_init = -2, nB_init = 1, nA = 1, nB = 1)
+		)
+	)
+	expect_warning(regexp = "biologically meaningful",
+		calculate_mix_fitness(var_names = vars,
+			data.frame(nA_init = 1, nB_init = -2, nA = 1, nB = 1)
+		)
+	)
+	expect_warning(regexp = "biologically meaningful",
+		calculate_mix_fitness(var_names = vars,
+			data.frame(nA_init = 1, nB_init = 1, nA = -2, nB = 1)
+		)
+	)
+	expect_warning(regexp = "biologically meaningful",
+		calculate_mix_fitness(var_names = vars,
+			data.frame(nA_init = 1, nB_init = 1, nA = 1, nB = -2)
+		)
+	)
+	expect_warning(regexp = "biologically meaningful",
+		calculate_mix_fitness(var_names = vars,
+			data.frame(N_init = -2, qA_init = 0.1, N = 1, qA = 0.1)
+		)
+	)
+	expect_warning(regexp = "biologically meaningful",
+		calculate_mix_fitness(var_names = vars,
+			data.frame(N_init = 1, qA_init = 0.1, N = -2, qA = 0.1)
+		)
+	)
 
 	# Test valid strain frequencies
-	expect_warning(calculate_mix_fitness(
-		data.frame(N_init = 2, qA_init = -0.5, N = 4, qA = 0.5), var_names = vars
-	))
-	expect_warning(calculate_mix_fitness(
-		data.frame(N_init = 2, qA_init = 0.5, N = 4, qA = -0.5), var_names = vars
-	))
-	expect_warning(calculate_mix_fitness(
-		data.frame(N_init = 2, qB_init = -0.5, N = 4, qB = 0.5), var_names = vars
-	))
-	expect_warning(calculate_mix_fitness(
-		data.frame(N_init = 2, qB_init = 0.5, N = 4, qB = -0.5), var_names = vars
-	))
-	expect_warning(calculate_mix_fitness(
-		data.frame(N_init = 2, qA_init = 1.5, N = 4, qA = 0.5), var_names = vars
-	))
-	expect_warning(calculate_mix_fitness(
-		data.frame(N_init = 2, qA_init = 0.5, N = 4, qA = 1.5), var_names = vars
-	))
-	expect_warning(calculate_mix_fitness(
-		data.frame(N_init = 2, qB_init = 1.5, N = 4, qB = 0.5), var_names = vars
-	))
-	expect_warning(calculate_mix_fitness(
-		data.frame(N_init = 2, qB_init = 0.5, N = 4, qB = 1.5), var_names = vars
-	))
+	expect_warning(regexp = "biologically meaningful",
+		calculate_mix_fitness(var_names = vars,
+			data.frame(N_init = 1, qA_init = -0.2, N = 1, qA = 0.1)
+		)
+	)
+	expect_warning(regexp = "biologically meaningful",
+		calculate_mix_fitness(var_names = vars,
+			data.frame(N_init = 1, qA_init = 0.1, N = 1, qA = -0.2)
+		)
+	)
+	expect_warning(regexp = "biologically meaningful",
+		calculate_mix_fitness(var_names = vars,
+			data.frame(N_init = 1, qB_init = -0.2, N = 1, qB = 0.1)
+		)
+	)
+	expect_warning(regexp = "biologically meaningful",
+		calculate_mix_fitness(var_names = vars,
+			data.frame(N_init = 1, qB_init = 0.1, N = 1, qB = -0.2)
+		)
+	)
+	expect_warning(regexp = "biologically meaningful",
+		calculate_mix_fitness(var_names = vars,
+			data.frame(N_init = 1, qA_init = 2.0, N = 1, qA = 0.1)
+		)
+	)
+	expect_warning(regexp = "biologically meaningful",
+		calculate_mix_fitness(var_names = vars,
+			data.frame(N_init = 1, qA_init = 0.1, N = 1, qA = 2.0)
+		)
+	)
+	expect_warning(regexp = "biologically meaningful",
+		calculate_mix_fitness(var_names = vars,
+			data.frame(N_init = 1, qB_init = 2.0, N = 1, qB = 0.1)
+		)
+	)
+	expect_warning(regexp = "biologically meaningful",
+		calculate_mix_fitness(var_names = vars,
+			data.frame(N_init = 1, qB_init = 0.1, N = 1, qB = 2.0)
+		)
+	)
 
 	# Test more strain than total
-	expect_warning(calculate_mix_fitness(
-		data.frame(nA_init = 2, N_init = 1, nA = 2, N = 2), var_names = vars
-	))
-	expect_warning(calculate_mix_fitness(
-		data.frame(nA_init = 1, N_init = 2, nA = 3, N = 2), var_names = vars
-	))
-	expect_warning(calculate_mix_fitness(
-		data.frame(nB_init = 2, N_init = 1, nB = 2, N = 2), var_names = vars
-	))
-	expect_warning(calculate_mix_fitness(
-		data.frame(nB_init = 1, N_init = 2, nB = 3, N = 2), var_names = vars
-	))
-})
-
-# Best to test that error is informative, not just any error
-# test_that("calculate_mix_fitness() errors if var_names invalid", {
-# 	data <- data.frame(init_A = 1, init_B = 2, final_A = 3, final_B = 4)
-# 	expect_error(calculate_mix_fitness(data))
-# 	expect_error(calculate_mix_fitness(data, var_names = "foo"))
-# })
-
-# Best to test that error is informative, not just any error
-# test_that("calculate_mix_fitness() errors if data is insufficient", {
-# 	data <- data.frame(
-# 		init_A = 1, init_B = 1, final_A = 2, final_B = 2, init_N = 2, final_N = 4,
-# 		init_qA = 0.5, init_qB = 0.5, final_qA = 0.5, final_qA = 0.5
-# 	)
-# 	expect_error(
-# 		calculate_mix_fitness(data, var_names = c(
-# 			# initial_number_A = "init_A",
-# 			initial_number_B = "init_B",
-# 			final_number_A = "final_A",
-# 			final_number_B = "final_B",
-# 			name_A = "A",
-# 			name_B = "B"
-# 		))
-# 	)
-# 	expect_error(
-# 		calculate_mix_fitness(data, var_names = c(
-# 			initial_number_A = "init_A",
-# 			initial_number_B = "init_B",
-# 			# final_number_A = "final_A",
-# 			final_number_B = "final_B",
-# 			name_A = "A",
-# 			name_B = "B"
-# 		))
-# 	)
-# })
-
-test_that("calculate_mix_fitness() can use specified strain names", {
-	expect_no_error(
-		data.frame(init_A = 1, init_B = 2, final_A = 3, final_B = 4) |>
-		calculate_mix_fitness(var_names = c(
-			initial_number_A = "init_A",
-			initial_number_B = "init_B",
-			final_number_A = "final_A",
-			final_number_B = "final_B",
-			name_A = "My strain A",
-			name_B = "My strain B"
-		))
+	expect_warning(regexp = "biologically meaningful",
+		calculate_mix_fitness(var_names = vars,
+			data.frame(nA_init = 2, N_init = 1, nA = 1, N = 1)
+		)
+	)
+	expect_warning(regexp = "biologically meaningful",
+		calculate_mix_fitness(var_names = vars,
+			data.frame(nA_init = 1, N_init = 1, nA = 2, N = 1)
+		)
+	)
+	expect_warning(regexp = "biologically meaningful",
+		calculate_mix_fitness(var_names = vars,
+			data.frame(nB_init = 2, N_init = 1, nB = 1, N = 1)
+		)
+	)
+	expect_warning(regexp = "biologically meaningful",
+		calculate_mix_fitness(var_names = vars,
+			data.frame(nB_init = 1, N_init = 1, nB = 2, N = 1)
+		)
 	)
 })
 
-test_that("calculate_mix_fitness() can use strain names from data", {
-	expect_no_error(
-		data.frame(
-			init_A = 1, init_B = 2, final_A = 3, final_B = 4,
-			strain_A = "My strain A", strain_B = "My strain B"
-		) |>
-		calculate_mix_fitness(var_names = c(
-			initial_number_A = "init_A",
-			initial_number_B = "init_B",
-			final_number_A = "final_A",
-			final_number_B = "final_B",
-			name_A = "strain_A",
-			name_B = "strain_B"
-		))
+test_that("calculate_mix_fitness() gives informative `var_names` errors", {
+	data <- data.frame(init_A = 1, init_B = 2, final_A = 3, final_B = 4)
+	expect_error(calculate_mix_fitness(data), regexp = "missing")
+	expect_error(calculate_mix_fitness(data, var_names = 1), regexp = "must be")
+	expect_error(
+		calculate_mix_fitness(data, var_names = c(
+			initial_number_A = "init_A", # initial_number_B = "init_A",
+			final_number_A = "final_A", final_number_B = "final_B",
+			name_A = "A", name_B = "B"
+		)),
+		regexp = "calculate initial"
+	)
+	expect_error(
+		calculate_mix_fitness(data, var_names = c(
+			initial_number_A = "init_A", initial_number_B = "init_B",
+			final_number_A = "final_A", # final_number_B = "final_B",
+			name_A = "A", name_B = "B"
+		)),
+		regexp = "calculate final"
+	)
+	expect_error(
+		calculate_mix_fitness(data, var_names = c(
+			initial_number_A = "init_A", initial_number_B = "init_B",
+			final_number_A = "final_A", final_number_B = "final_B",
+			name_B = "B" #, name_A = "A"
+		)),
+		regexp = "not found"
+	)
+	expect_error(
+		calculate_mix_fitness(data, var_names = c(
+			initial_number_A = "init_A", initial_number_B = "init_B",
+			final_number_A = "final_A", final_number_B = "final_B",
+			name_A = "A" #, name_B = "B"
+		)),
+		regexp = "not found"
 	)
 })
-
-# Best to test that error is informative, not just any error
-# test_that("calculate_mix_fitness() errors if strain names missing or invalid", {
-# 	data <- data.frame(init_A = 1, init_B = 2, final_A = 3, final_B = 4)
-# 	vars <- c(
-# 		initial_number_A = "init_A",
-# 		initial_number_B = "init_B",
-# 		final_number_A = "final_A",
-# 		final_number_B = "final_B"
-# 		# No name_A or name_B
-# 	)
-# 	expect_error(
-# 		calculate_mix_fitness(data, var_names = c(names, name_A = "strain_A"))
-# 	)
-# 	expect_error(
-# 		calculate_mix_fitness(data, var_names = c(names, name_B = "strain_B"))
-# 	)
-# })
 

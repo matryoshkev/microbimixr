@@ -123,6 +123,8 @@ calculate_mix_fitness <- function(data, var_names, keep = NULL) {
 # Check functions ==============================================================
 
 vars_possible <- function() {c(
+	"name_A",
+	"name_B",
 	"initial_number_A",
 	"initial_number_B",
 	"initial_number_total",
@@ -139,7 +141,7 @@ check_data_names <- function(var_names) {
 	# Require var_names
 	if (missing(var_names) || is.null(var_names)) {
 		rlang::abort(
-			"argument 'var_names' is missing, with no default",
+			"argument var_names is missing, with no default",
 			call = call("calculate_mix_fitness")
 		)
 	}
@@ -147,7 +149,7 @@ check_data_names <- function(var_names) {
 	# Require var_names be character vector or list
 	if (!(is.character(var_names) || is.list(var_names))) {
 		rlang::abort(
-			"'var_names' must be a named character vector or list",
+			"var_names must be a named character vector or list",
 			call = call("calculate_mix_fitness")
 		)
 	}
@@ -165,7 +167,7 @@ check_data_sufficient <- function(var_names, time_point) {
 	if (length(provided) < 2) {
 		rlang::abort(
 			paste(
-				"Too few data columns listed in `var_names` to calculate",
+				"Too few data columns listed in var_names to calculate",
 				time_point, "population state"
 			),
 			call = call("calculate_mix_fitness"),
@@ -179,13 +181,13 @@ check_strain_names <- function(var_names) {
 	for (name_var in c("name_A", "name_B")) {
 		if (!utils::hasName(var_names, name_var)) {
 			rlang::abort(
-				paste0("`", name_var,"` missing from `var_names` with no default"),
+				paste0(name_var, " not found in var_names"),
 				call = call("calculate_mix_fitness")
 			)
 	  }
 		if (!is.character(var_names[[name_var]])) {
 			rlang::abort(
-				paste0("`", name_var,"` in `var_names` must be a character string"),
+				paste0(name_var, " in var_names must be a character string"),
 				call = call("calculate_mix_fitness")
 			)
 		}
@@ -222,7 +224,7 @@ check_counts <- function(data, var_name) {
 	if (is.null(var_name)) return()
 	if (any(data[[var_name]] < 0, na.rm = TRUE)) {
 		rlang::warn(
-			paste("Some", var_name, "values < 0", "-- Not biologically meaningful."),
+			paste("Some", var_name, "values < 0", "-- not biologically meaningful"),
 			call = call("calculate_mix_fitness")
 		)
 	}
@@ -235,7 +237,7 @@ check_fractions <- function(data, var_name) {
 		rlang::warn(
 			paste(
 				"Some", var_name,
-				"values not in range [0, 1] -- Not biologically meaningful."
+				"values not in range [0, 1] -- not biologically meaningful"
 			),
 			call = call("calculate_mix_fitness")
 		)
@@ -249,7 +251,7 @@ check_differences <- function(data, strain_var, total_var) {
 		rlang::warn(
 			paste(
 				"Some", strain_var, "values >", total_var,
-				"-- Not biologically meaningful."
+				"-- not biologically meaningful"
 			),
 			call = call("calculate_mix_fitness")
 		)
@@ -310,6 +312,7 @@ calculate_population <- function(data, time_point) {
 
 # Label which strain is A and which is B if not already in data
 set_strain_names <- function(data, var_names) {
+	# rename_data_vars() called previously
 	if (is.null(data[["name_A"]])) {data["name_A"] <- var_names[["name_A"]]}
 	if (is.null(data[["name_B"]])) {data["name_B"] <- var_names[["name_B"]]}
 	data
@@ -338,7 +341,6 @@ fitness_vars_default <- function() {c(
 	name_B = "name_B",
 	initial_fraction_A = "initial_fraction_A",
 	initial_ratio_A_B = "initial_ratio_A_B",
-	# fitness = "fitness",
 	fitness_A = "fitness_A",
 	fitness_B = "fitness_B",
 	fitness_total = "fitness_total",
