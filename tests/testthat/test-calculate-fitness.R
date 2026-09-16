@@ -26,62 +26,59 @@ test_that("calculate_mix_fitness() works as expected with included datasets", {
 	))
 })
 
-# TODO: Test calculations correct with expect_equal()
-test_that("calculate_mix_fitness() can use all valid data combos", {
-	data <- data.frame(
-		num_A_init = 1,
-		num_B_init = 1,
-		num_total_init = 2,
-		freq_A_init = 1/2,
-		freq_B_init = 1/2,
-		num_A_final = 2,
-		num_B_final = 2,
-		num_total_final = 4,
-		freq_A_final = 2/4,
-		freq_B_final = 2/4
+test_that("fitness math works with all data combos", {
+	my_vars <- vars_possible()
+	names(my_vars) <- vars_possible()
+	fitness_target <- data.frame(
+		name_A = "name_A",
+		name_B = "name_B",
+		initial_fraction_A = 1/4,
+		initial_ratio_A_B = 1/3,
+		fitness_A = 3,
+		fitness_B = 5/3,
+		fitness_total = 8/4,
+		fitness_ratio_A_B = 3/(5/3)
 	)
-	expect_no_error({
-		calculate_mix_fitness(data, var_names = c(
-			initial_number_A = "num_A_init",
-			initial_number_B = "num_B_init",
-			final_number_A = "num_A_final",
-			final_number_B = "num_B_final",
-			name_A = "A",
-			name_B = "B"
+	expect_identical(fitness_target,
+		calculate_mix_fitness(var_names = my_vars, data.frame(
+			initial_number_A = 1,
+			initial_number_B = 3,
+			final_number_A = 3,
+			final_number_B = 5
 		))
-		calculate_mix_fitness(data, var_names = c(
-			initial_number_total = "num_total_init",
-			initial_fraction_A = "freq_A_init",
-			final_number_total = "num_total_final",
-			final_fraction_A = "freq_A_final",
-			name_A = "A",
-			name_B = "B"
+	)
+	expect_identical(fitness_target,
+		calculate_mix_fitness(var_names = my_vars, data.frame(
+			initial_number_total = 4,
+			initial_fraction_A = 1/4,
+			final_number_total = 8,
+			final_fraction_A = 3/8
 		))
-		calculate_mix_fitness(data, var_names = c(
-			initial_number_total = "num_total_init",
-			initial_fraction_B = "freq_B_init",
-			final_number_total = "num_total_final",
-			final_fraction_B = "freq_B_final",
-			name_A = "A",
-			name_B = "B"
+	)
+	expect_identical(fitness_target,
+		calculate_mix_fitness(var_names = my_vars, data.frame(
+			initial_number_total = 4,
+			initial_fraction_B = 3/4,
+			final_number_total = 8,
+			final_fraction_B = 5/8
 		))
-		calculate_mix_fitness(data, var_names = c(
-			initial_number_A = "num_A_init",
-			initial_number_total = "num_total_init",
-			final_number_A = "num_A_final",
-			final_number_total = "num_total_final",
-			name_A = "A",
-			name_B = "B"
+	)
+	expect_identical(fitness_target,
+		calculate_mix_fitness(var_names = my_vars, data.frame(
+			initial_number_A = 1,
+			initial_number_total = 4,
+			final_number_A = 3,
+			final_number_total = 8
 		))
-		calculate_mix_fitness(data, var_names = c(
-			initial_number_B = "num_B_init",
-			initial_number_total = "num_total_init",
-			final_number_B = "num_B_final",
-			final_number_total = "num_total_final",
-			name_A = "A",
-			name_B = "B"
+	)
+	expect_identical(fitness_target,
+		calculate_mix_fitness(var_names = my_vars, data.frame(
+			initial_number_B = 3,
+			initial_number_total = 4,
+			final_number_B = 5,
+			final_number_total = 8
 		))
-	})
+	)
 })
 
 test_that("calculate_mix_fitness() can use strain names given in var_names", {
@@ -229,7 +226,7 @@ test_that("calculate_mix_fitness() warns of nonbiological data values", {
 	)
 })
 
-test_that("calculate_mix_fitness() gives informative `var_names` errors", {
+test_that("calculate_mix_fitness() gives informative var_names errors", {
 	data <- data.frame(init_A = 1, init_B = 2, final_A = 3, final_B = 4)
 	expect_error(calculate_mix_fitness(data), regexp = "missing")
 	expect_error(calculate_mix_fitness(data, var_names = 1), regexp = "must be")
