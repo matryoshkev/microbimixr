@@ -164,9 +164,9 @@ fitness_ecoli <- calculate_mix_fitness(
     keep = c("ampicillin", "dilution")
 )
 #> Warning in calculate_mix_fitness(): Some fraction_resistant_initial values not
-#> in range [0, 1] -- Not biologically meaningful.
+#> in range [0, 1] -- not biologically meaningful
 #> Warning in calculate_mix_fitness(): Some fraction_resistant_final values not in
-#> range [0, 1] -- Not biologically meaningful.
+#> range [0, 1] -- not biologically meaningful
 
 head(fitness_ecoli)
 #>   ampicillin dilution name_A name_B initial_fraction_A initial_ratio_A_B
