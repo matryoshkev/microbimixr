@@ -780,11 +780,11 @@ add_mix_axis <- function(
 	fig_input + switch(
 		mix_scale,
 		fraction = list(
-			ggplot2::aes(.data[[var_names$initial_fraction_A]]),
+			ggplot2::aes(x = .data[[var_names$initial_fraction_A]]),
 			scale_x_initial_fraction(name = xlab, limits = xlim)
 		),
 		ratio = list(
-			ggplot2::aes(.data[[var_names$initial_ratio_A_B]]),
+			ggplot2::aes(x = .data[[var_names$initial_ratio_A_B]]),
 			scale_x_initial_ratio(name = xlab, limits = xlim)
 		)
 	)
@@ -920,25 +920,33 @@ check_fitness_columns <- function(data, var_names, vars, mix_scale, caller) {
 check_fitness_values <- function(
 	data, var_names, vars, mix_scale = NULL, caller
 ) {
+	# Wrightian fitness measures range from zero to infinity:
+	#   fitness_A     [0, Inf)
+	#   fitness_B     [0, Inf)
+	#   fitness_total [0, Inf)
+	#   fitness_ratio [0, Inf]
+
 	for (var in vars) {
 		var_name <- var_names[[var]]
 
 		# Fitness < 0 not biologically meaningful
-		# Wrightian fitness measures range from zero to infinity:
-		#   fitness_A     [0, Inf)
-		#   fitness_B     [0, Inf)
-		#   fitness_total [0, Inf)
-		#   fitness_ratio [0, Inf]
 		if (any(data[[var_name]] < 0, na.rm = TRUE)) {
-			data[data[[var_name]] < 0, ] <- NA
+			data[data[[var_name]] < 0, var_name] <- NA
 			rlang::warn(
 				paste("Some", var_name, "values < 0 -- not biologically meaningful"),
 				call = call(caller)
 			)
 		}
 
-		# TODO: NaN not biologically meaningful: warn()
-		# TODO: fitness 0 undefined on log scale: warn()
+		# Fitness zeros undefined on log scale
+		if (any(data[[var_name]] == 0, na.rm = TRUE)) {
+			data[data[[var_name]] == 0, var_name] <- NA
+			rlang::warn(
+				paste("Some", var_name, "values = 0 -- undefined on log scale"),
+				call = call(caller)
+			)
+		}
+
 		# TODO: fitness Inf undefined on log scale: warn()
 	}
 	data
