@@ -86,15 +86,10 @@ plot_mix_fitness <- function(
 		mix_scale = mix_scale,
 		caller = "plot_mix_fitness"
 	)
-	check_fitness_data(
+	data <- check_fitness_data(
 		data,
 		var_names = var_names,
-		vars = c(
-			var_names[["fitness_A"]],
-			var_names[["fitness_B"]],
-			var_names[["fitness_total"]],
-			var_names[["fitness_ratio_A_B"]]
-		),
+		vars = c("fitness_A", "fitness_B", "fitness_total", "fitness_ratio_A_B"),
 		mix_scale = mix_scale,
 		caller = "plot_mix_fitness"
 	)
@@ -274,15 +269,33 @@ plot_strain_fitness <- function(
 		mix_scale = mix_scale,
 		caller = "plot_strain_fitness"
 	)
-	check_fitness_data(
+	data <- check_fitness_data(
 		data,
 		var_names = var_names,
-		vars = c(var_names[["fitness_A"]], var_names[["fitness_B"]]),
+		vars = c("fitness_A", "fitness_B"),
 		mix_scale = mix_scale,
 		caller = "plot_strain_fitness"
 	)
 	var_names$fitness <- "fitness"
 	strain_names <- get_strain_names(data, var_names)
+
+	# Make long-format data frame for plot
+	data_to_plot <- stats::reshape(
+		as.data.frame(data),  # reshape() chokes on tibbles
+		direction = "long",
+		varying = c(var_names$fitness_A, var_names$fitness_B),
+		v.names = "fitness",
+		timevar = "strain",
+		times = c(strain_names$name_A, strain_names$name_B)
+	)
+	data_to_plot$strain <- factor(
+		data_to_plot$strain, levels = c(strain_names$name_A, strain_names$name_B)
+	)
+
+	# Drop single-strain data if using ratio mixing scale
+	if (mix_scale == "ratio") {
+		data_to_plot <- drop_unmixed_ratio(data_to_plot, var_names)
+	}
 
 	# Axis options
 	if (missing(xlab)) {xlab <- waiver()}
@@ -298,22 +311,6 @@ plot_strain_fitness <- function(
 		fill <- c(fill_strain_A(), fill_strain_B())
 	}
 	point_args <- get_point_args(shape = shape, size = size, drop_NA = drop_NA)
-
-	# Drop single-strain data if using ratio mixing scale
-	if (mix_scale == "ratio") {data <- drop_unmixed_ratio(data, var_names)}
-
-	# Make long-format data frame for plot
-	data_to_plot <- stats::reshape(
-		as.data.frame(data),  # reshape() chokes on tibbles
-		direction = "long",
-		varying = c(var_names$fitness_A, var_names$fitness_B),
-		v.names = "fitness",
-		timevar = "strain",
-		times = c(strain_names$name_A, strain_names$name_B)
-	)
-	data_to_plot$strain <- factor(
-		data_to_plot$strain, levels = c(strain_names$name_A, strain_names$name_B)
-	)
 
 	# Make plot
 	fig_output <-
@@ -413,14 +410,17 @@ plot_total_group_fitness <- function(
 		mix_scale = mix_scale,
 		caller = "plot_total_group_fitness"
 	)
-	check_fitness_data(
+	data <- check_fitness_data(
 		data,
 		var_names = var_names,
-		vars = var_names[["fitness_total"]],
+		vars = "fitness_total",
 		mix_scale = mix_scale,
 		caller = "plot_total_group_fitness"
 	)
 	strain_names <- get_strain_names(data, var_names)
+
+	# Drop single-strain data if using ratio mixing scale
+	if (mix_scale == "ratio") {data <- drop_unmixed_ratio(data, var_names)}
 
 	# Axis options
 	if (missing(xlab)) {xlab <- waiver()}
@@ -432,9 +432,6 @@ plot_total_group_fitness <- function(
 	point_args <- get_point_args(
 		color = color, fill = fill, shape = shape, size = size, drop_NA = drop_NA
 	)
-
-	# Drop single-strain data if using ratio mixing scale
-	if (mix_scale == "ratio") {data <- drop_unmixed_ratio(data, var_names)}
 
 	# Make plot
 	fig_output <-
@@ -530,14 +527,21 @@ plot_within_group_fitness <- function(
 		mix_scale = mix_scale,
 		caller = "plot_within_group_fitness"
 	)
-	check_fitness_data(
+	data <- check_fitness_data(
 		data,
 		var_names = var_names,
-		vars = var_names[["fitness_ratio_A_B"]],
+		vars = "fitness_ratio_A_B",
 		mix_scale = mix_scale,
 		caller = "plot_within_group_fitness"
 	)
 	strain_names <- get_strain_names(data, var_names)
+
+	# Drop single-strain data
+	if (mix_scale == "fraction") {
+		data <- drop_unmixed_fraction(data, var_names)
+	} else if (mix_scale == "ratio") {
+		data <- drop_unmixed_ratio(data, var_names)
+	}
 
 	# Axis options
 	if (missing(xlab)) {xlab <- waiver()}
@@ -553,13 +557,6 @@ plot_within_group_fitness <- function(
 	point_args <- get_point_args(
 		color = color, fill = fill, shape = shape, size = size, drop_NA = drop_NA
 	)
-
-	# Drop single-strain data
-	if (mix_scale == "fraction") {
-		data <- drop_unmixed_fraction(data, var_names)
-	} else if (mix_scale == "ratio") {
-		data <- drop_unmixed_ratio(data, var_names)
-	}
 
 	# Make plot
 	fig_output <-
@@ -617,8 +614,8 @@ plot_fitness_strain_total <- function(
 	}
 	point_args <- get_point_args(shape = shape, size = size, drop_NA = drop_NA)
 
-	# Drop single-strain data if using ratio mixing scale
-	if (mix_scale == "ratio") {data <- drop_unmixed_ratio(data, var_names)}
+	# # Drop single-strain data if using ratio mixing scale
+	# if (mix_scale == "ratio") {data <- drop_unmixed_ratio(data, var_names)}
 
 	# Make long-format data
 	data_for_plot <- stats::reshape(
@@ -636,6 +633,11 @@ plot_fitness_strain_total <- function(
 		levels = c(strain_names$name_A, strain_names$name_B, name_total)
 	)
 	data_for_plot$my_facet <- data_for_plot$strain == name_total
+
+	# Drop single-strain data if using ratio mixing scale
+	if (mix_scale == "ratio") {
+		data_for_plot <- drop_unmixed_ratio(data_for_plot, var_names)
+	}
 
 	# Make plot
 	fig_output <-
@@ -871,41 +873,75 @@ check_fitness_names <- function(var_names, vars, mix_scale, caller) {
 	as.list(var_names)
 }
 
+# TODO:
+# check_strain_names <- function(var_names) {}
+
 check_fitness_data <- function(data, var_names, vars, mix_scale, caller) {
-	if ("fraction" %in% mix_scale) {
-		vars <- c(vars, var_names[["initial_fraction_A"]])
-	}
-	if ("ratio" %in% mix_scale) {
-		vars <- c(vars, var_names[["initial_ratio_A_B"]])
-	}
-  check_fitness_columns(data, vars, caller)
-	# check_fitness_values()
+	data |>
+	check_fitness_columns(var_names, vars, mix_scale, caller) |>
+	# TODO: check_mix_values(var_names, vars, mix_scale, caller) |>
+	check_fitness_values(var_names, vars, mix_scale, caller)
 }
 
 # Check variables we want to plot are columns in data
-check_fitness_columns <- function(data, vars, caller) {
+check_fitness_columns <- function(data, var_names, vars, mix_scale, caller) {
+	if ("fraction" %in% mix_scale) {vars <- c(vars, "initial_fraction_A")}
+	if ("ratio" %in% mix_scale) {vars <- c(vars, "initial_ratio_A_B")}
 	missing <- NULL
 	for (var in vars) {
-		if (!utils::hasName(data, var)) {missing <- c(missing, var)}
+		var_name <- var_names[[var]]
+		if (!utils::hasName(data, var_name)) {missing <- c(missing, var_name)}
 	}
 	if (!is.null(missing)) {
 		rlang::abort(
 			paste0("Column `", missing, "` not found in data"), call = call(caller)
 		)
 	}
+	data
 }
 
 # TODO:
-# check_fitness_values <- function(data, var_names) {}
-# 	# Warn about fitness zeroes
-# 	if (any(c(output$fitness_A == 0, output$fitness_B == 0), na.rm = TRUE)) {
-# 		warning(
-# 			"Some fitness values are zero. Undefined on log scale.",
-# 			call. = FALSE
-# 		)
-# 	}
+# Check data for unplottable initial frequencies & replace with NA
+# check_mix_values <- function (data, var_names, vars, mix_scale, caller) {
+	# Possible values:
+	# initial_fraction_A  [0, 1]
+	# initial_ratio_A_B   [0, Inf]
 
-# TODO:
-# check_strain_names <- function(var_names) {}
+	# warn()
+	# initial_fraction > 1 not biologically meaningful
+	# initial_fraction < 0 not biologically meaningful
+	# initial_ratio < 0 not biologically meaningful
+
+	# inform()
+	# Single-strain data undefined on log-ratio mixing scale
+# }
+
+# Check for unplottable fitness values & replace with NA
+check_fitness_values <- function(
+	data, var_names, vars, mix_scale = NULL, caller
+) {
+	for (var in vars) {
+		var_name <- var_names[[var]]
+
+		# Fitness < 0 not biologically meaningful
+		# Wrightian fitness measures range from zero to infinity:
+		#   fitness_A     [0, Inf)
+		#   fitness_B     [0, Inf)
+		#   fitness_total [0, Inf)
+		#   fitness_ratio [0, Inf]
+		if (any(data[[var_name]] < 0, na.rm = TRUE)) {
+			data[data[[var_name]] < 0, ] <- NA
+			rlang::warn(
+				paste("Some", var_name, "values < 0 -- not biologically meaningful"),
+				call = call(caller)
+			)
+		}
+
+		# TODO: NaN not biologically meaningful: warn()
+		# TODO: fitness 0 undefined on log scale: warn()
+		# TODO: fitness Inf undefined on log scale: warn()
+	}
+	data
+}
 
 

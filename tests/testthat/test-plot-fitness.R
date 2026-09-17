@@ -51,7 +51,7 @@ test_that("plot functions can use custom variable names", {
 
 
 # Input validation -------------------------------------------------------------
-# and informative error messages
+# with informative errors, warnings, and messages
 
 test_that("plot functions list variables missing in var_names", {
 	fitness_data <- data.frame(
@@ -401,13 +401,84 @@ test_that("plot functions report missing data columns", {
 	)
 })
 
-# # TODO
-# test_that("plot functions indicate unplottable fitness values"), {
-# 	# inform() zeroes undefined on log scale
-# 	# inform() Inf undefined on log scale
-# 	# warn() < 0 not biologically meaningful
-# 	# warn() NaN not biologically meaningful
-# }
+# test_that("plot functions report unplottable values", {
+test_that("plot functions report nonsensical fitness values < 0", {
+	var_names <- fitness_vars_default()
+	names(var_names) <- fitness_vars_default()
+
+	# Fitness < 0
+	expect_warning(regexp = "biologically meaningful", {
+		plot_mix_fitness(var_names = var_names, data.frame(
+			initial_fraction_A = 0.1,
+			initial_ratio_A_B = 0.1,
+			fitness_A = -2,
+			fitness_B = 1,
+			fitness_total = 1,
+			fitness_ratio_A_B = 1
+		))
+	})
+	expect_warning(regexp = "biologically meaningful", {
+		plot_mix_fitness(var_names = var_names, data.frame(
+			initial_fraction_A = 0.1,
+			initial_ratio_A_B = 0.1,
+			fitness_A = 1,
+			fitness_B = -2,
+			fitness_total = 1,
+			fitness_ratio_A_B = 1
+		))
+	})
+	expect_warning(regexp = "biologically meaningful", {
+		plot_mix_fitness(var_names = var_names, data.frame(
+			initial_fraction_A = 0.1,
+			initial_ratio_A_B = 0.1,
+			fitness_A = 1,
+			fitness_B = 1,
+			fitness_total = -2,
+			fitness_ratio_A_B = 1
+		))
+	})
+	expect_warning(regexp = "biologically meaningful", {
+		plot_mix_fitness(var_names = var_names, data.frame(
+			initial_fraction_A = 0.1,
+			initial_ratio_A_B = 0.1,
+			fitness_A = 1,
+			fitness_B = 1,
+			fitness_total = 1,
+			fitness_ratio_A_B = -2
+		))
+	})
+	expect_warning(regexp = "biologically meaningful", {
+		plot_strain_fitness(var_names = var_names,
+			data.frame(initial_fraction_A = 0.1, fitness_A = -2, fitness_B = 1)
+		)
+	})
+	expect_warning(regexp = "biologically meaningful", {
+		plot_strain_fitness(var_names = var_names,
+			data.frame(initial_fraction_A = 0.1, fitness_A = 1, fitness_B = -2)
+		)
+	})
+	expect_warning(regexp = "biologically meaningful", {
+		plot_total_group_fitness(var_names = var_names,
+			data.frame(initial_fraction_A = 0.1, fitness_total = -2)
+		)
+	})
+	expect_warning(regexp = "biologically meaningful", {
+		plot_within_group_fitness(var_names = var_names,
+			data.frame(initial_fraction_A = 0.1, fitness_ratio_A_B = -2)
+		)
+	})
+})
+
+	# Warn about values not biologically meaningful
+	# TODO: Fitness NaN
+	# TODO: Mix freq NaN
+	# TODO: Mix ratio < 0
+	# TODO: Mix fraction not in [0, 1]
+
+	# Message about values undefined on log scale -- rlang::inform()
+	# TODO: Fitness zeros
+	# TODO: Fitness Inf
+	# TODO: Mix ratio 0 & Inf
 
 
 # Plot customization -----------------------------------------------------------
