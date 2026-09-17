@@ -521,12 +521,77 @@ test_that("plot functions warn about fitness zeros", {
 	})
 	expect_warning(regexp = "undefined on log scale", {
 		plot_total_group_fitness(var_names = var_names, data.frame(
-			initial_fraction_A = c(0.1, 0.1), fitness_total = c(0, 1)
+			initial_fraction_A = 0.1, fitness_total = 0
 		))
 	})
 	expect_warning(regexp = "undefined on log scale", {
 		plot_within_group_fitness(var_names = var_names, data.frame(
-			initial_fraction_A = c(0.1, 0.1), fitness_ratio_A_B = c(0, 1)
+			initial_fraction_A = 0.1, fitness_ratio_A_B = 0
+		))
+	})
+})
+
+test_that("plot functions warn about infinite fitness values", {
+	var_names <- fitness_vars_default()
+	names(var_names) <- fitness_vars_default()
+	expect_warning(regexp = "infinite", {
+		plot_mix_fitness(var_names = var_names, data.frame(
+			initial_fraction_A = 0.1,
+			initial_ratio_A_B = 0.1,
+			fitness_A = Inf,
+			fitness_B = 1,
+			fitness_total = 1,
+			fitness_ratio_A_B = 1
+		))
+	})
+	expect_warning(regexp = "infinite", {
+		plot_mix_fitness(var_names = var_names, data.frame(
+			initial_fraction_A = 0.1,
+			initial_ratio_A_B = 0.1,
+			fitness_A = 1,
+			fitness_B = Inf,
+			fitness_total = 1,
+			fitness_ratio_A_B = 1
+		))
+	})
+	expect_warning(regexp = "infinite", {
+		plot_mix_fitness(var_names = var_names, data.frame(
+			initial_fraction_A = 0.1,
+			initial_ratio_A_B = 0.1,
+			fitness_A = 1,
+			fitness_B = 1,
+			fitness_total = Inf,
+			fitness_ratio_A_B = 1
+		))
+	})
+	expect_warning(regexp = "infinite", {
+		plot_mix_fitness(var_names = var_names, data.frame(
+			initial_fraction_A = 0.1,
+			initial_ratio_A_B = 0.1,
+			fitness_A = 1,
+			fitness_B = 1,
+			fitness_total = 1,
+			fitness_ratio_A_B = Inf
+		))
+	})
+	expect_warning(regexp = "infinite", {
+		plot_strain_fitness(var_names = var_names, data.frame(
+			initial_fraction_A = 0.1, fitness_A = Inf, fitness_B = 1
+		))
+	})
+	expect_warning(regexp = "infinite", {
+		plot_strain_fitness(var_names = var_names, data.frame(
+			initial_fraction_A = 0.1, fitness_A = 1, fitness_B = Inf
+		))
+	})
+	expect_warning(regexp = "infinite", {
+		plot_total_group_fitness(var_names = var_names, data.frame(
+			initial_fraction_A = 0.1, fitness_total = Inf
+		))
+	})
+	expect_warning(regexp = "infinite", {
+		plot_within_group_fitness(var_names = var_names, data.frame(
+			initial_fraction_A = 0.1, fitness_ratio_A_B = Inf
 		))
 	})
 })
@@ -534,9 +599,7 @@ test_that("plot functions warn about fitness zeros", {
 	# Warn about values not biologically meaningful
 	# TODO: Mix ratio < 0
 	# TODO: Mix fraction not in [0, 1]
-
 	# Message about values undefined on log scale -- rlang::inform()
-	# TODO: Fitness Inf
 	# TODO: Mix ratio 0 & Inf
 
 

@@ -925,7 +925,6 @@ check_fitness_values <- function(
 	#   fitness_B     [0, Inf)
 	#   fitness_total [0, Inf)
 	#   fitness_ratio [0, Inf]
-
 	for (var in vars) {
 		var_name <- var_names[[var]]
 
@@ -947,7 +946,14 @@ check_fitness_values <- function(
 			)
 		}
 
-		# TODO: fitness Inf undefined on log scale: warn()
+		# Fitness Inf not plotted
+		if (any(is.infinite(data[[var_name]]), na.rm = TRUE)) {
+			data[is.infinite(data[[var_name]]), var_name] <- NA
+			rlang::warn(
+				paste("Some", var_name, "values infinite, not plotted"),
+				call = call(caller)
+			)
+		}
 	}
 	data
 }
