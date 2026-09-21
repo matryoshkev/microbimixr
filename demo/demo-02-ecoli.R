@@ -1,14 +1,4 @@
-# Mix experiments under different conditions ===================================
-#
-# Two E. coli genotypes growing in same liquid culture:
-# - One is resistant to the antibiotic ampicillin
-#   because it has a beta-lactamase on a non-conjugative plasmid
-# - One is sensitive to ampicillin
-#
-# Experimental treatments:
-# - Initial strain frequency
-# - Ampicillin concentration
-# - Culture dilution (changes initial cell density before growth)
+# Using microbimixr with multiple experimental conditions ======================
 
 # Dependencies
 library(dplyr)    # Data handling that makes code more readable
@@ -19,6 +9,16 @@ library(ggplot2)  # Graphics package
 
 # Data included in microbimixr
 head(data_Yurtsev_2013)
+
+# Two E. coli genotypes growing in same liquid culture:
+# - One is resistant to the antibiotic ampicillin
+#   because it has a beta-lactamase on a non-conjugative plasmid
+# - One is sensitive to ampicillin
+#
+# Experimental treatments:
+# - Initial strain frequency
+# - Ampicillin concentration
+# - Culture dilution (changes initial cell density before growth)
 
 # Calculate fitness measures
 fitness_ecoli <-

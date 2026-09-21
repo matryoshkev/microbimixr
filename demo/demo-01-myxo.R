@@ -1,7 +1,4 @@
 # Demonstrate basic microbimixr use ============================================
-#
-# Two Myxococcus strains forming fruiting bodies together:
-# a wild-type ancestral genotype and an experimentally-evolved cheater
 
 # Dependencies
 library(dplyr)    # Data handling that makes code more readable
@@ -12,6 +9,9 @@ library(ggplot2)  # Graphics package
 
 # Data included in microbimixr
 head(data_smith_2010)
+
+# Two Myxococcus strains forming fruiting bodies together:
+# a wild-type ancestral genotype and an experimentally-evolved cheater
 
 # Calculate fitness measures
 fitness_myxo <-
@@ -29,7 +29,7 @@ fitness_myxo <-
 		keep = "exptl_block"
 	)
 fitness_myxo
-# Fitness here is sporulation success (spores/cell)
+# Fitness here is spores/cell
 
 # Compare fitness measures
 plot_mix_fitness(fitness_myxo)
