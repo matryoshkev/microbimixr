@@ -10,8 +10,8 @@ reference:
 - title: Plot fitness with microbimixr functions
   contents:
   - plot_strain_fitness
-  - plot_total_group_fitness
-  - plot_within_group_fitness
+  - plot_total_fitness
+  - plot_fitness_ratio
 - title: Plot fitness with ggplot2
   desc: Use axes and other plot components separately
   contents:
