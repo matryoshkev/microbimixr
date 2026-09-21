@@ -227,7 +227,7 @@ plot_mix_fitness <- function(
 #' @returns
 #' A ggplot object that can be further modified using the ggplot2 package
 #'
-#' @seealso [plot_total_group_fitness()], [plot_within_group_fitness()]
+#' @seealso [plot_total_fitness()], [plot_within_group_fitness()]
 #'
 #' @examples
 #' fitness_myxo <- calculate_mix_fitness(data_smith_2010, var_names_smith_2010)
@@ -335,7 +335,7 @@ plot_strain_fitness <- function(
 
 #' Plot fitness of total group or subpopulation
 #'
-#' `plot_total_group_fitness()` draws a plot of total-group fitness as a
+#' `plot_total_fitness()` draws a plot of total-group fitness as a
 #' function of initial strain frequency
 #'
 #' @inheritParams plot_strain_fitness
@@ -368,13 +368,13 @@ plot_strain_fitness <- function(
 #'
 #' @examples
 #' fitness_myxo <- calculate_mix_fitness(data_smith_2010, var_names_smith_2010)
-#' plot_total_group_fitness(fitness_myxo)
+#' plot_total_fitness(fitness_myxo)
 #'
 #' # Using ratio scale for mix frequencies
-#' plot_total_group_fitness(fitness_myxo, mix_scale = "ratio")
+#' plot_total_fitness(fitness_myxo, mix_scale = "ratio")
 #'
 #' # Other plot options
-#' plot_total_group_fitness(
+#' plot_total_fitness(
 #'   fitness_myxo,
 #'   ylim = c(1e-8, 1),
 #'   xlab = "Initial frequency of evolved strain",
@@ -387,7 +387,7 @@ plot_strain_fitness <- function(
 #'
 #' @export
 #'
-plot_total_group_fitness <- function(
+plot_total_fitness <- function(
 	data,
 	var_names = NULL,
 	mix_scale = "fraction",
@@ -408,14 +408,14 @@ plot_total_group_fitness <- function(
 		var_names = var_names,
 		vars = "fitness_total",
 		mix_scale = mix_scale,
-		caller = "plot_total_group_fitness"
+		caller = "plot_total_fitness"
 	)
 	data <- check_fitness_data(
 		data,
 		var_names = var_names,
 		vars = "fitness_total",
 		mix_scale = mix_scale,
-		caller = "plot_total_group_fitness"
+		caller = "plot_total_fitness"
 	)
 	strain_names <- get_strain_names(data, var_names)
 
@@ -457,7 +457,7 @@ plot_total_group_fitness <- function(
 #' `plot_within_group_fitness()` draws a plot of the relative within-group
 #' fitness of strains A and B as a function of their initial frequency
 #'
-#' @inheritParams plot_total_group_fitness
+#' @inheritParams plot_total_fitness
 #'
 #' @details
 #' `var_names` must be a named vector or list that includes the following
@@ -480,7 +480,7 @@ plot_total_group_fitness <- function(
 #' @returns
 #' A ggplot object that can be further modified using the ggplot2 package
 #'
-#' @seealso [plot_total_group_fitness()], [plot_strain_fitness()]
+#' @seealso [plot_total_fitness()], [plot_strain_fitness()]
 #'
 #' @examples
 #' fitness_myxo <- calculate_mix_fitness(data_smith_2010, var_names_smith_2010)
@@ -603,7 +603,7 @@ plot_fitness_strain_total <- function(
 	)
 	var_names$fitness <- "fitness"
 	strain_names <- get_strain_names(data, var_names)
-	name_total <- "Total group"
+	name_total <- "Total"
 
 	# Point options
 	if (is_waiver(color) || is.null(color)) {

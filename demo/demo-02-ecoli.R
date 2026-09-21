@@ -51,7 +51,7 @@ fitness_ecoli |>
 dev.new(width = 6.3, height = 6, units = "in")
 fitness_ecoli |>
 	dplyr::filter(ampicillin %in% c(0, 50, 100, 200)) |>
-	plot_total_group_fitness() +
+	plot_total_fitness() +
 	ggplot2::facet_grid(ampicillin ~ dilution)
 # Or ampicillin. Just culture dilution.
 

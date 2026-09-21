@@ -90,7 +90,7 @@ fitted_total_group <- dplyr::mutate(
 
 # Plot total-group fitness with fitted model
 dev.new(width = 2.5, height = 2.1, units = "in")
-fig_total_group <- plot_total_group_fitness(
+fig_total_group <- plot_total_fitness(
 	fitness_myxo, ylab = "Total sporulation success\n (spores/cell)"
 )
 fig_total_group + ggplot2::geom_line(data = fitted_total_group)
