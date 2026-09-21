@@ -97,7 +97,7 @@ to.
 ## Visualize interaction effects
 
 Make publication-quality figures easily with `plot_strain_fitness()`,
-`plot_total_fitness()`, and `plot_within_group_fitness()`:
+`plot_total_fitness()`, and `plot_fitness_ratio()`:
 
 <!--
 Once you know which fitness measures to focus on, you can use microbimixr to visualize them. The simplest way is to use its built-in plot functions. They make figures with default settings suited to fitness data and have some basic graphical options. 
@@ -105,7 +105,7 @@ Once you know which fitness measures to focus on, you can use microbimixr to vis
 microbimixr provides convenience functions to make publication-quality figures with default settings appropriate for fitness data.  
 
 fig_total <- plot_total_fitness(fitness_myxo)
-fig_within <- plot_within_group_fitness(
+fig_within <- plot_fitness_ratio(
     fitness_myxo, mix_scale = "ratio", ylim = c(1e-3, 1e3)
 )
 fig_total + fig_within
@@ -114,7 +114,7 @@ fig_total + fig_within
 ``` r
 library("patchwork")
 plot_total_fitness(fitness_myxo, ylim = c(1e-8, 1)) +
-plot_within_group_fitness(fitness_myxo, mix_scale = "ratio", ylim = c(1e-4, 1e4)) +
+plot_fitness_ratio(fitness_myxo, mix_scale = "ratio", ylim = c(1e-4, 1e4)) +
 plot_annotation(tag_levels = "A")
 ```
 

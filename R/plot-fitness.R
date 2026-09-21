@@ -127,7 +127,7 @@ plot_mix_fitness <- function(
 		size = size,
 		drop_NA = drop_NA
 	)
-	figB <- plot_within_group_fitness(
+	figB <- plot_fitness_ratio(
 		data,
 		var_names,
 		mix_scale = "fraction",
@@ -149,7 +149,7 @@ plot_mix_fitness <- function(
 		size = size,
 		drop_NA = drop_NA
 	)
-	figD <- plot_within_group_fitness(
+	figD <- plot_fitness_ratio(
 		data,
 		var_names,
 		mix_scale = "ratio",
@@ -227,7 +227,7 @@ plot_mix_fitness <- function(
 #' @returns
 #' A ggplot object that can be further modified using the ggplot2 package
 #'
-#' @seealso [plot_total_fitness()], [plot_within_group_fitness()]
+#' @seealso [plot_total_fitness()], [plot_fitness_ratio()]
 #'
 #' @examples
 #' fitness_myxo <- calculate_mix_fitness(data_smith_2010, var_names_smith_2010)
@@ -364,7 +364,7 @@ plot_strain_fitness <- function(
 #' @returns
 #' A ggplot object that can be further modified using the ggplot2 package
 #'
-#' @seealso [plot_within_group_fitness()], [plot_strain_fitness()]
+#' @seealso [plot_fitness_ratio()], [plot_strain_fitness()]
 #'
 #' @examples
 #' fitness_myxo <- calculate_mix_fitness(data_smith_2010, var_names_smith_2010)
@@ -454,7 +454,7 @@ plot_total_fitness <- function(
 
 #' Plot within-group ratio of strain fitnesses
 #'
-#' `plot_within_group_fitness()` draws a plot of the relative within-group
+#' `plot_fitness_ratio()` draws a plot of the relative within-group
 #' fitness of strains A and B as a function of their initial frequency
 #'
 #' @inheritParams plot_total_fitness
@@ -484,13 +484,13 @@ plot_total_fitness <- function(
 #'
 #' @examples
 #' fitness_myxo <- calculate_mix_fitness(data_smith_2010, var_names_smith_2010)
-#' plot_within_group_fitness(fitness_myxo)
+#' plot_fitness_ratio(fitness_myxo)
 #'
 #' # Using ratio scale for mix frequencies
-#' plot_within_group_fitness(fitness_myxo, mix_scale = "ratio")
+#' plot_fitness_ratio(fitness_myxo, mix_scale = "ratio")
 #'
 #' # More plot options
-#' plot_within_group_fitness(
+#' plot_fitness_ratio(
 #'   fitness_myxo,
 #'   mix_scale = "ratio",
 #'   ylim = c(0.01, 100),
@@ -504,7 +504,7 @@ plot_total_fitness <- function(
 #'
 #' @export
 #'
-plot_within_group_fitness <- function(
+plot_fitness_ratio <- function(
 	data,
 	var_names = NULL,
 	mix_scale = "fraction",
@@ -525,14 +525,14 @@ plot_within_group_fitness <- function(
 		var_names = var_names,
 		vars = "fitness_ratio_A_B",
 		mix_scale = mix_scale,
-		caller = "plot_within_group_fitness"
+		caller = "plot_fitness_ratio"
 	)
 	data <- check_fitness_data(
 		data,
 		var_names = var_names,
 		vars = "fitness_ratio_A_B",
 		mix_scale = mix_scale,
-		caller = "plot_within_group_fitness"
+		caller = "plot_fitness_ratio"
 	)
 	strain_names <- get_strain_names(data, var_names)
 

@@ -68,7 +68,7 @@ fig_ecoli <-
 	dplyr::filter(
 		ampicillin %in% c(0, 15, 50, 100) & dilution %in% c(200, 400, 800)
 	) |>
-	plot_within_group_fitness()
+	plot_fitness_ratio()
 
 # Add panels and color scales for experimental conditions
 name_amp <- "Ampicillin\n(\u03BCg/mL)"

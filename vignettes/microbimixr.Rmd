@@ -166,7 +166,7 @@ Once you know which fitness measures to focus on, you can use microbimixr to vis
 
 * `plot_strain_fitness()`: Plot fitness of each strain separately
 * `plot_total_fitness()` : Plot fitness of total group or subpopulation
-* `plot_within_group_fitness()` : Plot within-group ratio of strain fitnesses
+* `plot_fitness_ratio()` : Plot within-group ratio of strain fitnesses
 
 These functions let you reproduce the individual subplots from `plot_mix_fitness()`. They're a simple, straight-forward way to make figures designed for fitness data. 
 <!-- 
@@ -186,7 +186,7 @@ fig_total <- plot_total_fitness(
 	xlab = "Initial frequency of evolved strain",
 	ylab = "Total sporulation efficiency\n(spores/cell)"
 )
-fig_within <- plot_within_group_fitness(
+fig_within <- plot_fitness_ratio(
 	fitness_myxo, 
 	mix_scale = "ratio",
 	xlab = "Initial ratio evolved / ancestral",

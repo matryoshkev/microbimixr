@@ -92,5 +92,5 @@ plot_total_fitness(
 
 }
 \seealso{
-\code{\link[=plot_within_group_fitness]{plot_within_group_fitness()}}, \code{\link[=plot_strain_fitness]{plot_strain_fitness()}}
+\code{\link[=plot_fitness_ratio]{plot_fitness_ratio()}}, \code{\link[=plot_strain_fitness]{plot_strain_fitness()}}
 }

@@ -54,7 +54,7 @@ fitness_myxo <- fitness_myxo |>
 
 # Plot within-group fitness ratio with fitted model
 dev.new(width = 2.5, height = 2.1, units = "in")
-fig_within_group <- plot_within_group_fitness(
+fig_within_group <- plot_fitness_ratio(
 	fitness_myxo,
 	mix_scale = "ratio",
 	ylab = "Relative sporulation success\n evolved / ancestral"

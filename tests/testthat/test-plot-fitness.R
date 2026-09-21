@@ -5,7 +5,7 @@ test_that("plot functions run defaults", {
 	expect_no_error({
 		plot_strain_fitness(fitness_myxo)
 		plot_total_fitness(fitness_myxo)
-		plot_within_group_fitness(fitness_myxo)
+		plot_fitness_ratio(fitness_myxo)
 		plot_mix_fitness(fitness_myxo)
 	})
 })
@@ -16,7 +16,7 @@ test_that("plot functions accept initial ratio as x-axis scale", {
 		plot_mix_fitness(fitness_myxo, mix_scale = "ratio")
 		plot_strain_fitness(fitness_myxo, mix_scale = "ratio")
 		plot_total_fitness(fitness_myxo, mix_scale = "ratio")
-		plot_within_group_fitness(fitness_myxo, mix_scale = "ratio")
+		plot_fitness_ratio(fitness_myxo, mix_scale = "ratio")
 	})
 })
 
@@ -45,7 +45,7 @@ test_that("plot functions can use custom variable names", {
 		plot_mix_fitness(fitness_data, var_names = my_names)
 		plot_strain_fitness(fitness_data, var_names = my_names)
 		plot_total_fitness(fitness_data, var_names = my_names)
-		plot_within_group_fitness(fitness_data, var_names = my_names)
+		plot_fitness_ratio(fitness_data, var_names = my_names)
 	})
 })
 
@@ -205,14 +205,14 @@ test_that("plot functions list variables missing in var_names", {
 
 	# Fitness ratio
 	expect_error(
-		plot_within_group_fitness(fitness_data, var_names = c(strains,
+		plot_fitness_ratio(fitness_data, var_names = c(strains,
 			# initial_fraction_A = "initial_fraction_A",
 			fitness_ratio_A_B = "fitness_ratio_A_B"
 		)),
 		regexp = "not found in"
 	)
 	expect_error(
-		plot_within_group_fitness(fitness_data, mix_scale = "ratio",
+		plot_fitness_ratio(fitness_data, mix_scale = "ratio",
 			var_names = c(strains,
 				# initial_ratio_A_B = "initial_ratio_A_B",
 				fitness_ratio_A_B = "fitness_ratio_A_B"
@@ -221,14 +221,14 @@ test_that("plot functions list variables missing in var_names", {
 		regexp = "not found in"
 	)
 	expect_error(
-		plot_within_group_fitness(fitness_data, var_names = c(strains,
+		plot_fitness_ratio(fitness_data, var_names = c(strains,
 			# initial_fraction_A = "initial_fraction_A",
 			fitness_ratio_A_B = "fitness_ratio_A_B"
 		)),
 		regexp = "not found in"
 	)
 	expect_error(
-		plot_within_group_fitness(fitness_data, var_names = strains),
+		plot_fitness_ratio(fitness_data, var_names = strains),
 		regexp = "not found in"
 	)
 })
@@ -371,14 +371,14 @@ test_that("plot functions report missing data columns", {
 
 	# Fitness ratio
 	expect_error(
-		plot_within_group_fitness(
+		plot_fitness_ratio(
 			data.frame(fitness_ratio_A_B = 5),
 			var_names = fitness_vars_default()
 		),
 		regexp = "not found in"
 	)
 	expect_error(
-		plot_within_group_fitness(
+		plot_fitness_ratio(
 			data.frame(fitness_ratio_A_B = 0.5),
 			var_names = fitness_vars_default(),
 			mix_scale = "ratio"
@@ -386,14 +386,14 @@ test_that("plot functions report missing data columns", {
 		regexp = "not found in"
 	)
 	expect_error(
-		plot_within_group_fitness(
+		plot_fitness_ratio(
 			data.frame(initial_fraction_A = 0.5),
 			var_names = fitness_vars_default()
 		),
 		regexp = "not found in"
 	)
 	expect_error(
-		plot_within_group_fitness(
+		plot_fitness_ratio(
 			data.frame(),
 			var_names = fitness_vars_default()
 		),
@@ -460,7 +460,7 @@ test_that("plot functions warn about nonsensical fitness values < 0", {
 		))
 	})
 	expect_warning(regexp = "biologically meaningful", {
-		plot_within_group_fitness(var_names = var_names, data.frame(
+		plot_fitness_ratio(var_names = var_names, data.frame(
 			initial_fraction_A = 0.1, fitness_ratio_A_B = -2
 		))
 	})
@@ -525,7 +525,7 @@ test_that("plot functions warn about fitness zeros", {
 		))
 	})
 	expect_warning(regexp = "undefined on log scale", {
-		plot_within_group_fitness(var_names = var_names, data.frame(
+		plot_fitness_ratio(var_names = var_names, data.frame(
 			initial_fraction_A = 0.1, fitness_ratio_A_B = 0
 		))
 	})
@@ -590,7 +590,7 @@ test_that("plot functions warn about infinite fitness values", {
 		))
 	})
 	expect_warning(regexp = "infinite", {
-		plot_within_group_fitness(var_names = var_names, data.frame(
+		plot_fitness_ratio(var_names = var_names, data.frame(
 			initial_fraction_A = 0.1, fitness_ratio_A_B = Inf
 		))
 	})
@@ -611,7 +611,7 @@ test_that("plot functions accept expression() axis labels", {
 	expect_no_error({
 		plot_strain_fitness(fitness_myxo, xlab = label, ylab = label)
 		plot_total_fitness(fitness_myxo, xlab = label, ylab = label)
-		plot_within_group_fitness(fitness_myxo, xlab = label, ylab = label)
+		plot_fitness_ratio(fitness_myxo, xlab = label, ylab = label)
 	})
 })
 
@@ -631,7 +631,7 @@ test_that("plot functions accept point args", {
 		plot_total_fitness(
 			fitness_myxo, color = color, fill = fill, shape = shape, size = size
 		)
-		plot_within_group_fitness(
+		plot_fitness_ratio(
 			fitness_myxo, color = color, fill = fill, shape = shape, size = size
 		)
 	})
