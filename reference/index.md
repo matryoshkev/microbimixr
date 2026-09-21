@@ -11,9 +11,9 @@
 
 - [`plot_strain_fitness()`](https://matryoshkev.github.io/microbimixr/reference/plot_strain_fitness.md)
   : Plot fitness of each strain separately
-- [`plot_total_group_fitness()`](https://matryoshkev.github.io/microbimixr/reference/plot_total_group_fitness.md)
+- [`plot_total_fitness()`](https://matryoshkev.github.io/microbimixr/reference/plot_total_fitness.md)
   : Plot fitness of total group or subpopulation
-- [`plot_within_group_fitness()`](https://matryoshkev.github.io/microbimixr/reference/plot_within_group_fitness.md)
+- [`plot_fitness_ratio()`](https://matryoshkev.github.io/microbimixr/reference/plot_fitness_ratio.md)
   : Plot within-group ratio of strain fitnesses
 
 ## Plot fitness with ggplot2

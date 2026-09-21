@@ -345,11 +345,11 @@ plot functions:</p>
 <code><a href="../reference/plot_strain_fitness.html">plot_strain_fitness()</a></code>: Plot fitness of each strain
 separately</li>
 <li>
-<code><a href="../reference/plot_total_group_fitness.html">plot_total_group_fitness()</a></code> : Plot fitness of total
-group or subpopulation</li>
+<code><a href="../reference/plot_total_fitness.html">plot_total_fitness()</a></code> : Plot fitness of total group or
+subpopulation</li>
 <li>
-<code><a href="../reference/plot_within_group_fitness.html">plot_within_group_fitness()</a></code> : Plot within-group ratio
-of strain fitnesses</li>
+<code><a href="../reference/plot_fitness_ratio.html">plot_fitness_ratio()</a></code> : Plot within-group ratio of
+strain fitnesses</li>
 </ul>
 <p>These functions let you reproduce the individual subplots from
 <code><a href="../reference/plot_mix_fitness.html">plot_mix_fitness()</a></code>. They’re a simple, straight-forward way
@@ -357,17 +357,17 @@ to make figures designed for fitness data. <!--
 They work best with simple mix experiments with two strains and no other treatment variables.  
 --></p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_total_group_fitness.html">plot_total_group_fitness</a></span><span class="op">(</span><span class="va">fitness_myxo</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_total_fitness.html">plot_total_fitness</a></span><span class="op">(</span><span class="va">fitness_myxo</span><span class="op">)</span></span></code></pre></div>
 <p><img src="microbimixr_files/figure-html/plot-smith2010-1.png" class="r-plt" alt="" width="50%" style="display: block; margin: auto;"></p>
 <p>They have some basic options:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://patchwork.data-imaginist.com" class="external-link">patchwork</a></span><span class="op">)</span></span>
-<span><span class="va">fig_total</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/plot_total_group_fitness.html">plot_total_group_fitness</a></span><span class="op">(</span></span>
+<span><span class="va">fig_total</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/plot_total_fitness.html">plot_total_fitness</a></span><span class="op">(</span></span>
 <span>    <span class="va">fitness_myxo</span>,</span>
 <span>    xlab <span class="op">=</span> <span class="st">"Initial frequency of evolved strain"</span>,</span>
 <span>    ylab <span class="op">=</span> <span class="st">"Total sporulation efficiency\n(spores/cell)"</span></span>
 <span><span class="op">)</span></span>
-<span><span class="va">fig_within</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/plot_within_group_fitness.html">plot_within_group_fitness</a></span><span class="op">(</span></span>
+<span><span class="va">fig_within</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/plot_fitness_ratio.html">plot_fitness_ratio</a></span><span class="op">(</span></span>
 <span>    <span class="va">fitness_myxo</span>, </span>
 <span>    mix_scale <span class="op">=</span> <span class="st">"ratio"</span>,</span>
 <span>    xlab <span class="op">=</span> <span class="st">"Initial ratio evolved / ancestral"</span>,</span>

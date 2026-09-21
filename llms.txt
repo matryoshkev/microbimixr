@@ -90,15 +90,15 @@ to.
 
 Make publication-quality figures easily with
 [`plot_strain_fitness()`](https://matryoshkev.github.io/microbimixr/reference/plot_strain_fitness.md),
-[`plot_total_group_fitness()`](https://matryoshkev.github.io/microbimixr/reference/plot_total_group_fitness.md),
+[`plot_total_fitness()`](https://matryoshkev.github.io/microbimixr/reference/plot_total_fitness.md),
 and
-[`plot_within_group_fitness()`](https://matryoshkev.github.io/microbimixr/reference/plot_within_group_fitness.md):
+[`plot_fitness_ratio()`](https://matryoshkev.github.io/microbimixr/reference/plot_fitness_ratio.md):
 
 ``` r
 
 library("patchwork")
-plot_total_group_fitness(fitness_myxo, ylim = c(1e-8, 1)) +
-plot_within_group_fitness(fitness_myxo, mix_scale = "ratio", ylim = c(1e-4, 1e4)) +
+plot_total_fitness(fitness_myxo, ylim = c(1e-8, 1)) +
+plot_fitness_ratio(fitness_myxo, mix_scale = "ratio", ylim = c(1e-4, 1e4)) +
 plot_annotation(tag_levels = "A")
 ```
 
@@ -149,9 +149,9 @@ devtools::install_github("matryoshkev/microbimixr")
 
 - [`plot_strain_fitness()`](https://matryoshkev.github.io/microbimixr/reference/plot_strain_fitness.md)
   : Plot fitness of each strain separately
-- [`plot_total_group_fitness()`](https://matryoshkev.github.io/microbimixr/reference/plot_total_group_fitness.md)
+- [`plot_total_fitness()`](https://matryoshkev.github.io/microbimixr/reference/plot_total_fitness.md)
   : Plot fitness of total group or subpopulation
-- [`plot_within_group_fitness()`](https://matryoshkev.github.io/microbimixr/reference/plot_within_group_fitness.md)
+- [`plot_fitness_ratio()`](https://matryoshkev.github.io/microbimixr/reference/plot_fitness_ratio.md)
   : Plot within-group ratio of strain fitnesses
 
 ## Plot fitness with ggplot2

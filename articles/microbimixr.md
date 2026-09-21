@@ -294,9 +294,9 @@ plot functions:
 
 - [`plot_strain_fitness()`](https://matryoshkev.github.io/microbimixr/reference/plot_strain_fitness.md):
   Plot fitness of each strain separately
-- [`plot_total_group_fitness()`](https://matryoshkev.github.io/microbimixr/reference/plot_total_group_fitness.md)
+- [`plot_total_fitness()`](https://matryoshkev.github.io/microbimixr/reference/plot_total_fitness.md)
   : Plot fitness of total group or subpopulation
-- [`plot_within_group_fitness()`](https://matryoshkev.github.io/microbimixr/reference/plot_within_group_fitness.md)
+- [`plot_fitness_ratio()`](https://matryoshkev.github.io/microbimixr/reference/plot_fitness_ratio.md)
   : Plot within-group ratio of strain fitnesses
 
 These functions let you reproduce the individual subplots from
@@ -306,7 +306,7 @@ fitness data.
 
 ``` r
 
-plot_total_group_fitness(fitness_myxo)
+plot_total_fitness(fitness_myxo)
 ```
 
 ![](microbimixr_files/figure-html/plot-smith2010-1.png)
@@ -316,12 +316,12 @@ They have some basic options:
 ``` r
 
 library(patchwork)
-fig_total <- plot_total_group_fitness(
+fig_total <- plot_total_fitness(
     fitness_myxo,
     xlab = "Initial frequency of evolved strain",
     ylab = "Total sporulation efficiency\n(spores/cell)"
 )
-fig_within <- plot_within_group_fitness(
+fig_within <- plot_fitness_ratio(
     fitness_myxo, 
     mix_scale = "ratio",
     xlab = "Initial ratio evolved / ancestral",

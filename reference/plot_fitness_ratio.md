@@ -1,12 +1,12 @@
-# Plot fitness of each strain separately
+# Plot within-group ratio of strain fitnesses
 
-`plot_strain_fitness()` draws a plot of absolute fitness for each of two
-microbe strains as a function of their initial frequency
+`plot_fitness_ratio()` draws a plot of the relative within-group fitness
+of strains A and B as a function of their initial frequency
 
 ## Usage
 
 ``` r
-plot_strain_fitness(
+plot_fitness_ratio(
   data,
   var_names = NULL,
   mix_scale = "fraction",
@@ -14,8 +14,8 @@ plot_strain_fitness(
   ylab = NA,
   xlim = c(NA, NA),
   ylim = c(NA, NA),
-  color = c(NULL, NULL),
-  fill = c(NULL, NULL),
+  color = NULL,
+  fill = NULL,
   shape = NULL,
   size = NULL,
   drop_NA = TRUE
@@ -26,9 +26,8 @@ plot_strain_fitness(
 
 - data:
 
-  Data frame of fitness values and mix frequencies. Wide format: each
-  row must contain data for two microbes in the same population. Accepts
-  data frame extensions like `tibble`.
+  Data frame of fitness values and mix frequencies. Accepts data frame
+  extensions like `tibble`.
 
 - var_names:
 
@@ -54,11 +53,11 @@ plot_strain_fitness(
 
 - color:
 
-  Point colors
+  Point color
 
 - fill:
 
-  Point fill colors. Only affects shapes 21–25.
+  Point fill color. Only affects shapes 21-25.
 
 - shape:
 
@@ -87,33 +86,39 @@ elements (shown here with default values):
       name_B = "name_B",
       initial_fraction_A = "initial_fraction_A",
       initial_ratio_A_B = "initial_ratio_A_B",
-      fitness_A = "fitness_A",
-      fitness_B = "fitness_B"
+      fitness_ratio_A_B = "fitness_ratio_A_B"
     )
 
 Expects Wrightian fitness data like those returned by
 [`calculate_mix_fitness()`](https://matryoshkev.github.io/microbimixr/reference/calculate_mix_fitness.md).
-Does not try to plot single-strain data if `mix_scale = "ratio"`.
+Relative within-group fitness is measured as the ratio of strain A
+fitness to strain B fitness. Does not try to plot single-strain data.
 
 ## See also
 
 [`plot_total_fitness()`](https://matryoshkev.github.io/microbimixr/reference/plot_total_fitness.md),
-[`plot_fitness_ratio()`](https://matryoshkev.github.io/microbimixr/reference/plot_fitness_ratio.md)
+[`plot_strain_fitness()`](https://matryoshkev.github.io/microbimixr/reference/plot_strain_fitness.md)
 
 ## Examples
 
 ``` r
 fitness_myxo <- calculate_mix_fitness(data_smith_2010, var_names_smith_2010)
-plot_strain_fitness(fitness_myxo)
+plot_fitness_ratio(fitness_myxo)
 
 
-# Some plot options
-plot_strain_fitness(
+# Using ratio scale for mix frequencies
+plot_fitness_ratio(fitness_myxo, mix_scale = "ratio")
+
+
+# More plot options
+plot_fitness_ratio(
   fitness_myxo,
-  xlab = "Initial frequency of GVB206.3",
-  ylab = "Sporulation efficiency\n(spores/cell)",
-  color = c("black", "grey40"),
-  fill = c("grey50", "white"),
+  mix_scale = "ratio",
+  ylim = c(0.01, 100),
+  xlab = "Initial ratio evolved / ancestral",
+  ylab = "Relative sporulation success\nevolved / ancestral",
+  color = "darkblue",
+  fill = "lightblue",
   shape = 23,
   size = 2
 )
