@@ -1,24 +1,17 @@
 # Using microbimixr with multiple strain combinations ==========================
 
 # Dependencies
-library(dplyr)      # Data handling that makes code easier to read
-library(ggplot2)    # Data visualization
-library(patchwork)
+library(dplyr)    # Data handling that makes code easier to read
+library(ggplot2)  # Graphics package
 
 
-# Inspect data and calculate fitness -------------------------------------------
+# Calculate and compare fitness measures ---------------------------------------
 
 # Data included in microbimixr
 head(data_Madgwick_2018)
 
 # Two Dictystelium strains forming fruiting bodies together,
 # many different strain combinations
-
-# Ten strains
-with(data_Madgwick_2018, unique(c(strain_i, strain_j)))
-
-# 34 different pairs
-data_Madgwick_2018 |> select(strain_i, strain_j) |> distinct()
 
 # Calculate fitness measures
 fitness_dicty <-
@@ -37,11 +30,9 @@ fitness_dicty <-
 	)
 # Fitness here is spores/cell
 
-
-# One strain pair --------------------------------------------------------------
-# NC105.1 + NC34.2 is one of the pairs with more replicates
-
 # Compare fitness measures
+# NC105.1 + NC34.2 is one of the strain pairs with more replicates
+dev.new()
 fitness_dicty |>
 	filter(name_A == "NC105.1", name_B == "NC34.2") |>
 	plot_mix_fitness()
@@ -49,38 +40,25 @@ fitness_dicty |>
 # Effect sizes are small: <10-fold
 # Fitness ratio is negatively frequency-dependent,
 #   approx linear on log-ratio mix scale
-# Both strains make more spores when rare
 
 # Better view of the strain effects
-dev.new(width = 4, height = 2.5)
+dev.new(width = 4, height = 2.25)
 fitness_dicty |>
 	filter(name_A == "NC105.1", name_B == "NC34.2") |>
 	plot_strain_fitness(ylab = "Spores/cell", ylim = c(0.2, 2.3)) +
-	ggplot2::facet_wrap(~ strain) +
-	ggplot2::theme(
-		legend.title         = ggplot2::element_blank(),
-		legend.background    = ggplot2::element_blank(),
-		legend.position      = "top",
-		legend.box.spacing   = grid::unit(0, "points"),
-		strip.text           = ggplot2::element_blank(),
-		strip.background     = ggplot2::element_blank()
-	)
+	facet_wrap(~ strain) +
+	theme(legend.position = "none")
+# Both strains make more spores when rare
 
 
 # Compare strain pairs ---------------------------------------------------------
 
-# unique(fitness_dicty$name_A)
-# unique(fitness_dicty$name_B)
-
 # Expand fitness frame so all strains get chance to be both A and B
 strain_order <- c(
-	"NC28.1", "NC34.2", "NC63.2", "NC80.1", "NC105.1",  # Full reciprocal
-	"NC60.1", "NC99.1",  # Not reciprocal
-	"NC52.3",  # Behavior B
-	"NC69.1", "NC71.1"  # Behavior C
+	"NC28.1", "NC34.2", "NC63.2", "NC80.1", "NC105.1", "NC60.1", "NC99.1",
+	"NC52.3", "NC69.1", "NC71.1"
 )
-fitness_matrix <-
-	fitness_dicty |>
+fitness_dicty <- fitness_dicty |>
 	rename(
 		name_A = name_B,
 		name_B = name_A,
@@ -98,37 +76,24 @@ fitness_matrix <-
 		name_B = factor(name_B, levels = strain_order)
 	)
 
-# unique(fitness_matrix$name_A) |> sort()
-# unique(fitness_matrix$name_B) |> sort()
-
-# Focus on two sets of strains
-strain_set_1 <- c("NC28.1", "NC34.2", "NC63.2", "NC105.1")
-strain_set_2 <- c("NC60.1", "NC99.1")
-strain_set_3 <- c("NC69.1", "NC71.1")
-
-fitness_matrix |>
-	filter(name_A %in% strain_set_3) |>
-	select(name_A, name_B) |>
-	distinct()
-
+# Focus on one set of strain combinations
+fitness_focus <-
+	fitness_dicty |>
+	filter(
+		name_A %in% c("NC34.2", "NC60.1", "NC99.1", "NC69.1", "NC71.1"),
+		name_B %in% c("NC28.1", "NC63.2", "NC105.1")
+	)
 
 # Plot fitness ratio
-dev.new(width = 6.3, height = 6.3, units = "in")
-fitness_matrix |>
-	filter(
-		# name_A %in% c(strain_set_1, strain_set_3),
-		name_A %in% c(strain_set_1, strain_set_2, strain_set_3),
-		name_B %in% strain_set_1
-	) |>
+dev.new(width = 6.4, height = 4.25, units = "in")
+fitness_focus |>
 	plot_fitness_ratio(
 		mix_scale = "ratio",
 		xlab = "Initial strain ratio (top / right)",
-		ylab = "Relative sporulation success (top / right)",
-		xlim = c(0.03, 30),
-		ylim = c(0.1, 10)
+		ylab = "Relative sporulation success (top / right)"
 	) +
 	facet_grid(
-		row = vars(name_B),
+		rows = vars(name_B),
 		cols = vars(name_A),
 		labeller = labeller(name_B = function(x) paste("+", x))
 	)
@@ -136,91 +101,29 @@ fitness_matrix |>
 # and frequency dependence might be different shape
 
 # Plot strain fitness
-dev.new(width = 6.3, height = 5, units = "in")
-fitness_matrix |>
-	filter(
-		name_A %in% c(strain_set_1, strain_set_2, strain_set_3),
-		name_B %in% strain_set_1
-	) |>
+dev.new(width = 6.4, height = 4.25, units = "in")
+fitness_focus |>
 	plot_strain_fitness(
-		xlab = "Initial frequency black strain",
-		ylab = "Sporulation success (spores/cell)",
-		ylim = c(0.1, 4),
-		color = c("black", "grey55"),
-		fill = c("grey55", "white")
+		ylab = "Sporulation success (spores/cell)", size = 1.2
 	) +
-	facet_grid(row = vars(name_B), cols = vars(name_A)) +
-	theme(legend.position = "none")
+	scale_x_initial_fraction(
+		name = "Initial frequency of top strain", breaks = c(0, 0.5, 1)
+	) +
+	facet_grid(
+		cols = vars(name_A, strain),
+		rows = vars(name_B),
+		labeller = labeller(
+			name_B = function(x) paste("+", x),
+			strain = function(x) paste("")
+		)
+	) +
+	theme(
+		legend.position = "none",
+		strip.text.x = element_text(color = "tan4", face = "bold"),
+		strip.text.y = element_text(color = "lightsteelblue4", face = "bold"),
+		strip.background = element_blank()
+	)
 
-# TODO: Make strain fitness easy to see and plot with multiple pairs
-
-# # dev.new(width = 4, height = 2.5, units = "in")
-# dev.new(width = 2.1, height = 2.1, units = "in")
-# test_fig <-
-# 	filter(fitness_matrix, name_A == "NC34.2" & name_B == "NC63.2") |>
-# 	plot_strain_fitness(
-# 		# xlab = "Initial fraction black strain",
-# 		ylab = "Sporulation success (spores/cell)",
-# 		ylim = c(0.1, 4),
-# 		color = c("black", "grey45"),
-# 		fill = c("grey55", "white")
-# 	) +
-# 	facet_wrap(~ strain) +
-# 	scale_x_initial_fraction(
-# 		name = "Initial fraction black strain",
-# 		breaks = c(0, 0.5, 1)
-# 	) +
-# 	theme(
-# 		legend.title         = ggplot2::element_blank(),
-# 		legend.background    = ggplot2::element_blank(),
-# 		legend.position      = "top",
-# 		legend.margin        = margin(0),
-# 		legend.box.spacing   = grid::unit(3, "points"),
-# 		legend.key.size      = grid::unit(12, "points"),
-# 		legend.key.spacing   = grid::unit(4, "points"),
-# 		strip.text           = ggplot2::element_blank(),
-# 		strip.background     = ggplot2::element_blank()
-# 	)
-#
-# # fig_strains
-# # fig_strains %+%
-# # 	filter(fitness_matrix, name_A == "NC71.1" & name_B == "NC28.1")
-# # Doesn't work because long-format data!
-#
-# dev.new(width = 6.4, height = 6.4)
-# 	test_fig + test_fig + test_fig + test_fig +
-# 	test_fig + test_fig + test_fig + test_fig +
-# 	test_fig + test_fig + test_fig + test_fig +
-# 	patchwork::plot_layout(axes = "collect")
-
-# Total sporulation success
-# dev.new(width = 6.3, height = 5, units = "in")
-# fitness_matrix |>
-# 	filter(
-# 		name_A %in% c(strain_set_1, strain_set_2),
-# 		name_B %in% strain_set_1
-# 	) |>
-# 	plot_total_fitness(
-# 		mix_scale = "ratio",
-# 		xlab = "Initial strain ratio (top / right)",
-# 		xlim = c(0.03, 30),
-# 		# ylim = c(0.1, 10)
-# 	) +
-# 	facet_grid(row = vars(name_B), cols = vars(name_A))
-
-# Strain fitness: linear via plot components
-# dev.new(width = 6.3, height = 6.3)
-# fitness_matrix |>
-# 	ggplot(aes(x = initial_fraction_A, y = fitness_A, group = replicate)) +
-# 	scale_x_initial_fraction(name = "Initial freq right") +
-# 	scale_y_continuous(
-# 		name = "Spores/cell (right strain)",
-# 		limits = c(0, 1.5),
-# 		breaks = seq(0, 2, by = 0.5),
-# 		minor_breaks = NULL
-# 	) +
-# 	geom_line(color = gray(0.8), na.rm = TRUE) +
-# 	geom_point_overlap(na.rm = TRUE) +
-# 	facet_grid(row = vars(name_A), cols = vars(name_B)) +
-# 	theme(text = ggplot2::element_text(size = 9))
+# TODO:
+# Needs cleaner top labels, nested spacing. Try ggh4x::facet_nested()
 

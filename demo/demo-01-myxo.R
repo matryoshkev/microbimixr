@@ -5,7 +5,7 @@ library(dplyr)    # Data handling that makes code more readable
 library(ggplot2)  # Graphics package
 
 
-# Calculate & compare fitness measures -----------------------------------------
+# Calculate and compare fitness measures -----------------------------------------
 
 # Data included in microbimixr
 head(data_smith_2010)
