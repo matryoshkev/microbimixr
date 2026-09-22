@@ -13,6 +13,7 @@ scale_x_initial_fraction(
   name = waiver(),
   limits = NULL,
   breaks = waiver(),
+  labels = waiver(),
   minor_breaks = NULL,
   ...
 )
@@ -37,6 +38,21 @@ scale_x_initial_fraction(
   Numeric vector of positions for axis breaks. Or
   [`waiver()`](https://ggplot2.tidyverse.org/reference/waiver.html) for
   automatic breaks. Or `NULL` for no breaks.
+
+- labels:
+
+  One of:
+
+  - Character vector giving labels for breaks (must be same length as
+    `breaks`)
+
+  - [`waiver()`](https://ggplot2.tidyverse.org/reference/waiver.html)
+    for automatic labels with simple 0 and 1
+
+  - Expression vector (must be the same length as `breaks`). See
+    ?plotmath for details.
+
+  - `NULL` for no labels
 
 - minor_breaks:
 
