@@ -16,6 +16,13 @@
 #' @param breaks Numeric vector of positions for axis breaks.
 #'   Or `waiver()` for automatic breaks.
 #'   Or `NULL` for no breaks.
+#' @param labels One of:
+#'   * Character vector giving labels for breaks (must be same length as
+#'     `breaks`)
+#'   * `waiver()` for automatic labels with simple 0 and 1
+#'   * Expression vector (must be the same length as `breaks`). See ?plotmath
+#'     for details.
+#'   * `NULL` for no labels
 #' @param minor_breaks Numeric vector of positions for axis minor breaks.
 #'   Or `NULL` for no minor breaks.
 #' @param ... Other arguments passed to [ggplot2::scale_x_continuous()]
@@ -45,16 +52,19 @@ scale_x_initial_fraction <- function(
 	name = waiver(),
 	limits = NULL,
 	breaks = waiver(),
+	labels = waiver(),
 	minor_breaks = NULL,
 	...
 ) {
 	if (is_waiver(name)) {name <- paste("Initial fraction strain A")}
 	if (is.null(limits)) {limits <- c(0, 1)}
 	if (is_waiver(breaks)) {breaks <- seq(0, 1, by = 0.2)}
+	if (is_waiver(labels)) {labels <- labels_fraction}
 	ggplot2::scale_x_continuous(
 		name = name,
 		limits = limits,
 		breaks = breaks,
+		labels = labels,
 		minor_breaks = minor_breaks,
 		...
 	)
@@ -382,6 +392,11 @@ breaks_log10 <- function(limits) {
 		breaks <- 10^seq(-20, 20, by = 4)
 	}
 	breaks
+}
+
+# Labels for fraction axes with simple 0 and 1
+labels_fraction <- function(breaks) {
+	scales::number(breaks, drop0trailing = TRUE)
 }
 
 # Labels for log10 axes

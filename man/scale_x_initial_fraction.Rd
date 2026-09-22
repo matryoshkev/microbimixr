@@ -8,6 +8,7 @@ scale_x_initial_fraction(
   name = waiver(),
   limits = NULL,
   breaks = waiver(),
+  labels = waiver(),
   minor_breaks = NULL,
   ...
 )
@@ -24,6 +25,16 @@ mix frequencies.}
 \item{breaks}{Numeric vector of positions for axis breaks.
 Or \code{waiver()} for automatic breaks.
 Or \code{NULL} for no breaks.}
+
+\item{labels}{One of:
+\itemize{
+\item Character vector giving labels for breaks (must be same length as
+\code{breaks})
+\item \code{waiver()} for automatic labels with simple 0 and 1
+\item Expression vector (must be the same length as \code{breaks}). See ?plotmath
+for details.
+\item \code{NULL} for no labels
+}}
 
 \item{minor_breaks}{Numeric vector of positions for axis minor breaks.
 Or \code{NULL} for no minor breaks.}
