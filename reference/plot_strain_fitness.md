@@ -10,6 +10,7 @@ plot_strain_fitness(
   data,
   var_names = NULL,
   mix_scale = "fraction",
+  facet_strains = FALSE,
   xlab = NA,
   ylab = NA,
   xlim = c(NA, NA),
@@ -43,6 +44,10 @@ plot_strain_fitness(
   of strain A (proportion of total) from `initial_fraction_A` variable
   of data. `"ratio"` uses ratio of strain A to strain B (on
   \\\log\_{10}\\ scale) from `initial_ratio_A_B`.
+
+- facet_strains:
+
+  `TRUE` to show data for each strain on separate subplots
 
 - xlab, ylab:
 
@@ -110,6 +115,7 @@ plot_strain_fitness(fitness_myxo)
 # Some plot options
 plot_strain_fitness(
   fitness_myxo,
+  facet_strains = TRUE,
   xlab = "Initial frequency of GVB206.3",
   ylab = "Sporulation efficiency\n(spores/cell)",
   color = c("black", "grey40"),

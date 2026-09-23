@@ -46,6 +46,7 @@ microbe strains as a function of their initial frequency</p>
 <span>  <span class="va">data</span>,</span>
 <span>  var_names <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  mix_scale <span class="op">=</span> <span class="st">"fraction"</span>,</span>
+<span>  facet_strains <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  xlab <span class="op">=</span> <span class="cn">NA</span>,</span>
 <span>  ylab <span class="op">=</span> <span class="cn">NA</span>,</span>
 <span>  xlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="cn">NA</span>, <span class="cn">NA</span><span class="op">)</span>,</span>
@@ -79,6 +80,10 @@ variables in <code>data</code>. If <code>NULL</code>, defaults to column names r
 frequency of strain A (proportion of total) from <code>initial_fraction_A</code>
 variable of data. <code>"ratio"</code> uses ratio of strain A to strain B (on
 \(\log_{10}\) scale) from <code>initial_ratio_A_B</code>.</p></dd>
+
+
+<dt id="arg-facet-strains">facet_strains<a class="anchor" aria-label="anchor" href="#arg-facet-strains"></a></dt>
+<dd><p><code>TRUE</code> to show data for each strain on separate subplots</p></dd>
 
 
 <dt id="arg-xlab-ylab">xlab, ylab<a class="anchor" aria-label="anchor" href="#arg-xlab-ylab"></a></dt>
@@ -144,6 +149,7 @@ Does not try to plot single-strain data if <code>mix_scale = "ratio"</code>.</p>
 <span class="r-in"><span><span class="co"># Some plot options</span></span></span>
 <span class="r-in"><span><span class="fu">plot_strain_fitness</span><span class="op">(</span></span></span>
 <span class="r-in"><span>  <span class="va">fitness_myxo</span>,</span></span>
+<span class="r-in"><span>  facet_strains <span class="op">=</span> <span class="cn">TRUE</span>,</span></span>
 <span class="r-in"><span>  xlab <span class="op">=</span> <span class="st">"Initial frequency of GVB206.3"</span>,</span></span>
 <span class="r-in"><span>  ylab <span class="op">=</span> <span class="st">"Sporulation efficiency\n(spores/cell)"</span>,</span></span>
 <span class="r-in"><span>  color <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"black"</span>, <span class="st">"grey40"</span><span class="op">)</span>,</span></span>
