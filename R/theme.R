@@ -1,23 +1,31 @@
 # Themes for ggplot2 ===========================================================
 
-# Default package theme (suited to figures in papers)
+# Want default plots to look good AND be robust to modification
+# So we want a light touch here
 
-#' @importFrom ggplot2 %+replace%
 theme_microbimixr <- function() {
-	ggplot2::theme_grey() %+replace%
-	ggplot2::theme(
-		text = ggplot2::element_text(size = 9)
-	)
+	# Text for medium-sized figures in papers
+	ggplot2::theme(text = ggplot2::element_text(size = 9))
 }
 
-# Additional options for plot_mix_fitness() (less clutter)
-theme_plot_mix_fitness <- function() {
-	ggplot2::theme(
-		legend.title         = ggplot2::element_blank(),
-		legend.background    = ggplot2::element_blank(),
-		legend.position      = "top",
-		legend.box.spacing   = grid::unit(0, "points"),
-		strip.text           = ggplot2::element_blank(),
-		strip.background     = ggplot2::element_blank()
+theme_strain_fitness <- function(facet_strains = FALSE) {
+	output <- theme_microbimixr() +	ggplot2::theme(
+		# Simple legend on top
+		legend.position = "top",
+		legend.box.spacing = grid::unit(0, "points"),
+		legend.key.size = grid::unit(14, "points"),
 	)
+	if (is.logical(facet_strains) && facet_strains == TRUE) {
+		# No facet strips, more space between facets
+		output <- output + ggplot2::theme(
+			strip.text.x = ggplot2::element_blank(),
+			strip.background.x = ggplot2::element_blank(),
+			panel.spacing.x = grid::unit(8, "points"),
+		)
+	}
+	output
 }
+
+theme_total_fitness <- function() theme_microbimixr()
+
+theme_fitness_ratio <- function() theme_microbimixr()

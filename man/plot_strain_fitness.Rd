@@ -8,6 +8,7 @@ plot_strain_fitness(
   data,
   var_names = NULL,
   mix_scale = "fraction",
+  facet_strains = FALSE,
   xlab = NA,
   ylab = NA,
   xlim = c(NA, NA),
@@ -32,6 +33,8 @@ variables in \code{data}. If \code{NULL}, defaults to column names returned by
 frequency of strain A (proportion of total) from \code{initial_fraction_A}
 variable of data. \code{"ratio"} uses ratio of strain A to strain B (on
 \eqn{\log_{10}} scale) from \code{initial_ratio_A_B}.}
+
+\item{facet_strains}{\code{TRUE} to show data for each strain on separate subplots}
 
 \item{xlab, ylab}{X and y axis labels}
 
@@ -80,6 +83,7 @@ plot_strain_fitness(fitness_myxo)
 # Some plot options
 plot_strain_fitness(
   fitness_myxo,
+  facet_strains = TRUE,
   xlab = "Initial frequency of GVB206.3",
   ylab = "Sporulation efficiency\n(spores/cell)",
   color = c("black", "grey40"),

@@ -42,12 +42,10 @@ fitness_dicty |>
 #   approx linear on log-ratio mix scale
 
 # Better view of the strain effects
-dev.new(width = 4, height = 2.25)
+dev.new(width = 4, height = 2.5)
 fitness_dicty |>
 	filter(name_A == "NC105.1", name_B == "NC34.2") |>
-	plot_strain_fitness(ylab = "Spores/cell", ylim = c(0.2, 2.3)) +
-	facet_wrap(~ strain) +
-	theme(legend.position = "none")
+	plot_strain_fitness(ylab = "Spores/cell", facet_strains = TRUE)
 # Both strains make more spores when rare
 
 
@@ -85,7 +83,7 @@ fitness_focus <-
 	)
 
 # Plot fitness ratio
-dev.new(width = 6.4, height = 4.25, units = "in")
+dev.new(width = 6.5, height = 4.25, units = "in")
 fitness_focus |>
 	plot_fitness_ratio(
 		mix_scale = "ratio",
@@ -93,25 +91,40 @@ fitness_focus |>
 		ylab = "Relative sporulation success (top / right)"
 	) +
 	facet_grid(
-		rows = vars(name_B),
-		cols = vars(name_A),
+		cols = vars(name_A), rows = vars(name_B),
 		labeller = labeller(name_B = function(x) paste("+", x))
 	)
 # Strains NC69.1 & NC71.1 do worse than the others
 # and frequency dependence might be different shape
 
 # Plot strain fitness
-dev.new(width = 6.4, height = 4.25, units = "in")
+# dev.new(width = 6.5, height = 4.25, units = "in")
+# fitness_focus |>
+# 	plot_strain_fitness(
+# 		xlab = "Initial frequency of top strain",
+# 		ylab = "Spores/cell"
+# 	) +
+# 	facet_grid(
+# 		cols = vars(name_A), rows = vars(name_B),
+# 		labeller = labeller(name_B = function(x) paste("+", x))
+# 	) +
+# 	theme(
+# 		legend.position = "none",
+# 		strip.background = element_blank(),
+# 		strip.text = element_text(size = 9, face = "bold"),
+# 		strip.text.x = element_text(color = "tan4"),
+# 		strip.text.y = element_text(color = "lightsteelblue4"),
+# 	)
+
+# Plot strain fitness (facet by strain)
+dev.new(width = 6.5, height = 4.25, units = "in")
 fitness_focus |>
-	plot_strain_fitness(
-		ylab = "Sporulation success (spores/cell)", size = 1.2
-	) +
+	plot_strain_fitness(ylab = "Spores/cell", size = 1.2) +
 	scale_x_initial_fraction(
 		name = "Initial frequency of top strain", breaks = c(0, 0.5, 1)
 	) +
 	facet_grid(
-		cols = vars(name_A, strain),
-		rows = vars(name_B),
+		cols = vars(name_A, strain), rows = vars(name_B),
 		labeller = labeller(
 			name_B = function(x) paste("+", x),
 			strain = function(x) paste("")
@@ -119,9 +132,14 @@ fitness_focus |>
 	) +
 	theme(
 		legend.position = "none",
-		strip.text.x = element_text(color = "tan4", face = "bold"),
-		strip.text.y = element_text(color = "lightsteelblue4", face = "bold"),
-		strip.background = element_blank()
+		strip.background = element_blank(),
+		strip.text = element_text(size = 9, face = "bold"),
+		strip.text.x = element_text(color = "tan4"),
+		strip.text.y = element_text(color = "lightsteelblue4")
+	) +
+	geom_smooth(
+		method = "lm", formula = y ~ x, na.rm = TRUE,
+		se = FALSE, linewidth = 0.5
 	)
 
 # TODO:

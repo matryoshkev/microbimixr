@@ -197,6 +197,7 @@ plot_mix_fitness <- function(
 #'   frequency of strain A (proportion of total) from `initial_fraction_A`
 #'   variable of data. `"ratio"` uses ratio of strain A to strain B (on
 #'   \eqn{\log_{10}} scale) from `initial_ratio_A_B`.
+#' @param facet_strains `TRUE` to show data for each strain on separate subplots
 #' @param xlab,ylab X and y axis labels
 #' @param xlim,ylim X and y axis limits
 #' @param color Point colors
@@ -236,6 +237,7 @@ plot_mix_fitness <- function(
 #' # Some plot options
 #' plot_strain_fitness(
 #'   fitness_myxo,
+#'   facet_strains = TRUE,
 #'   xlab = "Initial frequency of GVB206.3",
 #'   ylab = "Sporulation efficiency\n(spores/cell)",
 #'   color = c("black", "grey40"),
@@ -250,6 +252,7 @@ plot_strain_fitness <- function(
 	data,
 	var_names = NULL,
 	mix_scale = "fraction",
+	facet_strains = FALSE,
 	xlab = NA,
 	ylab = NA,
 	xlim = c(NA, NA),
@@ -312,15 +315,17 @@ plot_strain_fitness <- function(
 	}
 	point_args <- get_point_args(shape = shape, size = size, drop_NA = drop_NA)
 
-	# Make plot
+	# Make base plot
 	fig_output <-
 		ggplot2::ggplot(data_to_plot) +
 		ggplot2::aes(y = .data$fitness, color = .data$strain, fill = .data$strain) +
-		theme_microbimixr() +
+		theme_strain_fitness(facet_strains = facet_strains) +
 		scale_y_fitness(name = ylab, limits = ylim) +
 		do.call(geom_point_overlap, point_args) +
-		ggplot2::scale_color_manual(values = color) +
-		ggplot2::scale_fill_manual(values = fill)
+		ggplot2::scale_color_manual(values = color, name = "") +
+		ggplot2::scale_fill_manual(values = fill, name = "")
+
+	# Add x-axis
 	fig_output <- fig_output |>
 		add_mix_axis(
 			mix_scale = mix_scale,
@@ -329,6 +334,11 @@ plot_strain_fitness <- function(
 			xlab = xlab,
 			xlim = xlim
 		)
+
+	# Show strains on separate subplots
+	if (is.logical(facet_strains) && facet_strains == TRUE) {
+		fig_output <- fig_output + ggplot2::facet_wrap(~ strain, nrow = 1)
+	}
 
 	fig_output
 }
@@ -437,7 +447,7 @@ plot_total_fitness <- function(
 	fig_output <-
 		ggplot2::ggplot(data) +
 		ggplot2::aes(y = .data[[var_names$fitness_total]]) +
-		theme_microbimixr() +
+		theme_total_fitness() +
 		scale_y_fitness_total(name = ylab, limits = ylim) +
 		do.call(geom_point_overlap, point_args)
 	fig_output <- fig_output |>
@@ -562,7 +572,7 @@ plot_fitness_ratio <- function(
 	fig_output <-
 		ggplot2::ggplot(data) +
 		ggplot2::aes(y = .data[[var_names$fitness_ratio_A_B]]) +
-		theme_microbimixr() +
+		theme_fitness_ratio() +
 		scale_y_fitness_ratio(name = ylab, limits = ylim) +
 		do.call(geom_point_overlap, point_args)
 	fig_output <- fig_output |>
@@ -603,7 +613,7 @@ plot_fitness_strain_total <- function(
 	)
 	var_names$fitness <- "fitness"
 	strain_names <- get_strain_names(data, var_names)
-	name_total <- "Total"
+	name_total <- "total"
 
 	# Point options
 	if (is_waiver(color) || is.null(color)) {
@@ -643,12 +653,11 @@ plot_fitness_strain_total <- function(
 	fig_output <-
 		ggplot2::ggplot(data_for_plot) +
 		ggplot2::aes(y = .data$fitness, color = .data$strain, fill = .data$strain) +
-		theme_microbimixr() +
-		theme_plot_mix_fitness() +
+		theme_strain_fitness(facet_strains = TRUE) +
 		scale_y_fitness(limits = ylim) +
 		do.call(geom_point_overlap, point_args) +
-		ggplot2::scale_color_manual(values = color, na.value = NA) +
-		ggplot2::scale_fill_manual(values = fill, na.value = NA) +
+		ggplot2::scale_color_manual(values = color, na.value = NA, name = "") +
+		ggplot2::scale_fill_manual(values = fill, na.value = NA, name = "") +
 		ggplot2::facet_wrap(~ my_facet, nrow = 1)
 	fig_output <- fig_output |>
 		add_mix_axis(
@@ -929,8 +938,8 @@ check_fitness_values <- function(
 		var_name <- var_names[[var]]
 
 		# Fitness < 0 not biologically meaningful
-		if (any(data[[var_name]] < 0, na.rm = TRUE)) {
-			data[data[[var_name]] < 0, var_name] <- NA
+		if (any(!is.na(data[[var_name]]) & data[[var_name]] < 0)) {
+			data[!is.na(data[[var_name]]) & data[[var_name]] < 0, var_name] <- NA
 			rlang::warn(
 				paste("Some", var_name, "values < 0 -- not biologically meaningful"),
 				call = call(caller)
