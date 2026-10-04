@@ -24,7 +24,7 @@ URL: https://matryoshkev.github.io/microbimixr/, https://github.com/matryoshkev/
 BugReports: https://github.com/matryoshkev/microbimixr/issues
 LazyData: true
 Depends: 
-    R (>= 3.5)
+    R (>= 4.1)
 Imports: 
     ggplot2,
     scales,
