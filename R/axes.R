@@ -57,9 +57,9 @@ scale_x_initial_fraction <- function(
 	...
 ) {
 	if (is_waiver(name)) {name <- paste("Initial frequency strain A")}
-	if (is.null(limits)) {limits <- limits_fraction}
+	if (is.null(limits)) {limits <- limits_fraction()}
 	if (is_waiver(breaks)) {breaks <- seq(-0.2, 1.2, by = 0.2)}
-	if (is_waiver(labels)) {labels <- labels_fraction}
+	if (is_waiver(labels)) {labels <- label_fraction()}
 	ggplot2::scale_x_continuous(
 		name = name,
 		limits = limits,
@@ -130,9 +130,9 @@ scale_x_initial_ratio <- function(
 	...
 ) {
 	if (is_waiver(name)) {name <- "Initial strain ratio A/B"}
-	if (is.null(limits)) {limits <- limits_log10}
-	if (is_waiver(breaks)) {breaks <- breaks_log10}
-	if (is_waiver(labels)) {labels <- labels_log10}
+	if (is.null(limits)) {limits <- limits_log10()}
+	if (is_waiver(breaks)) {breaks <- breaks_log10()}
+	if (is_waiver(labels)) {labels <- label_log10()}
 	ggplot2::scale_x_log10(
 		name = name,
 		limits = limits,
@@ -198,10 +198,12 @@ scale_y_fitness <- function(
 	if (is_waiver(name)) {
 		name <- "Wrightian fitness\n (final no. / initial no.)"
 	}
-	if (is.null(limits)) {limits <- limits_log10}
-	if (is_waiver(breaks)) {breaks <- breaks_log10}
-	if (is_waiver(labels)) {labels <- labels_log10}
-	if (is_waiver(minor_breaks)) {minor_breaks <- minor_breaks_log10}
+	if (is.null(limits)) {limits <- limits_log10()}
+	if (is_waiver(breaks)) {breaks <- breaks_log10()}
+	if (is_waiver(labels)) {labels <- label_log10()}
+	if (is_waiver(minor_breaks)) {
+		minor_breaks <- breaks_log10(n_min = 6, n_max = 17)
+	}
 	ggplot2::scale_y_log10(
 		name = name,
 		limits = limits,
@@ -340,10 +342,12 @@ scale_y_fitness_ratio <- function(
 	...
 ) {
 	if (is_waiver(name)) {name <-	"Fitness ratio\n strain A / strain B"}
-	if (is.null(limits)) {limits <- limits_log10}
-	if (is_waiver(breaks)) {breaks <- breaks_log10}
-	if (is_waiver(labels)) {labels <- labels_log10}
-	if (is_waiver(minor_breaks)) {minor_breaks <- minor_breaks_log10}
+	if (is.null(limits)) {limits <- limits_log10()}
+	if (is_waiver(breaks)) {breaks <- breaks_log10()}
+	if (is_waiver(labels)) {labels <- label_log10()}
+	if (is_waiver(minor_breaks)) {
+		minor_breaks <- breaks_log10(n_min = 6, n_max = 16)
+	}
 	ggplot2::scale_y_log10(
 		name = name,
 		limits = limits,
@@ -356,83 +360,103 @@ scale_y_fitness_ratio <- function(
 
 
 # Axis helpers =================================================================
-
-# Expand ggplot's automatic limits for fraction scales to include zero and one
-#   so plot won't drop points slightly outside [0, 1]
-limits_fraction <- function(limits) {
-	range(c(limits, 0, 1))
-}
-
-# Expand ggplot's automatic limits for logarithmic scales
-limits_log10 <- function(limits) {
-	# Include 1
-	limits <- c(limits, 1)
-
-	# Minimum 10-fold range
-	log10_range <- range(log10(limits))
-	if (max(log10_range) - min(log10_range) < 1) {
-		midpoint <- mean(log10_range)
-		limits <- 10^c(midpoint - 0.5, midpoint + 0.5)
-	}
-
-	range(limits)
-}
-
-# Breaks for log10 axes
-#   Assumes limits include 1
-breaks_log10 <- function(values, n_min = 4, n_max = 6) {
-	log_range <- log10(range(values, na.rm = TRUE))
-	candidates <- list(
-		10^seq(-n_max * 4, n_max * 4, by = 4),
-		10^seq(-n_max * 3, n_max * 3, by = 3),
-		10^seq(-n_max * 2, n_max * 2, by = 2),
-		10^seq(-n_max * 1, n_max * 1, by = 1),
-		as.vector(outer(c(1, 3), 10^{-3:3})),
-		as.vector(outer(c(1, 2, 5), 10^{-2:2})),
-		as.vector(outer(c(1, 2, 3, 5), 10^{-2:2}))
-	)
-	for (breaks in candidates) {
-		breaks_shown <- (breaks >= 10^log_range[1]) & (breaks <= 10^log_range[2])
-		if (sum(breaks_shown) >= n_min) return(breaks)
-	}
-	return(1)
-}
-
-# Minor breaks for log10 axes
-minor_breaks_log10 <- function(limits) {
-	limits_range <- log10(range(limits, na.rm = TRUE))
-	span <- limits_range[2] - limits_range[1]
-	if (span < 3) {
-		breaks <- rep(1:9, 6) * 10^sort(rep(-3:2, 9))
-	} else if (span < 6) {
-		breaks <- 3 * 10^c(-6:6)
-	} else if (span < 12) {
-		breaks <- 10^c(-12:12)
-	} else {
-		breaks <- 10^seq(-20, 20, by = 2)
-	}
-	breaks
-}
-
-# Labels for fraction axes with simple 0 and 1
-labels_fraction <- function(breaks) {
-	scales::number(breaks, drop0trailing = TRUE)
-}
-
-# Labels for log10 axes
-labels_log10 <- function(breaks) {
-	if (max(abs(log10(breaks)), na.rm = TRUE) >= 3) {
-		# 10^n notation except for 1
-		sapply(breaks, function(x) {
-			ifelse(x == 1, "1", paste0("10^", log10(x)))
-		}) |>
-		parse(text = _)
-	} else {
-		# Clean integer/decimal if all breaks between 0.01 and 100
-		scales::number(breaks, drop0trailing = TRUE)
-	}
-}
+# Limits, breaks, and label functions return functions
+# like their counterparts in the scales package
 
 # Test for ggplot2 waiver object
 is_waiver <- function(x) inherits(x, "waiver")
 
+# Evaluate all arguments
+force_all <- function(...) list(...)
+
+# Expand ggplot's automatic limits for fraction scales
+#   to include zero and one
+#   so plot won't drop points slightly outside [0, 1]
+limits_fraction <- function(limits) {
+	function(limits = limits) {
+		range(c(limits, 0, 1), na.rm = TRUE, finite = TRUE)
+	}
+}
+
+# Expand ggplot's automatic limits for logarithmic scales
+#   to include 1 and span minimum 10-fold range
+limits_log10 <- function(limits) {
+	function(limits = limits) {
+		limits <- c(limits, 1)
+		log10_range <- range(log10(limits))
+		if (max(log10_range) - min(log10_range) < 1) {
+			midpoint <- mean(log10_range)
+			limits <- 10^c(midpoint - 0.5, midpoint + 0.5)
+		}
+		range(limits)
+	}
+}
+
+# Get breaks for log10 axes
+#   Assumes value range includes 1
+breaks_log10 <- function(n_min = 4, n_max = 6) {
+	force_all(n_min, n_max)
+	min_default <- n_min
+	max_default <- n_max
+	function(
+		limits, major_breaks = NULL, n_min = min_default, n_max = max_default
+	) {
+		log_range <- log10(range(limits, na.rm = TRUE))
+		candidates <- list(
+			# Order is important here
+			10^seq(-n_max * 1, n_max * 1, by = 1),
+			10^seq(-n_max * 2, n_max * 2, by = 2),
+			10^seq(-n_max * 3, n_max * 3, by = 3),
+			10^seq(-n_max * 4, n_max * 4, by = 4),
+			as.vector(outer(c(1, 3), 10^{-3:3})),
+			as.vector(outer(c(1, 2, 5), 10^{-2:2})),
+			as.vector(outer(c(1, 2, 3, 5), 10^{-2:2})),
+			as.vector(outer(1:9, 10^{-1:1}))
+		)
+		for (breaks in candidates) {
+			is_shown <- (breaks >= 10^log_range[1]) & (breaks <= 10^log_range[2])
+			if (sum(is_shown) >= n_min & sum(is_shown) <= n_max) {
+				return(breaks)
+			}
+		}
+		return(1)
+	}
+}
+
+# Minor breaks for log10 axes
+#   Now using breaks_log10() with different n_min, n_max
+# minor_breaks_log10 <- function(limits) {
+# 	limits_range <- log10(range(limits, na.rm = TRUE))
+# 	span <- limits_range[2] - limits_range[1]
+# 	if (span < 3) {
+# 		breaks <- rep(1:9, 6) * 10^sort(rep(-3:2, 9))
+# 	} else if (span < 6) {
+# 		breaks <- 3 * 10^c(-6:6)
+# 	} else if (span < 12) {
+# 		breaks <- 10^c(-12:12)
+# 	} else {
+# 		breaks <- 10^seq(-20, 20, by = 2)
+# 	}
+# 	breaks
+# }
+
+# Labels for fraction axes with simple 0 and 1
+label_fraction <- function() {
+	function(breaks) scales::number(breaks, drop0trailing = TRUE)
+}
+
+# Labels for log10 axes
+label_log10 <- function() {
+	function(breaks) {
+		if (max(abs(log10(breaks)), na.rm = TRUE) >= 3) {
+			# 10^n notation except for 1
+			sapply(breaks, function(x) {
+				ifelse(x == 1, "1", paste0("10^", log10(x)))
+			}) |>
+			parse(text = _)
+		} else {
+			# Clean integer/decimal if all breaks between 0.01 and 100
+			scales::number(breaks, drop0trailing = TRUE)
+		}
+	}
+}

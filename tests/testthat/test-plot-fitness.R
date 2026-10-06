@@ -3,10 +3,10 @@
 test_that("plot functions run defaults", {
 	fitness_myxo <- calculate_mix_fitness(data_smith_2010, var_names_smith_2010)
 	expect_no_error({
+		plot_mix_fitness(fitness_myxo)
 		plot_strain_fitness(fitness_myxo)
 		plot_total_fitness(fitness_myxo)
 		plot_fitness_ratio(fitness_myxo)
-		plot_mix_fitness(fitness_myxo)
 	})
 })
 
