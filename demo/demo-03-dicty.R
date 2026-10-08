@@ -97,31 +97,13 @@ fitness_focus |>
 # Strains NC69.1 & NC71.1 do worse than the others
 # and frequency dependence might be different shape
 
-# Plot strain fitness
-# dev.new(width = 6.5, height = 4.25, units = "in")
-# fitness_focus |>
-# 	plot_strain_fitness(
-# 		xlab = "Initial frequency of top strain",
-# 		ylab = "Spores/cell"
-# 	) +
-# 	facet_grid(
-# 		cols = vars(name_A), rows = vars(name_B),
-# 		labeller = labeller(name_B = function(x) paste("+", x))
-# 	) +
-# 	theme(
-# 		legend.position = "none",
-# 		strip.background = element_blank(),
-# 		strip.text = element_text(size = 9, face = "bold"),
-# 		strip.text.x = element_text(color = "tan4"),
-# 		strip.text.y = element_text(color = "lightsteelblue4"),
-# 	)
-
 # Plot strain fitness (facet by strain)
 dev.new(width = 6.5, height = 4.25, units = "in")
 fitness_focus |>
-	plot_strain_fitness(ylab = "Spores/cell", size = 1.2) +
+	plot_strain_fitness(ylab = "Spores/cell", size = 1.2, shape = 16) +
 	scale_x_initial_fraction(
-		name = "Initial frequency of top strain", breaks = c(0, 0.5, 1)
+		name = "Initial frequency of top strain",
+		breaks = c(0, 1), minor_breaks = c(0, 0.5, 1)
 	) +
 	facet_grid(
 		cols = vars(name_A, strain), rows = vars(name_B),
@@ -133,13 +115,9 @@ fitness_focus |>
 	theme(
 		legend.position = "none",
 		strip.background = element_blank(),
-		strip.text = element_text(size = 9, face = "bold"),
-		strip.text.x = element_text(color = "tan4"),
-		strip.text.y = element_text(color = "lightsteelblue4")
-	) +
-	geom_smooth(
-		method = "lm", formula = y ~ x, na.rm = TRUE,
-		se = FALSE, linewidth = 0.5
+		strip.text = element_text(size = 9),
+		strip.text.x = element_text(color = "#AB6C02"),
+		strip.text.y = element_text(color = "#00259E")
 	)
 
 # TODO:

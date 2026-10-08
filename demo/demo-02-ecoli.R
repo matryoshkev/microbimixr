@@ -42,6 +42,7 @@ fitness_ecoli
 # noise in flow cytometry
 
 # A lot of data, so first let's just look at one treatment combination
+dev.new()
 fitness_ecoli |>
 	dplyr::filter(ampicillin == 100 & dilution == 100) |>
 	plot_mix_fitness()

@@ -32,6 +32,7 @@ fitness_myxo
 # Fitness here is spores/cell
 
 # Compare fitness measures
+dev.new()
 plot_mix_fitness(fitness_myxo)
 
 # Group measures appear most informative/convenient:
