@@ -3,6 +3,7 @@
 # Dependencies
 library(dplyr)    # Data handling that makes code easier to read
 library(ggplot2)  # Graphics package
+library(ggh4x)    # Nested facets in plots
 
 
 # Calculate and compare fitness measures ---------------------------------------
@@ -101,16 +102,20 @@ fitness_focus |>
 dev.new(width = 6.5, height = 4.25, units = "in")
 fitness_focus |>
 	plot_strain_fitness(ylab = "Spores/cell", size = 1.2, shape = 16) +
+	ggh4x::facet_nested(
+		cols = vars(name_A, strain), rows = vars(name_B),
+		labeller = labeller(name_B = function(x) paste("+", x)),
+		strip = ggh4x::strip_nested(
+			by_layer_x = TRUE,
+			size = "variable",
+			text_x = ggh4x::elem_list_text(
+				size = c(NA, 0), margin = list(NA, margin(0, 0, 0, 0))
+			)
+		)
+	) +
 	scale_x_initial_fraction(
 		name = "Initial frequency of top strain",
 		breaks = c(0, 1), minor_breaks = c(0, 0.5, 1)
-	) +
-	facet_grid(
-		cols = vars(name_A, strain), rows = vars(name_B),
-		labeller = labeller(
-			name_B = function(x) paste("+", x),
-			strain = function(x) paste("")
-		)
 	) +
 	theme(
 		legend.position = "none",
@@ -119,7 +124,4 @@ fitness_focus |>
 		strip.text.x = element_text(color = "#AB6C02"),
 		strip.text.y = element_text(color = "#00259E")
 	)
-
-# TODO:
-# Needs cleaner top labels, nested spacing. Try ggh4x::facet_nested()
-
+# NC69.1 & NC71.1 make fewer spores in mixes. Other strains make more.
