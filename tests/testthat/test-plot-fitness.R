@@ -89,545 +89,245 @@ test_that("plot functions list variables missing in var_names", {
 		fitness_total = 15,
 		fitness_ratio_A_B = 10/20
 	)
-	strains <- c(name_A = "Strain A", name_B = "Strain B")
+	my_vars <- fitness_vars_default()
 
-	# Compare fitness measures
-	expect_error(
-		plot_mix_fitness(fitness_data, var_names = c(strains,
-			# initial_fraction_A = "initial_fraction_A",
-			initial_ratio_A_B = "initial_ratio_A_B",
-			fitness_A = "fitness_A",
-			fitness_B = "fitness_B",
-			fitness_total = "fitness_total",
-			fitness_ratio_A_B = "fitness_ratio_A_B"
-		)),
-		regexp = "not found in"
-	)
-	expect_error(
-		plot_mix_fitness(fitness_data, var_names = c(strains,
-			initial_fraction_A = "initial_fraction_A",
-			# initial_ratio_A_B = "initial_ratio_A_B",
-			fitness_A = "fitness_A",
-			fitness_B = "fitness_B",
-			fitness_total = "fitness_total",
-			fitness_ratio_A_B = "fitness_ratio_A_B"
-		)),
-		regexp = "not found in"
-	)
-	expect_error(
-		plot_mix_fitness(fitness_data, var_names = c(strains,
-			initial_fraction_A = "initial_fraction_A",
-			initial_ratio_A_B = "initial_ratio_A_B",
-			# fitness_A = "fitness_A",
-			fitness_B = "fitness_B",
-			fitness_total = "fitness_total",
-			fitness_ratio_A_B = "fitness_ratio_A_B"
-		)),
-		regexp = "not found in"
-	)
-	expect_error(
-		plot_mix_fitness(fitness_data, var_names = c(strains,
-			initial_fraction_A = "initial_fraction_A",
-			initial_ratio_A_B = "initial_ratio_A_B",
-			fitness_A = "fitness_A",
-			# fitness_B = "fitness_B",
-			fitness_total = "fitness_total",
-			fitness_ratio_A_B = "fitness_ratio_A_B"
-		)),
-		regexp = "not found in"
-	)
-	expect_error(
-		plot_mix_fitness(fitness_data, var_names = c(strains,
-			initial_fraction_A = "initial_fraction_A",
-			initial_ratio_A_B = "initial_ratio_A_B",
-			fitness_A = "fitness_A",
-			fitness_B = "fitness_B",
-			# fitness_total = "fitness_total",
-			fitness_ratio_A_B = "fitness_ratio_A_B"
-		)),
-		regexp = "not found in"
-	)
-	expect_error(
-		plot_mix_fitness(fitness_data, var_names = c(strains,
-			initial_fraction_A = "initial_fraction_A",
-			initial_ratio_A_B = "initial_ratio_A_B",
-			fitness_A = "fitness_A",
-			fitness_B = "fitness_B",
-			fitness_total = "fitness_total"
-			# fitness_ratio_A_B = "fitness_ratio_A_B"
-		)),
-		regexp = "not found in"
-	)
-	expect_error(
-		plot_mix_fitness(fitness_data, var_names = strains),
-		regexp = "not found in"
-	)
+	# Comparing fitness measures
+	for (i in 3:length(my_vars)) {
+		expect_error(regexp = "not found in var_names",
+			plot_mix_fitness(fitness_data, my_vars[-i])
+		)
+	}
 
 	# Strain fitness
-	expect_error(
-		plot_strain_fitness(fitness_data, var_names = c(strains,
-			# initial_fraction_A = "initial_fraction_A",
-			fitness_A = "fitness_A",
-			fitness_B = "fitness_B"
-		)),
-		regexp = "not found in"
-	)
-	expect_error(
-		plot_strain_fitness(fitness_data, mix_scale = "ratio", var_names = c(strains,
-			# initial_ratio_A_B = "initial_ratio_A_B",
-			fitness_A = "fitness_A",
-			fitness_B = "fitness_B"
-		)),
-		regexp = "not found in"
-	)
-	expect_error(
-		plot_strain_fitness(fitness_data, var_names = c(strains,
-			initial_fraction_A = "initial_fraction_A",
-			# fitness_A = "fitness_A",
-			fitness_B = "fitness_B"
-		)),
-		regexp = "not found in"
-	)
-	expect_error(
-		plot_strain_fitness(fitness_data, var_names = c(strains,
-			initial_fraction_A = "initial_fraction_A",
-			fitness_A = "fitness_A"
-			# fitness_B = "fitness_B"
-		)),
-		regexp = "not found in"
-	)
-	expect_error(
-		plot_strain_fitness(fitness_data, var_names = strains),
-		regexp = "not found in"
+	for (i in c("initial_fraction_A", "fitness_A", "fitness_B")) {
+		expect_error(regexp = "not found in var_names",
+			plot_strain_fitness(fitness_data, my_vars[names(my_vars) != i])
+		)
+	}
+	expect_error(regexp = "not found in var_names",
+		plot_strain_fitness(
+			fitness_data,
+			my_vars[names(my_vars) != "initial_ratio_A_B"],
+			mix_scale = "ratio"
+		)
 	)
 
 	# Total fitness
-	expect_error(
-		plot_total_fitness(fitness_data, var_names = c(strains,
-			# initial_fraction_A = "initial_fraction_A",
-			fitness_total = "fitness_total"
-		)),
-		regexp = "not found in"
-	)
-	expect_error(
-		plot_total_fitness(fitness_data, mix_scale = "ratio",
-			var_names = c(strains,
-				# initial_ratio_A_B = "initial_ratio_A_B",
-				fitness_total = "fitness_total"
-			)
-		),
-		regexp = "not found in"
-	)
-	expect_error(
-		plot_total_fitness(fitness_data, var_names = c(strains,
-			initial_fraction_A = "initial_fraction_A"
-			# fitness_total = "fitness_total"
-		)),
-		regexp = "not found in"
-	)
-	expect_error(
-		plot_total_fitness(fitness_data, var_names = strains),
-		regexp = "not found in"
+	for (i in c("initial_fraction_A", "fitness_total")) {
+		expect_error(regexp = "not found in var_names",
+			plot_total_fitness(fitness_data, my_vars[names(my_vars) != i])
+		)
+	}
+	expect_error(regexp = "not found in var_names",
+		plot_total_fitness(
+			fitness_data,
+			my_vars[names(my_vars) != "initial_ratio_A_B"],
+			mix_scale = "ratio"
+		)
 	)
 
 	# Fitness ratio
-	expect_error(
-		plot_fitness_ratio(fitness_data, var_names = c(strains,
-			# initial_fraction_A = "initial_fraction_A",
-			fitness_ratio_A_B = "fitness_ratio_A_B"
-		)),
-		regexp = "not found in"
-	)
-	expect_error(
-		plot_fitness_ratio(fitness_data, mix_scale = "ratio",
-			var_names = c(strains,
-				# initial_ratio_A_B = "initial_ratio_A_B",
-				fitness_ratio_A_B = "fitness_ratio_A_B"
-			)
-		),
-		regexp = "not found in"
-	)
-	expect_error(
-		plot_fitness_ratio(fitness_data, var_names = c(strains,
-			# initial_fraction_A = "initial_fraction_A",
-			fitness_ratio_A_B = "fitness_ratio_A_B"
-		)),
-		regexp = "not found in"
-	)
-	expect_error(
-		plot_fitness_ratio(fitness_data, var_names = strains),
-		regexp = "not found in"
+	for (i in c("initial_fraction_A", "fitness_ratio_A_B")) {
+		expect_error(regexp = "not found in var_names",
+			plot_fitness_ratio(fitness_data, my_vars[names(my_vars) != i])
+		)
+	}
+	expect_error(regexp = "not found in var_names",
+		plot_fitness_ratio(
+			fitness_data,
+			my_vars[names(my_vars) != "initial_ratio_A_B"],
+			mix_scale = "ratio"
+		)
 	)
 })
 
 test_that("plot functions report missing data columns", {
-	# Compare fitness measures
-	expect_error(
-		plot_mix_fitness(var_names = fitness_vars_default(), data = data.frame(
-			# initial_fraction_A = 0.5,
-			initial_ratio_A_B = 1,
-			fitness_A = 5,
-			fitness_B = 10,
-			fitness_total = 10,
-			fitness_ratio_A_B = 10
-		)),
-		regexp = "not found in"
+	data <- data.frame(
+		initial_fraction_A = 0.5,
+		initial_ratio_A_B = 1,
+		fitness_A = 10,
+		fitness_B = 20,
+		fitness_total = 15,
+		fitness_ratio_A_B = 10/20
 	)
-	expect_error(
-		plot_mix_fitness(var_names = fitness_vars_default(), data = data.frame(
-			initial_fraction_A = 0.5,
-			# initial_ratio_A_B = 1,
-			fitness_A = 5,
-			fitness_B = 10,
-			fitness_total = 10,
-			fitness_ratio_A_B = 10
-		)),
-		regexp = "not found in"
-	)
-	expect_error(
-		plot_mix_fitness(var_names = fitness_vars_default(), data = data.frame(
-			initial_fraction_A = 0.5,
-			initial_ratio_A_B = 1,
-			# fitness_A = 5,
-			fitness_B = 10,
-			fitness_total = 10,
-			fitness_ratio_A_B = 10
-		)),
-		regexp = "not found in"
-	)
-	expect_error(
-		plot_mix_fitness(var_names = fitness_vars_default(), data = data.frame(
-			initial_fraction_A = 0.5,
-			initial_ratio_A_B = 1,
-			fitness_A = 5,
-			# fitness_B = 10,
-			fitness_total = 10,
-			fitness_ratio_A_B = 10
-		)),
-		regexp = "not found in"
-	)
-	expect_error(
-		plot_mix_fitness(var_names = fitness_vars_default(), data = data.frame(
-			initial_fraction_A = 0.5,
-			initial_ratio_A_B = 1,
-			fitness_A = 5,
-			fitness_B = 10,
-			# fitness_total = 10,
-			fitness_ratio_A_B = 10
-		)),
-		regexp = "not found in"
-	)
-	expect_error(
-		plot_mix_fitness(var_names = fitness_vars_default(), data = data.frame(
-			initial_fraction_A = 0.5,
-			initial_ratio_A_B = 1,
-			fitness_A = 5,
-			fitness_B = 10,
-			fitness_total = 10
-			# fitness_ratio_A_B = 10
-		)),
-		regexp = "not found in"
-	)
-	expect_error(
-		plot_mix_fitness(var_names = fitness_vars_default(), data = data.frame()),
-		regexp = "not found in"
-	)
+	var_names <- fitness_vars_default()
+
+	# Comparing fitness measures
+	for (i in 1:length(data)) {
+		expect_error(regexp = "not found in data",
+			plot_mix_fitness(data[-i], var_names)
+		)
+	}
 
 	# Strain fitness
-	expect_error(
+	for (i in c("initial_fraction_A", "fitness_A", "fitness_B")) {
+		expect_error(regexp = "not found in data",
+			plot_strain_fitness(data[names(data) != i], var_names)
+		)
+	}
+	expect_error(regexp = "not found in data",
 		plot_strain_fitness(
-			data.frame(fitness_A = 5, fitness_B = 10),
-			var_names = fitness_vars_default()
-		),
-		regexp = "not found in"
-	)
-	expect_error(
-		plot_strain_fitness(
-			data.frame(fitness_A = 5, fitness_B = 10),
-			var_names = fitness_vars_default(),
+			data[names(data) != "initial_ratio_A_B"],
+			var_names = var_names,
 			mix_scale = "ratio"
-		),
-		regexp = "not found in"
-	)
-	expect_error(
-		plot_strain_fitness(
-			data.frame(fitness_B = 10, initial_fraction_A = 0.5),
-			var_names = fitness_vars_default()
-		),
-		regexp = "not found in"
-	)
-	expect_error(
-		plot_strain_fitness(
-			data.frame(fitness_A = 5, initial_fraction_A = 0.5),
-			var_names = fitness_vars_default()
-		),
-		regexp = "not found in"
-	)
-	expect_error(
-		plot_strain_fitness(data.frame(), var_names = fitness_vars_default()),
-		regexp = "not found in"
+		)
 	)
 
 	# Total fitness
-	expect_error(
+	for (i in c("initial_fraction_A", "fitness_total")) {
+		expect_error(regexp = "not found in data",
+			plot_total_fitness(data[names(data) != i], var_names)
+		)
+	}
+	expect_error(regexp = "not found in data",
 		plot_total_fitness(
-			data.frame(fitness_total = 10),
-			var_names = fitness_vars_default()
-		),
-		regexp = "not found in"
-	)
-	expect_error(
-		plot_total_fitness(
-			data.frame(fitness_total = 10),
-			var_names = fitness_vars_default(),
+			data[names(data) != "initial_ratio_A_B"],
+			var_names = var_names,
 			mix_scale = "ratio"
-		),
-		regexp = "not found in"
-	)
-	expect_error(
-		plot_total_fitness(
-			data.frame(initial_fraction_A = 0.5),
-			var_names = fitness_vars_default()
-		),
-		regexp = "not found in"
-	)
-	expect_error(
-		plot_total_fitness(data.frame(), var_names = fitness_vars_default()),
-		regexp = "not found in"
+		)
 	)
 
 	# Fitness ratio
-	expect_error(
+	for (i in c("initial_fraction_A", "fitness_ratio_A_B")) {
+		expect_error(regexp = "not found in data",
+			plot_fitness_ratio(data[names(data) != i], var_names)
+		)
+	}
+	expect_error(regexp = "not found in data",
 		plot_fitness_ratio(
-			data.frame(fitness_ratio_A_B = 5),
-			var_names = fitness_vars_default()
-		),
-		regexp = "not found in"
-	)
-	expect_error(
-		plot_fitness_ratio(
-			data.frame(fitness_ratio_A_B = 0.5),
-			var_names = fitness_vars_default(),
+			data[names(data) != "initial_ratio_A_B"],
+			var_names = var_names,
 			mix_scale = "ratio"
-		),
-		regexp = "not found in"
-	)
-	expect_error(
-		plot_fitness_ratio(
-			data.frame(initial_fraction_A = 0.5),
-			var_names = fitness_vars_default()
-		),
-		regexp = "not found in"
-	)
-	expect_error(
-		plot_fitness_ratio(
-			data.frame(),
-			var_names = fitness_vars_default()
-		),
-		regexp = "not found in"
+		)
 	)
 })
 
 test_that("plot functions warn about nonsensical fitness values < 0", {
+	# Wrightian fitness defined over [0, Inf]
+	good_data <- data.frame(
+		initial_fraction_A = 0.5,
+		initial_ratio_A_B = 0.5,
+		fitness_A = 1,
+		fitness_B = 1,
+		fitness_total = 1,
+		fitness_ratio_A_B = 1
+	)
 	var_names <- fitness_vars_default()
-	names(var_names) <- fitness_vars_default()
+	for (i in c("fitness_A", "fitness_B", "fitness_total", "fitness_ratio_A_B")) {
+		bad_data <- good_data
+		bad_data[[i]] <- bad_data[[i]] * -1
+		expect_warning(regexp = "biologically meaningful", {
+			plot_mix_fitness(bad_data, var_names)
+		})
+	}
 	expect_warning(regexp = "biologically meaningful", {
-		plot_mix_fitness(var_names = var_names, data.frame(
-			initial_fraction_A = 0.1,
-			initial_ratio_A_B = 0.1,
-			fitness_A = -2,
-			fitness_B = 1,
-			fitness_total = 1,
-			fitness_ratio_A_B = 1
-		))
-	})
-	expect_warning(regexp = "biologically meaningful", {
-		plot_mix_fitness(var_names = var_names, data.frame(
-			initial_fraction_A = 0.1,
-			initial_ratio_A_B = 0.1,
-			fitness_A = 1,
-			fitness_B = -2,
-			fitness_total = 1,
-			fitness_ratio_A_B = 1
-		))
-	})
-	expect_warning(regexp = "biologically meaningful", {
-		plot_mix_fitness(var_names = var_names, data.frame(
-			initial_fraction_A = 0.1,
-			initial_ratio_A_B = 0.1,
-			fitness_A = 1,
-			fitness_B = 1,
-			fitness_total = -2,
-			fitness_ratio_A_B = 1
-		))
-	})
-	expect_warning(regexp = "biologically meaningful", {
-		plot_mix_fitness(var_names = var_names, data.frame(
-			initial_fraction_A = 0.1,
-			initial_ratio_A_B = 0.1,
-			fitness_A = 1,
-			fitness_B = 1,
-			fitness_total = 1,
-			fitness_ratio_A_B = -2
+		plot_strain_fitness(var_names = var_names, data.frame(
+			initial_fraction_A = 0.5, fitness_A = -1, fitness_B = 1
 		))
 	})
 	expect_warning(regexp = "biologically meaningful", {
 		plot_strain_fitness(var_names = var_names, data.frame(
-			initial_fraction_A = 0.1, fitness_A = -2, fitness_B = 1
-		))
-	})
-	expect_warning(regexp = "biologically meaningful", {
-		plot_strain_fitness(var_names = var_names, data.frame(
-			initial_fraction_A = 0.1, fitness_A = 1, fitness_B = -2
+			initial_fraction_A = 0.5, fitness_A = 1, fitness_B = -1
 		))
 	})
 	expect_warning(regexp = "biologically meaningful", {
 		plot_total_fitness(var_names = var_names, data.frame(
-			initial_fraction_A = 0.1, fitness_total = -2
+			initial_fraction_A = 0.5, fitness_total = -1
 		))
 	})
 	expect_warning(regexp = "biologically meaningful", {
 		plot_fitness_ratio(var_names = var_names, data.frame(
-			initial_fraction_A = 0.1, fitness_ratio_A_B = -2
+			initial_fraction_A = 0.5, fitness_ratio_A_B = -1
 		))
 	})
 })
 
+# TODO: Mix fraction not in [0, 1]
+# TODO: Mix ratio < 0
+
+
+# Unplottable data -------------------------------------------------------------
+# with informative errors, warnings, and messages
+
 test_that("plot functions warn about fitness zeros", {
+	fitness <- data.frame(
+		initial_fraction_A = 0.5,
+		initial_ratio_A_B = 0.5,
+		fitness_A = 1,
+		fitness_B = 1,
+		fitness_total = 1,
+		fitness_ratio_A_B = 1
+	)
 	var_names <- fitness_vars_default()
-	names(var_names) <- fitness_vars_default()
+	for (i in c("fitness_A", "fitness_B", "fitness_total", "fitness_ratio_A_B")) {
+		fitness_zero <- fitness
+		fitness_zero[[i]] <- 0
+		expect_warning(regexp = "undefined on log scale", {
+			plot_mix_fitness(fitness_zero, var_names)
+		})
+	}
 	expect_warning(regexp = "undefined on log scale", {
-		plot_mix_fitness(var_names = var_names, data.frame(
-			initial_fraction_A = 0.1,
-			initial_ratio_A_B = 0.1,
-			fitness_A = 0,
-			fitness_B = 1,
-			fitness_total = 1,
-			fitness_ratio_A_B = 1
-		))
-	})
-	expect_warning(regexp = "undefined on log scale", {
-		plot_mix_fitness(var_names = var_names, data.frame(
-			initial_fraction_A = 0.1,
-			initial_ratio_A_B = 0.1,
-			fitness_A = 1,
-			fitness_B = 0,
-			fitness_total = 1,
-			fitness_ratio_A_B = 1
-		))
-	})
-	expect_warning(regexp = "undefined on log scale", {
-		plot_mix_fitness(var_names = var_names, data.frame(
-			initial_fraction_A = 0.1,
-			initial_ratio_A_B = 0.1,
-			fitness_A = 1,
-			fitness_B = 1,
-			fitness_total = 0,
-			fitness_ratio_A_B = 1
-		))
-	})
-	expect_warning(regexp = "undefined on log scale", {
-		plot_mix_fitness(var_names = var_names, data.frame(
-			initial_fraction_A = 0.1,
-			initial_ratio_A_B = 0.1,
-			fitness_A = 1,
-			fitness_B = 1,
-			fitness_total = 1,
-			fitness_ratio_A_B = 0
+		plot_strain_fitness(var_names = var_names, data.frame(
+			initial_fraction_A = 0.5, fitness_A = 0, fitness_B = 1
 		))
 	})
 	expect_warning(regexp = "undefined on log scale", {
 		plot_strain_fitness(var_names = var_names, data.frame(
-			initial_fraction_A = 0.1, fitness_A = 0, fitness_B = 1
-		))
-	})
-	expect_warning(regexp = "undefined on log scale", {
-		plot_strain_fitness(var_names = var_names, data.frame(
-			initial_fraction_A = 0.1, fitness_A = 1, fitness_B = 0
+			initial_fraction_A = 0.5, fitness_A = 1, fitness_B = 0
 		))
 	})
 	expect_warning(regexp = "undefined on log scale", {
 		plot_total_fitness(var_names = var_names, data.frame(
-			initial_fraction_A = 0.1, fitness_total = 0
+			initial_fraction_A = 0.5, fitness_total = 0
 		))
 	})
 	expect_warning(regexp = "undefined on log scale", {
 		plot_fitness_ratio(var_names = var_names, data.frame(
-			initial_fraction_A = 0.1, fitness_ratio_A_B = 0
+			initial_fraction_A = 0.5, fitness_ratio_A_B = 0
 		))
 	})
 })
 
 test_that("plot functions warn about infinite fitness values", {
+	fitness <- data.frame(
+		initial_fraction_A = 0.5,
+		initial_ratio_A_B = 0.5,
+		fitness_A = 1,
+		fitness_B = 1,
+		fitness_total = 1,
+		fitness_ratio_A_B = 1
+	)
 	var_names <- fitness_vars_default()
-	names(var_names) <- fitness_vars_default()
+	for (i in c("fitness_A", "fitness_B", "fitness_total", "fitness_ratio_A_B")) {
+		fitness_inf <- fitness
+		fitness_inf[[i]] <- Inf
+		expect_warning(regexp = "infinite", {
+			plot_mix_fitness(fitness_inf, var_names)
+		})
+	}
 	expect_warning(regexp = "infinite", {
-		plot_mix_fitness(var_names = var_names, data.frame(
-			initial_fraction_A = 0.1,
-			initial_ratio_A_B = 0.1,
-			fitness_A = Inf,
-			fitness_B = 1,
-			fitness_total = 1,
-			fitness_ratio_A_B = 1
-		))
-	})
-	expect_warning(regexp = "infinite", {
-		plot_mix_fitness(var_names = var_names, data.frame(
-			initial_fraction_A = 0.1,
-			initial_ratio_A_B = 0.1,
-			fitness_A = 1,
-			fitness_B = Inf,
-			fitness_total = 1,
-			fitness_ratio_A_B = 1
-		))
-	})
-	expect_warning(regexp = "infinite", {
-		plot_mix_fitness(var_names = var_names, data.frame(
-			initial_fraction_A = 0.1,
-			initial_ratio_A_B = 0.1,
-			fitness_A = 1,
-			fitness_B = 1,
-			fitness_total = Inf,
-			fitness_ratio_A_B = 1
-		))
-	})
-	expect_warning(regexp = "infinite", {
-		plot_mix_fitness(var_names = var_names, data.frame(
-			initial_fraction_A = 0.1,
-			initial_ratio_A_B = 0.1,
-			fitness_A = 1,
-			fitness_B = 1,
-			fitness_total = 1,
-			fitness_ratio_A_B = Inf
+		plot_strain_fitness(var_names = var_names, data.frame(
+			initial_fraction_A = 0.5, fitness_A = Inf, fitness_B = 1
 		))
 	})
 	expect_warning(regexp = "infinite", {
 		plot_strain_fitness(var_names = var_names, data.frame(
-			initial_fraction_A = 0.1, fitness_A = Inf, fitness_B = 1
-		))
-	})
-	expect_warning(regexp = "infinite", {
-		plot_strain_fitness(var_names = var_names, data.frame(
-			initial_fraction_A = 0.1, fitness_A = 1, fitness_B = Inf
+			initial_fraction_A = 0.5, fitness_A = 1, fitness_B = Inf
 		))
 	})
 	expect_warning(regexp = "infinite", {
 		plot_total_fitness(var_names = var_names, data.frame(
-			initial_fraction_A = 0.1, fitness_total = Inf
+			initial_fraction_A = 0.5, fitness_total = Inf
 		))
 	})
 	expect_warning(regexp = "infinite", {
 		plot_fitness_ratio(var_names = var_names, data.frame(
-			initial_fraction_A = 0.1, fitness_ratio_A_B = Inf
+			initial_fraction_A = 0.5, fitness_ratio_A_B = Inf
 		))
 	})
 })
 
-	# Warn about values not biologically meaningful
-	# TODO: Mix ratio < 0
-	# TODO: Mix fraction not in [0, 1]
-	# Message about values undefined on log scale -- rlang::inform()
-	# TODO: Mix ratio 0 & Inf
+# TODO: Mix ratio 0 & Inf
 
 
 # Plot customization -----------------------------------------------------------
