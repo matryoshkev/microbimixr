@@ -49,6 +49,33 @@ test_that("plot functions can use custom variable names", {
 	})
 })
 
+test_that("plot functions don't require unused mix_scale data", {
+	data <- data.frame(
+		initial_fraction_A = 0.5,
+		initial_ratio_A_B = 1,
+		fitness_A	= 10,
+		fitness_B	= 20,
+		fitness_total = 15,
+		fitness_ratio_A_B = 10/20,
+		name_A = "A",
+		name_B = "B"
+	)
+	data_no_fraction <- data[names(data) != "initial_fraction_A"]
+	data_no_ratio <- data[names(data) != "initial_ratio_A_B"]
+	expect_no_error({
+		plot_mix_fitness(data_no_fraction, mix_scale = "ratio")
+		plot_strain_fitness(data_no_fraction, mix_scale = "ratio")
+		plot_total_fitness(data_no_fraction, mix_scale = "ratio")
+		plot_fitness_ratio(data_no_fraction, mix_scale = "ratio")
+	})
+	expect_no_error({
+		plot_mix_fitness(data_no_ratio, mix_scale = "fraction")
+		plot_strain_fitness(data_no_ratio, mix_scale = "fraction")
+		plot_total_fitness(data_no_ratio, mix_scale = "fraction")
+		plot_fitness_ratio(data_no_ratio, mix_scale = "fraction")
+	})
+})
+
 
 # Input validation -------------------------------------------------------------
 # with informative errors, warnings, and messages

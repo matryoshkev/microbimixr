@@ -116,50 +116,54 @@ plot_mix_fitness <- function(
 	if (is.null(size)) {size <- waiver()}
 
 	# Make subplots
-	figA <- plot_fitness_strain_total(
-		data,
-		var_names,
-		mix_scale = "fraction",
-		ylim = ylim$fitness,
-		color = color_strain_group,
-		fill = fill_strain_group,
-		shape = shape,
-		size = size,
-		drop_NA = drop_NA
-	)
-	figB <- plot_fitness_ratio(
-		data,
-		var_names,
-		mix_scale = "fraction",
-		ylim = ylim$fitness_ratio,
-		color = color_group,
-		fill = fill_group,
-		shape = shape,
-		size = size,
-		drop_NA = drop_NA
-	)
-	figC <- plot_fitness_strain_total(
-		data,
-		var_names,
-		mix_scale = "ratio",
-		ylim = ylim$fitness,
-		color = color_strain_group,
-		fill = fill_strain_group,
-		shape = shape,
-		size = size,
-		drop_NA = drop_NA
-	)
-	figD <- plot_fitness_ratio(
-		data,
-		var_names,
-		mix_scale = "ratio",
-		ylim = ylim$fitness_ratio,
-		color = color_group,
-		fill = fill_group,
-		shape = shape,
-		size = size,
-		drop_NA = drop_NA
-	)
+	if ("fraction" %in% mix_scale) {
+		figA <- plot_fitness_strain_total(
+			data,
+			var_names,
+			mix_scale = "fraction",
+			ylim = ylim$fitness,
+			color = color_strain_group,
+			fill = fill_strain_group,
+			shape = shape,
+			size = size,
+			drop_NA = drop_NA
+		)
+		figB <- plot_fitness_ratio(
+			data,
+			var_names,
+			mix_scale = "fraction",
+			ylim = ylim$fitness_ratio,
+			color = color_group,
+			fill = fill_group,
+			shape = shape,
+			size = size,
+			drop_NA = drop_NA
+		)
+	}
+	if ("ratio" %in% mix_scale) {
+		figC <- plot_fitness_strain_total(
+			data,
+			var_names,
+			mix_scale = "ratio",
+			ylim = ylim$fitness,
+			color = color_strain_group,
+			fill = fill_strain_group,
+			shape = shape,
+			size = size,
+			drop_NA = drop_NA
+		)
+		figD <- plot_fitness_ratio(
+			data,
+			var_names,
+			mix_scale = "ratio",
+			ylim = ylim$fitness_ratio,
+			color = color_group,
+			fill = fill_group,
+			shape = shape,
+			size = size,
+			drop_NA = drop_NA
+		)
+	}
 
 	# Combine subplots
 	if (("fraction" %in% mix_scale) & ("ratio" %in% mix_scale)) {
@@ -171,8 +175,7 @@ plot_mix_fitness <- function(
 	}
 
 	# Size plots for page-width figure
-	fig_output <-
-		fig_output +
+	fig_output <- fig_output +
 		patchwork::plot_layout(
 			widths = grid::unit(c(3.2, 1.6), "inches"),
 			heights = grid::unit(1.4, "inches")
