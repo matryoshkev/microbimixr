@@ -201,25 +201,21 @@ block, and so on.
 
 The actual fitness calculations are very simple. If the initial
 abundance of each strain (measured as the number or density of cells or
-virions) is $`n_A`$ and $`n_B`$, and their final abundances are $`n'_A`$
-and $`n'_B`$, then
+virions) is \\n_A\\ and \\n_B\\, and their final abundances are
+\\n'\_A\\ and \\n'\_B\\, then
 
-``` math
-\begin{aligned}
-    \texttt{fitness_A} &= \; n'_A / n_A = w_A \\
-    \texttt{fitness_B} &= \; n'_B / n_B = w_B \\
-    \texttt{fitness_total} &= \; (n'_A + n'_B) / (n_A + n_B) \\
-    \texttt{fitness_ratio_A_B} &= \; w_A / w_B
-\end{aligned}
-```
+\\\begin{aligned} \texttt{fitness_A} &= \\ n'\_A / n_A = w_A \\
+\texttt{fitness_B} &= \\ n'\_B / n_B = w_B \\ \texttt{fitness_total} &=
+\\ (n'\_A + n'\_B) / (n_A + n_B) \\ \texttt{fitness_ratio_A_B} &= \\ w_A
+/ w_B \end{aligned}\\
 
 These quantities are unscaled Wrightian fitness measured over the entire
 time period between the initial and final abundances. They measure fold
 change in absolute abundance. So if a bacterial strain’s cell density
-increases 100-fold, for example, its fitness will be $`w = 100`$. If it
-decreases to 10% of its initial density, its fitness will be
-$`w = 0.1`$. They’re usually best visualized and analyzed over
-$`\log_{10}`$ scales.
+increases 100-fold, for example, its fitness will be \\w = 100\\. If it
+decreases to 10% of its initial density, its fitness will be \\w =
+0.1\\. They’re usually best visualized and analyzed over \\\log\_{10}\\
+scales.
 
 These fitness measures are robust across different species and types of
 interaction (smith & Inglis 2021). They let you quantitatively compare
@@ -229,16 +225,12 @@ to fitness terms in theoretical models of microbial evolution.
 
 The two measures of mix frequency are:
 
-``` math
-\begin{aligned}
-    \texttt{initial_fraction_A} &= \; n_A / (n_A + n_B) \\
-    \texttt{initial_ratio_A_B} &= \; n_A / n_B
-\end{aligned}
-```
+\\\begin{aligned} \texttt{initial_fraction_A} &= \\ n_A / (n_A + n_B) \\
+\texttt{initial_ratio_A_B} &= \\ n_A / n_B \end{aligned}\\
 
 `initial_fraction_A` runs from 0 to 1. `initial_ratio_A_B` runs from
 negative infinity to positive infinity and is best analyzed over
-$`\log_{10}`$ scales.
+\\\log\_{10}\\ scales.
 
 ## Compare fitness measures
 

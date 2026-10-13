@@ -6,7 +6,13 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>Analyzing microbial interactions with microbimixr • microbimixr</title>
-<script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<!-- mathjax math --><script src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.js" integrity="sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI=" crossorigin="anonymous"></script><script>
+  window.MathJax = {
+    chtml: {
+      fontURL: "https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/output/chtml/fonts/woff-v2"
+    }
+  };
+</script><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
 <script src="../deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
@@ -249,31 +255,20 @@ treatments, experimental block, and so on.</p>
 </h3>
 <p>The actual fitness calculations are very simple. If the initial
 abundance of each strain (measured as the number or density of cells or
-virions) is
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>n</mi><mi>A</mi></msub><annotation encoding="application/x-tex">n_A</annotation></semantics></math>
-and
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>n</mi><mi>B</mi></msub><annotation encoding="application/x-tex">n_B</annotation></semantics></math>,
-and their final abundances are
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msubsup><mi>n</mi><mi>A</mi><mo>′</mo></msubsup><annotation encoding="application/x-tex">n'_A</annotation></semantics></math>
-and
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msubsup><mi>n</mi><mi>B</mi><mo>′</mo></msubsup><annotation encoding="application/x-tex">n'_B</annotation></semantics></math>,
-then</p>
-<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><mtext mathvariant="monospace">𝚏𝚒𝚝𝚗𝚎𝚜𝚜_𝙰</mtext></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mspace width="0.278em"></mspace><msubsup><mi>n</mi><mi>A</mi><mo>′</mo></msubsup><mi>/</mi><msub><mi>n</mi><mi>A</mi></msub><mo>=</mo><msub><mi>w</mi><mi>A</mi></msub></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><mtext mathvariant="monospace">𝚏𝚒𝚝𝚗𝚎𝚜𝚜_𝙱</mtext></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mspace width="0.278em"></mspace><msubsup><mi>n</mi><mi>B</mi><mo>′</mo></msubsup><mi>/</mi><msub><mi>n</mi><mi>B</mi></msub><mo>=</mo><msub><mi>w</mi><mi>B</mi></msub></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><mtext mathvariant="monospace">𝚏𝚒𝚝𝚗𝚎𝚜𝚜_𝚝𝚘𝚝𝚊𝚕</mtext></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mspace width="0.278em"></mspace><mo stretchy="false" form="prefix">(</mo><msubsup><mi>n</mi><mi>A</mi><mo>′</mo></msubsup><mo>+</mo><msubsup><mi>n</mi><mi>B</mi><mo>′</mo></msubsup><mo stretchy="false" form="postfix">)</mo><mi>/</mi><mo stretchy="false" form="prefix">(</mo><msub><mi>n</mi><mi>A</mi></msub><mo>+</mo><msub><mi>n</mi><mi>B</mi></msub><mo stretchy="false" form="postfix">)</mo></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><mtext mathvariant="monospace">𝚏𝚒𝚝𝚗𝚎𝚜𝚜_𝚛𝚊𝚝𝚒𝚘_𝙰_𝙱</mtext></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mspace width="0.278em"></mspace><msub><mi>w</mi><mi>A</mi></msub><mi>/</mi><msub><mi>w</mi><mi>B</mi></msub></mtd></mtr></mtable><annotation encoding="application/x-tex">\begin{aligned}
+virions) is <span class="math inline">\(n_A\)</span> and <span class="math inline">\(n_B\)</span>, and their final abundances are <span class="math inline">\(n'_A\)</span> and <span class="math inline">\(n'_B\)</span>, then</p>
+<p><span class="math display">\[\begin{aligned}
     \texttt{fitness_A} &amp;= \; n'_A / n_A = w_A \\
     \texttt{fitness_B} &amp;= \; n'_B / n_B = w_B \\
-    \texttt{fitness_total} &amp;= \; (n'_A + n'_B) / (n_A + n_B) \\
+    \texttt{fitness_total} &amp;= \; (n'_A + n'_B) / (n_A + n_B)
+\\
     \texttt{fitness_ratio_A_B} &amp;= \; w_A / w_B
-\end{aligned}</annotation></semantics></math></p>
+\end{aligned}\]</span></p>
 <p>These quantities are unscaled Wrightian fitness measured over the
 entire time period between the initial and final abundances. They
 measure fold change in absolute abundance. So if a bacterial strain’s
-cell density increases 100-fold, for example, its fitness will be
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>w</mi><mo>=</mo><mn>100</mn></mrow><annotation encoding="application/x-tex">w = 100</annotation></semantics></math>.
-If it decreases to 10% of its initial density, its fitness will be
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>w</mi><mo>=</mo><mn>0.1</mn></mrow><annotation encoding="application/x-tex">w = 0.1</annotation></semantics></math>.
-They’re usually best visualized and analyzed over
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mrow><mi mathvariant="normal">log</mi><mo>⁡</mo></mrow><mn>10</mn></msub><annotation encoding="application/x-tex">\log_{10}</annotation></semantics></math>
-scales.</p>
+cell density increases 100-fold, for example, its fitness will be <span class="math inline">\(w = 100\)</span>. If it decreases to 10% of its
+initial density, its fitness will be <span class="math inline">\(w =
+0.1\)</span>. They’re usually best visualized and analyzed over <span class="math inline">\(\log_{10}\)</span> scales.</p>
 <p>These fitness measures are robust across different species and types
 of interaction (smith &amp; Inglis 2021). They let you quantitatively
 compare fitness effects across systems. They’re good for statistical
@@ -281,15 +276,13 @@ analyses of effect sizes and confidence intervals. And they’re directly
 comparable to fitness terms in theoretical models of microbial
 evolution.</p>
 <p>The two measures of mix frequency are:</p>
-<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><mtext mathvariant="monospace">𝚒𝚗𝚒𝚝𝚒𝚊𝚕_𝚏𝚛𝚊𝚌𝚝𝚒𝚘𝚗_𝙰</mtext></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mspace width="0.278em"></mspace><msub><mi>n</mi><mi>A</mi></msub><mi>/</mi><mo stretchy="false" form="prefix">(</mo><msub><mi>n</mi><mi>A</mi></msub><mo>+</mo><msub><mi>n</mi><mi>B</mi></msub><mo stretchy="false" form="postfix">)</mo></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><mtext mathvariant="monospace">𝚒𝚗𝚒𝚝𝚒𝚊𝚕_𝚛𝚊𝚝𝚒𝚘_𝙰_𝙱</mtext></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mspace width="0.278em"></mspace><msub><mi>n</mi><mi>A</mi></msub><mi>/</mi><msub><mi>n</mi><mi>B</mi></msub></mtd></mtr></mtable><annotation encoding="application/x-tex">\begin{aligned}
+<p><span class="math display">\[\begin{aligned}
     \texttt{initial_fraction_A} &amp;= \; n_A / (n_A + n_B) \\
     \texttt{initial_ratio_A_B} &amp;= \; n_A / n_B
-\end{aligned}</annotation></semantics></math></p>
+\end{aligned}\]</span></p>
 <p><code>initial_fraction_A</code> runs from 0 to 1.
 <code>initial_ratio_A_B</code> runs from negative infinity to positive
-infinity and is best analyzed over
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mrow><mi mathvariant="normal">log</mi><mo>⁡</mo></mrow><mn>10</mn></msub><annotation encoding="application/x-tex">\log_{10}</annotation></semantics></math>
-scales.</p>
+infinity and is best analyzed over <span class="math inline">\(\log_{10}\)</span> scales.</p>
 </div>
 </div>
 <div class="section level2">
