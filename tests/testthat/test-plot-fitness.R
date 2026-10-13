@@ -202,7 +202,61 @@ test_that("plot functions report missing data columns", {
 	)
 })
 
-test_that("plot functions warn about nonsensical fitness values < 0", {
+test_that("plot functions warn about nonsensical strain frequencies", {
+	good_data <- data.frame(
+		initial_fraction_A = 0.5,
+		initial_ratio_A_B = 1,
+		fitness_A = 1,
+		fitness_B = 1,
+		fitness_total = 1,
+		fitness_ratio_A_B = 1
+	)
+	var_names <- fitness_vars_default()
+
+	# Initial fraction not in [0, 1]
+	for (bad_fraction in c(-0.1, 1.1)) {
+		suspect_data <- good_data
+		suspect_data[["initial_fraction_A"]] <- bad_fraction
+		expect_warning(regexp = "biologically meaningful", {
+			expect_warning(regexp = "biologically meaningful", {
+				plot_mix_fitness(suspect_data, var_names)
+			})
+		})  # 2 warnings: plot_mix_fitness() & plot_fitness_ratio()
+		expect_warning(regexp = "biologically meaningful", {
+			plot_strain_fitness(suspect_data, var_names)
+		})
+		expect_warning(regexp = "biologically meaningful", {
+			plot_total_fitness(suspect_data, var_names)
+		})
+		expect_warning(regexp = "biologically meaningful", {
+			plot_fitness_ratio(suspect_data, var_names)
+		})
+	}
+
+	# Initial ratio < 0
+	suspect_data <- data.frame(
+		initial_fraction_A = c(0.5, 0.5),
+		initial_ratio_A_B = c(1, -0.1),
+		fitness_A = c(1, 1),
+		fitness_B = c(1, 1),
+		fitness_total = c(1, 1),
+		fitness_ratio_A_B = c(1, 1)
+	)
+	expect_warning(regexp = "biologically meaningful", {
+		plot_mix_fitness(suspect_data, var_names, mix_scale = "ratio")
+	})  # 1 warning because plot_mix_fitness() replaces with NA
+	expect_warning(regexp = "biologically meaningful", {
+		plot_strain_fitness(suspect_data, var_names, mix_scale = "ratio")
+	})
+	expect_warning(regexp = "biologically meaningful", {
+		plot_total_fitness(suspect_data, var_names, mix_scale = "ratio")
+	})
+	expect_warning(regexp = "biologically meaningful", {
+		plot_fitness_ratio(suspect_data, var_names, mix_scale = "ratio")
+	})
+})
+
+test_that("plot functions warn about nonsensical fitness values", {
 	# Wrightian fitness defined over [0, Inf]
 	good_data <- data.frame(
 		initial_fraction_A = 0.5,
@@ -241,9 +295,6 @@ test_that("plot functions warn about nonsensical fitness values < 0", {
 		))
 	})
 })
-
-# TODO: Mix fraction not in [0, 1]
-# TODO: Mix ratio < 0
 
 
 # Unplottable data -------------------------------------------------------------

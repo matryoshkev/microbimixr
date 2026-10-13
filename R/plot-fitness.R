@@ -75,11 +75,11 @@ plot_mix_fitness <- function(
 	size = NULL,
 	drop_NA = TRUE
 ) {
+	# Check inputs
+	# Do it here because we need the data for the shared y-limits
 	mix_scale <- rlang::arg_match(
 		mix_scale, c("fraction", "ratio"), multiple = TRUE
 	)
-
-	# Variable names
 	var_names <- check_fitness_names(
 		var_names = var_names,
 		vars = c("fitness_A", "fitness_B", "fitness_total", "fitness_ratio_A_B"),
@@ -891,7 +891,7 @@ check_fitness_names <- function(var_names, vars, mix_scale, caller) {
 check_fitness_data <- function(data, var_names, vars, mix_scale, caller) {
 	data |>
 	check_fitness_columns(var_names, vars, mix_scale, caller) |>
-	# TODO: check_mix_values(var_names, vars, mix_scale, caller) |>
+	check_mix_values(var_names, vars, mix_scale, caller) |>
 	check_fitness_values(var_names, vars, mix_scale, caller)
 }
 
@@ -912,21 +912,38 @@ check_fitness_columns <- function(data, var_names, vars, mix_scale, caller) {
 	data
 }
 
-# TODO:
-# Check data for unplottable initial frequencies & replace with NA
-# check_mix_values <- function (data, var_names, vars, mix_scale, caller) {
-	# Possible values:
-	# initial_fraction_A  [0, 1]
-	# initial_ratio_A_B   [0, Inf]
-
-	# warn()
-	# initial_fraction > 1 not biologically meaningful
-	# initial_fraction < 0 not biologically meaningful
-	# initial_ratio < 0 not biologically meaningful
-
-	# inform()
-	# Single-strain data undefined on log-ratio mixing scale
-# }
+# Check data for nonbiological initial frequencies
+check_mix_values <- function (data, var_names, vars, mix_scale, caller) {
+	# Initial fraction not in [0, 1]
+	if ("fraction" %in% mix_scale) {
+		mix_var <- var_names[["initial_fraction_A"]]
+		if (any(!is.na(data[[mix_var]]) & data[[mix_var]] < 0)) {
+			rlang::warn(
+				paste("Some", mix_var, "values < 0 -- not biologically meaningful"),
+				call = call(caller)
+			)
+		}
+		if (any(!is.na(data[[mix_var]]) & data[[mix_var]] > 1)) {
+			rlang::warn(
+				paste("Some", mix_var, "values > 1 -- not biologically meaningful"),
+				call = call(caller)
+			)
+		}
+		# Keep these values because they are plottable
+	}
+	# Initial ratio < 0
+	if ("ratio" %in% mix_scale) {
+		mix_var <- var_names[["initial_ratio_A_B"]]
+		if (any(!is.na(data[[mix_var]]) & data[[mix_var]] < 0)) {
+			data[!is.na(data[[mix_var]]) & data[[mix_var]] < 0, mix_var] <- NA
+			rlang::warn(
+				paste("Some", mix_var, "values < 0 -- not biologically meaningful"),
+				call = call(caller)
+			)
+		}
+	}
+	data
+}
 
 # Check for unplottable fitness values & replace with NA
 check_fitness_values <- function(
