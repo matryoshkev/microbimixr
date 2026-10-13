@@ -265,6 +265,12 @@ conditions, it may be easier to inspect subsets of the data.
 fitness_ecoli |>
 subset(ampicillin == 100 & dilution == 100) |>
 plot_mix_fitness()
+#> Warning in plot_mix_fitness(): Some initial_fraction_A values < 0 -- not
+#> biologically meaningful
+#> Warning in plot_mix_fitness(): Some initial_ratio_A_B values < 0 -- not
+#> biologically meaningful
+#> Warning in plot_fitness_ratio(): Some initial_fraction_A values < 0 -- not
+#> biologically meaningful
 ```
 
 ![](microbimixr_files/figure-html/compare-Yurtsev-1.png)
