@@ -2,28 +2,27 @@
 
 # Dependencies
 library(dplyr)    # Data handling that makes code more readable
-library(ggplot2)  # Graphics package
+library(ggplot2)  # Graphics
+
+# Data included in microbimixr: resistant and sensitive E. coli under different
+# antibiotic concentrations and growth regimes
+head(data_Yurtsev_2013)
+
+# Drop data with strain frequencies not in [0, 1]
+# Possible artifact of correcting for background noise in flow cytometry
+data_ecoli <-
+	data_Yurtsev_2013 |>
+	tibble() |>
+	filter(
+		fraction_resistant_initial > 0 & fraction_resistant_initial < 1,
+		fraction_resistant_final > 0 & fraction_resistant_final < 1
+	)
 
 
 # Calculate and compare fitness measures ---------------------------------------
 
-# Data included in microbimixr
-head(data_Yurtsev_2013)
-
-# Two E. coli genotypes growing in same liquid culture:
-# - One is resistant to the antibiotic ampicillin
-#   because it has a beta-lactamase on a non-conjugative plasmid
-# - One is sensitive to ampicillin
-#
-# Experimental treatments:
-# - Initial strain frequency
-# - Ampicillin concentration
-# - Culture dilution (changes initial cell density before growth)
-
-# Calculate fitness measures
 fitness_ecoli <-
-	data_Yurtsev_2013 |>
-	dplyr::tibble() |>
+	data_ecoli |>
 	calculate_mix_fitness(
 		var_names = c(
 			initial_number_total = "OD_initial",
@@ -33,64 +32,58 @@ fitness_ecoli <-
 			name_A = "resistant",
 			name_B = "sensitive"
 		),
-		keep = c("ampicillin", "dilution", "replicate", "culture_id")
+		keep = c("ampicillin", "dilution")
 	)
-# Warning messages from calculate_mix_fitness()
-
 fitness_ecoli
-# Some strain frequencies are < 0, probably from correcting for background
-# noise in flow cytometry
 
-# A lot of data, so first let's just look at one treatment combination
-dev.new()
+# A lot of data, so first look at one treatment combination
 fitness_ecoli |>
-	dplyr::filter(ampicillin == 100 & dilution == 100) |>
+	filter(ampicillin == 100 & dilution == 100) |>
 	plot_mix_fitness()
-# Negative frequency-dependent selection
 
-# Looks like strain frequency doesn't affect total culture growth at all
-dev.new(width = 6.3, height = 6, units = "in")
+# Fitness ratio shows negative frequency-dependent selection
+# More linear vs initial strain fraction (not ratio)
+# Strain frequency doesn't affect total culture growth
+
+# Antibiotic concentration doesn't affect total growth either
 fitness_ecoli |>
-	dplyr::filter(ampicillin %in% c(0, 50, 100, 200)) |>
-	plot_total_fitness() +
-	ggplot2::facet_grid(ampicillin ~ dilution)
-# Or ampicillin. Just culture dilution.
+	filter(ampicillin > 0) |>
+	ggplot(aes(x = ampicillin, y = fitness_total)) +
+	scale_x_log10(name = "Ampicillin (\u03BCg/mL)") +
+	scale_y_fitness_total() +
+	geom_point_overlap() +
+	geom_smooth(linewidth = 0.5) +
+	facet_wrap(
+		vars(dilution),
+		labeller = as_labeller(function(x) paste0(x, "-fold dilution"))
+	)
 
-# So fitness ratio captures all the interesting effects,
-# and they're more linear vs initial strain frequency
 
+# Plot fitness ratio: resistant / sensitive ------------------------------------
 
-# Plot fitness ratio -----------------------------------------------------------
-
-# Make base plot with subset of data
-dev.new(width = 6.25, height = 2.25, units = "in")
+# Make base plot using subset of treatment conditions
 fig_ecoli <-
 	fitness_ecoli |>
-	dplyr::filter(
-		ampicillin %in% c(0, 15, 50, 100) & dilution %in% c(200, 400, 800)
+	filter(
+		ampicillin %in% c(0, 15, 50, 100),
+		dilution %in% c(200, 400, 800)
 	) |>
 	plot_fitness_ratio()
 
 # Add panels and color scales for experimental conditions
 name_amp <- "Ampicillin\n(\u03BCg/mL)"
 fig_ecoli <- fig_ecoli +
-	# Panels for culture dilution
-	ggplot2::facet_wrap(
-		~ dilution,
-		labeller = ggplot2::as_labeller(function(x) paste0(x, "-fold dilution"))
+	facet_wrap(
+		vars(dilution),
+		labeller = as_labeller(function(x) paste0(x, "-fold dilution"))
 	) +
-	# Color/fill scale for ampicillin
-	ggplot2::aes(color = factor(ampicillin), fill = factor(ampicillin)) +
-	ggplot2::scale_fill_viridis_d(
+	aes(color = factor(ampicillin), fill = factor(ampicillin)) +
+	scale_fill_viridis_d(
 		name = name_amp, option = "magma", direction = -1, begin = 0.5, end = 1
 	) +
-	ggplot2::scale_color_viridis_d(
+	scale_color_viridis_d(
 		name = name_amp, option = "magma", direction = -1, begin = 0, end = 0.8
 	)
 
-fig_ecoli
-# Shows that ampicillin & culture dilution have similar effects on fitness
-
-# TODO: Make these errors more informative
-
-
+# Ampicillin concentration & culture dilution have similar effects on fitness
+dev.new(width = 6.25, height = 2.25, units = "in"); fig_ecoli
