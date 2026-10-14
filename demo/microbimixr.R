@@ -1,22 +1,19 @@
 # Demonstrate basic microbimixr use ============================================
 
 # Dependencies
-library(dplyr)    # Data handling that makes code more readable
-library(ggplot2)  # Graphics package
+library(dplyr); library(ggplot2)
 
-
-# Calculate and compare fitness measures -----------------------------------------
-
-# Data included in microbimixr
+# Data included in microbimixr: two Myxococcus strains forming fruiting bodies
+# together, wild-type ancestral genotype and experimentally-evolved cheater
 head(data_smith_2010)
 
-# Two Myxococcus strains forming fruiting bodies together:
-# a wild-type ancestral genotype and an experimentally-evolved cheater
 
-# Calculate fitness measures
+# Calculate and compare fitness measures ---------------------------------------
+
+# Fitness here is spores/cell
 fitness_myxo <-
 	data_smith_2010 |>
-	dplyr::tibble() |>
+	tibble() |>
 	calculate_mix_fitness(
 		var_names = c(
 			initial_number_A = "initial_cells_evolved",
@@ -29,53 +26,46 @@ fitness_myxo <-
 		keep = "exptl_block"
 	)
 fitness_myxo
-# Fitness here is spores/cell
 
-# Compare fitness measures
-dev.new()
-plot_mix_fitness(fitness_myxo)
+dev.new(); plot_mix_fitness(fitness_myxo)
 
-# Group measures appear most informative/convenient:
-# - Within-group fitness ratio vs initial ratio
-# - Total group fitness vs initial fraction
+# Most informative/convenient:
+# - Fitness ratio vs initial ratio
+# - Total fitness vs initial fraction
 
 
-# Within-group fitness ratio ---------------------------------------------------
+# Relative sporulation success: evolved / ancestral ----------------------------
 
 # Fit statistical model
-model_within_group <- lm(
+model_fitness_ratio <- lm(
 	log10(fitness_ratio_A_B) ~ log10(initial_ratio_A_B),
 	data = fitness_myxo,
 	na.action = na.exclude
 )
 
-# Add predicted values to fitness frame
+# Add predicted values to fitness data
 fitness_myxo <- fitness_myxo |>
-	dplyr::mutate(fitness_ratio_predicted = 10^predict(model_within_group))
+	mutate(fitness_ratio_predicted = 10^predict(model_fitness_ratio))
 
-# Plot within-group fitness ratio with fitted model
-dev.new(width = 2.5, height = 2.1, units = "in")
-fig_within_group <- plot_fitness_ratio(
-	fitness_myxo,
-	mix_scale = "ratio",
-	ylab = "Relative sporulation success\n evolved / ancestral"
-)
-fig_within_group +
-	ggplot2::geom_line(mapping = aes(y = fitness_ratio_predicted))
+# Plot fitness ratio with fitted model
+fig_fitness_ratio <-
+	fitness_myxo |>
+	plot_fitness_ratio(
+		mix_scale = "ratio",
+		ylab = "Relative sporulation success\n evolved / ancestral"
+	) +
+	geom_line(mapping = aes(y = fitness_ratio_predicted))
+dev.new(width = 2.5, height = 2.1, units = "in"); fig_fitness_ratio
 
 # Parameter estimates and confidence intervals
-summary(model_within_group)
-confint(model_within_group)
-
-# The functional relationship here would be
-# w_evo / w_anc = a * (q_evo / q_anc)^b
-# where a = 10^intercept, b = slope
+summary(model_fitness_ratio)
+confint(model_fitness_ratio)
 
 
-# Total-group fitness ----------------------------------------------------------
+# Total sporulation success ----------------------------------------------------
 
 # Fit statistical model
-model_total_group <- nls(
+model_total_fitness <- nls(
 	log10(fitness_total) ~ a + b*initial_fraction_A + c*initial_fraction_A^2,
 	data = fitness_myxo,
 	start = c(a = -1, b = -5, c = 0),
@@ -83,24 +73,24 @@ model_total_group <- nls(
 )
 
 # Make data frame for fitted model to be a smooth curve
-fitted_total_group <- dplyr::tibble(initial_fraction_A = seq(0,1, by = 0.02))
-fitted_total_group <- dplyr::mutate(
-	fitted_total_group,
-	fitness_total = 10^predict(model_total_group, newdata = fitted_total_group)
-)
+fitted_total_fitness <- tibble(initial_fraction_A = seq(0,1, by = 0.02))
+fitted_total_fitness <- fitted_total_fitness |>
+	mutate(
+		fitness_total = 10^predict(
+			model_total_fitness, newdata = fitted_total_fitness
+		)
+	)
 
-# Plot total-group fitness with fitted model
-dev.new(width = 2.5, height = 2.1, units = "in")
-fig_total_group <- plot_total_fitness(
-	fitness_myxo, ylab = "Total sporulation success\n (spores/cell)"
-)
-fig_total_group + ggplot2::geom_line(data = fitted_total_group)
+# Plot total sporulation success with fitted model
+fig_total_fitness <-
+	plot_total_fitness(
+		fitness_myxo, ylab = "Total sporulation success\n (spores/cell)"
+	) +
+	geom_line(data = fitted_total_fitness)
+dev.new(width = 2.5, height = 2.1, units = "in"); fig_total_fitness
 
 # Parameter estimates and confidence intervals
-summary(model_total_group)
-confint(model_total_group)
+summary(model_total_fitness)
+confint(model_total_fitness)
+
 # Confidence interval for linear term includes zero
-
-# The functional relationship here would be
-# W = 10^(a + b*q_evo + c*q_evo^2)
-
