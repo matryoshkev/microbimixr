@@ -1,7 +1,8 @@
 # Demonstrate basic microbimixr use ============================================
 
 # Dependencies
-library(dplyr); library(ggplot2)
+library(dplyr)    # Data handling that makes code more readable
+library(ggplot2)  # Graphics
 
 # Data included in microbimixr: two Myxococcus strains forming fruiting bodies
 # together, wild-type ancestral genotype and experimentally-evolved cheater

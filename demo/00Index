@@ -1,3 +1,3 @@
-microbimixr               Show basic microbimixr use
-experimental-treatments   Multiple experimental conditions
-strain-combinations 	    Multiple strain combinations
+myxo    Demonstrate basic usage of microbimixr
+ecoli   Use microbimixr with multiple experimental conditions
+dicty   Use microbimixr with multiple strain combinations
