@@ -5,16 +5,14 @@ library(dplyr)    # Data handling that makes code easier to read
 library(ggplot2)  # Graphics package
 library(ggh4x)    # Nested facets in plots
 
+# Data included in microbimixr: two Dictystelium strains making fruiting bodies
+# together, many different strain combinations
+head(data_Madgwick_2018)
+
 
 # Calculate and compare fitness measures ---------------------------------------
 
-# Data included in microbimixr
-head(data_Madgwick_2018)
-
-# Two Dictystelium strains forming fruiting bodies together,
-# many different strain combinations
-
-# Calculate fitness measures
+# Fitness here is spores/cell
 fitness_dicty <-
 	data_Madgwick_2018 |>
 	tibble() |>
@@ -29,18 +27,15 @@ fitness_dicty <-
 		),
 		keep = "replicate"
 	)
-# Fitness here is spores/cell
 
 # Compare fitness measures
 # NC105.1 + NC34.2 is one of the strain pairs with more replicates
-dev.new()
 fitness_dicty |>
 	filter(name_A == "NC105.1", name_B == "NC34.2") |>
 	plot_mix_fitness()
-
 # Effect sizes are small: <10-fold
 # Fitness ratio is negatively frequency-dependent,
-#   approx linear on log-ratio mix scale
+# approx linear on log-ratio frequency scale
 
 # Better view of the strain effects
 dev.new(width = 4, height = 2.5)
