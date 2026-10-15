@@ -1,16 +1,19 @@
 # microbimixr
 
 microbimixr is an R package for analyzing microbial interactions in mix
-experiments. A common experimental design is to mix together two
-microbes (different strains of bacteria, for example) then measure how
-their survival and reproduction depend on mix frequency. How do they act
-differently together than on their own? microbimixr helps researchers
-get the most out of the data from these experiments by providing tools
-to:
+experiments. Studies of cooperation and conflict among microbes often
+use a common experimental design: mix together two microbes (different
+strains of bacteria, for example) then measure how their survival and
+reproduction depend on strain frequency. How do they act differently
+together than on their own? microbimixr helps you get the most out of
+your data by providing tools to:
 
 - Calculate best-practice fitness measures
-- Identify which measures to use with a specific dataset
-- Make publication-quality figures showing interaction effects
+- Identify which fitness measures are best for your research question
+  and data
+- Visualize interaction effects as publication-quality figures
+
+![](./reference/figures/README-workflow.png)
 
 ## Calculate fitness measures
 
@@ -19,14 +22,14 @@ microbimixr makes it easy to calculate fitness measures that are:
 
 - Robust and quantitatively comparable across different species and
   different types of interaction
-- Useful for both individual and group-centered approaches to social
-  behavior
 - Well-suited to statistical analysis of effect sizes and confidence
   intervals
+- Useful for both individual and group-centered approaches to social
+  behavior
 - Directly comparable to theoretical models of microbial evolution
 
 Starting from a data frame with the initial and final abundance of each
-microbe, calculate fitness effects with
+microbe, calculate fitness with
 [`calculate_mix_fitness()`](https://matryoshkev.github.io/microbimixr/reference/calculate_mix_fitness.md):
 
 ``` r
@@ -39,38 +42,38 @@ fitness_myxo <- calculate_mix_fitness(
         initial_number_B = "initial_cells_ancestral",
         final_number_A = "final_spores_evolved",
         final_number_B = "final_spores_ancestral", 
-        name_A = "GVB206.3", 
-        name_B = "GJV10"
+        name_A = "evolved", 
+        name_B = "ancestral"
     )
 )
 head(fitness_myxo)
-#>     name_A name_B initial_fraction_A initial_ratio_A_B    fitness_A  fitness_B
-#> 1 GVB206.3  GJV10         1.00000000               Inf 1.200000e-07         NA
-#> 2 GVB206.3  GJV10         0.98901099       90.00000000 1.555556e-07 0.00000400
-#> 3 GVB206.3  GJV10         0.90000000        9.00000000 2.600000e-06 0.00000480
-#> 4 GVB206.3  GJV10         0.50000000        1.00000000 4.280000e-04 0.00156000
-#> 5 GVB206.3  GJV10         0.10000000        0.11111111 4.200000e-02 0.01400000
-#> 6 GVB206.3  GJV10         0.01098901        0.01111111 8.420000e-01 0.02288889
-#>   fitness_total fitness_ratio_A_B
-#> 1  1.200000e-07                NA
-#> 2  1.978022e-07        0.03888889
-#> 3  2.820000e-06        0.54166667
-#> 4  9.940000e-04        0.27435897
-#> 5  1.680000e-02        3.00000000
-#> 6  3.189011e-02       36.78640777
+#>    name_A    name_B initial_fraction_A initial_ratio_A_B    fitness_A
+#> 1 evolved ancestral         1.00000000               Inf 1.200000e-07
+#> 2 evolved ancestral         0.98901099       90.00000000 1.555556e-07
+#> 3 evolved ancestral         0.90000000        9.00000000 2.600000e-06
+#> 4 evolved ancestral         0.50000000        1.00000000 4.280000e-04
+#> 5 evolved ancestral         0.10000000        0.11111111 4.200000e-02
+#> 6 evolved ancestral         0.01098901        0.01111111 8.420000e-01
+#>    fitness_B fitness_total fitness_ratio_A_B
+#> 1         NA  1.200000e-07                NA
+#> 2 0.00000400  1.978022e-07        0.03888889
+#> 3 0.00000480  2.820000e-06        0.54166667
+#> 4 0.00156000  9.940000e-04        0.27435897
+#> 5 0.01400000  1.680000e-02        3.00000000
+#> 6 0.02288889  3.189011e-02       36.78640777
 ```
 
 microbimixr works with most types of microbial abundance data including
-cell count, cell density, and strain frequency.
+cell counts, cell density, optical density, and strain frequency.
 
-## Compare fitness measures
+## Identify fitness response
 
-To quickly see what fitness measures would be most useful for your data,
-use
+To quickly see what fitness measures would be most useful for your
+research question and data, use
 [`plot_mix_fitness()`](https://matryoshkev.github.io/microbimixr/reference/plot_mix_fitness.md).
-It draws a combined figure with strain fitness, total group fitness, and
-relative within-group fitness plotted against two measures of mix
-frequency.
+It draws a combined figure that lets you compare strain fitness, total
+fitness, and the relative ratio of strain fitnesses. It also lets you
+compare linear and logarithmic measures of strain frequency.
 
 ``` r
 
@@ -79,55 +82,61 @@ plot_mix_fitness(fitness_myxo)
 
 ![](./reference/figures/README-compare-measures.png)
 
-This interaction between two genotypes of *Myxococcus* bacteria would be
-easiest to interpret in terms of total-group fitness as a function of
-initial genotype frequency and the within-group fitness ratio as a
-function of initial genotype ratio. These fitness effects are nearly
-linear (on log scales) and would be easiest to fit statistical models
-to.
+For example, this interaction between two genotypes of *Myxococcus*
+bacteria would be easiest to interpret and analyze as total fitness as a
+function of initial genotype fraction and fitness ratio as a function of
+initial genotype ratio. Those are the simplest fitness responses and
+easiest to fit statistical models to. These plots also let you interpret
+your data in terms of the fitness outcomes used by different theories of
+social evolution like kin selection, multilevel selection, and game
+theory.
 
-## Visualize interaction effects
+## Visualize fitness effects
 
-Make publication-quality figures easily with
-[`plot_strain_fitness()`](https://matryoshkev.github.io/microbimixr/reference/plot_strain_fitness.md),
-[`plot_total_fitness()`](https://matryoshkev.github.io/microbimixr/reference/plot_total_fitness.md),
-and
-[`plot_fitness_ratio()`](https://matryoshkev.github.io/microbimixr/reference/plot_fitness_ratio.md):
+Once you know which fitness measures to analyze, you can use microbimixr
+to make publication-quality figures. The package includes convenience
+functions to plot data with default settings appropriate for mix
+experiments. Fitness axes are plotted on \\\log\_{10}\\ scales, for
+example, include 1 for reference (no net change in abundance), and have
+a minimum ten-fold range.
 
 ``` r
 
 library("patchwork")
-plot_total_fitness(fitness_myxo, ylim = c(1e-8, 1)) +
-plot_fitness_ratio(fitness_myxo, mix_scale = "ratio", ylim = c(1e-4, 1e4)) +
-plot_annotation(tag_levels = "A")
+fig_total <- plot_total_fitness(fitness_myxo)
+fig_ratio <- plot_fitness_ratio(fitness_myxo, mix_scale = "ratio", ylim = c(1e-4, 1e4))
+fig_total + fig_ratio
 ```
 
-![](./reference/figures/README-plot-functions.png)
+![](./reference/figures/README-plots-simple.png)
 
-You can also use the individual axes and other components of microbimixr
-plots with ggplot2:
+You can also customize these plots using the ggplot2 graphics package:
 
 ``` r
 
 library("ggplot2")
 fitness_myxo |>
-    ggplot(aes(x = initial_fraction_A, y = fitness_total)) +
-    scale_x_initial_fraction(name = "Initial frequency of evolved strain") +
-    scale_y_fitness_total(name = "Group sporulation success\n(spores/cell)") +
-    geom_smooth(method = "lm", se = FALSE, formula = y ~ poly(x, 2)) +
-    geom_point_overlap(fill = "lightblue", color = "darkblue", size = 2) +
-    theme_bw()
+    plot_total_fitness(
+        xlab = "Initial frequency of evolved strain",
+        ylab = "Total sporulation\n(spores/cell)", 
+        ylim = c(1e-8, 1), color = "darkblue", fill = "skyblue"
+    ) +
+    geom_smooth(
+        method = "lm", formula = y ~ poly(x, 2), 
+        se = FALSE, linewidth = 0.5
+    ) +
+    theme_bw(base_size = 9)
 ```
 
-![](./reference/figures/README-plot-elements.png)
+![](./reference/figures/README-plots-custom.png)
 
-## Installation
+## Install microbimixr
 
 ``` r
 
-# The development version from GitHub:
+# Install the development version from GitHub:
 # install.packages("devtools")
-devtools::install_github("matryoshkev/microbimixr")
+devtools::install_github("matryoshkev/microbimixr", build_vignettes = TRUE)
 ```
 
 ## Further reading

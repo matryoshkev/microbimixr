@@ -58,23 +58,24 @@
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 <!-- badges: start -->
 
-<p>microbimixr is an R package for analyzing microbial interactions in mix experiments. A common experimental design is to mix together two microbes (different strains of bacteria, for example) then measure how their survival and reproduction depend on mix frequency. How do they act differently together than on their own? microbimixr helps researchers get the most out of the data from these experiments by providing tools to:</p>
+<p>microbimixr is an R package for analyzing microbial interactions in mix experiments. Studies of cooperation and conflict among microbes often use a common experimental design: mix together two microbes (different strains of bacteria, for example) then measure how their survival and reproduction depend on strain frequency. How do they act differently together than on their own? microbimixr helps you get the most out of your data by providing tools to:</p>
 <ul>
 <li>Calculate best-practice fitness measures</li>
-<li>Identify which measures to use with a specific dataset</li>
-<li>Make publication-quality figures showing interaction effects</li>
+<li>Identify which fitness measures are best for your research question and data</li>
+<li>Visualize interaction effects as publication-quality figures</li>
 </ul>
+<p><img src="./reference/figures/README-workflow.png"></p>
 <div class="section level2">
 <h2 id="calculate-fitness-measures">Calculate fitness measures<a class="anchor" aria-label="anchor" href="#calculate-fitness-measures"></a>
 </h2>
 <p>There are many ways to quantify microbial survival and reproduction. microbimixr makes it easy to calculate fitness measures that are:</p>
 <ul>
 <li>Robust and quantitatively comparable across different species and different types of interaction</li>
-<li>Useful for both individual and group-centered approaches to social behavior</li>
 <li>Well-suited to statistical analysis of effect sizes and confidence intervals</li>
+<li>Useful for both individual and group-centered approaches to social behavior</li>
 <li>Directly comparable to theoretical models of microbial evolution</li>
 </ul>
-<p>Starting from a data frame with the initial and final abundance of each microbe, calculate fitness effects with <code><a href="reference/calculate_mix_fitness.html">calculate_mix_fitness()</a></code>:</p>
+<p>Starting from a data frame with the initial and final abundance of each microbe, calculate fitness with <code><a href="reference/calculate_mix_fitness.html">calculate_mix_fitness()</a></code>:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://matryoshkev.github.io/microbimixr/">"microbimixr"</a></span><span class="op">)</span></span>
 <span><span class="va">fitness_myxo</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/calculate_mix_fitness.html">calculate_mix_fitness</a></span><span class="op">(</span></span>
@@ -84,80 +85,72 @@
 <span>        initial_number_B <span class="op">=</span> <span class="st">"initial_cells_ancestral"</span>,</span>
 <span>        final_number_A <span class="op">=</span> <span class="st">"final_spores_evolved"</span>,</span>
 <span>        final_number_B <span class="op">=</span> <span class="st">"final_spores_ancestral"</span>, </span>
-<span>        name_A <span class="op">=</span> <span class="st">"GVB206.3"</span>, </span>
-<span>        name_B <span class="op">=</span> <span class="st">"GJV10"</span></span>
+<span>        name_A <span class="op">=</span> <span class="st">"evolved"</span>, </span>
+<span>        name_B <span class="op">=</span> <span class="st">"ancestral"</span></span>
 <span>    <span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">fitness_myxo</span><span class="op">)</span></span>
-<span><span class="co">#&gt;     name_A name_B initial_fraction_A initial_ratio_A_B    fitness_A  fitness_B</span></span>
-<span><span class="co">#&gt; 1 GVB206.3  GJV10         1.00000000               Inf 1.200000e-07         NA</span></span>
-<span><span class="co">#&gt; 2 GVB206.3  GJV10         0.98901099       90.00000000 1.555556e-07 0.00000400</span></span>
-<span><span class="co">#&gt; 3 GVB206.3  GJV10         0.90000000        9.00000000 2.600000e-06 0.00000480</span></span>
-<span><span class="co">#&gt; 4 GVB206.3  GJV10         0.50000000        1.00000000 4.280000e-04 0.00156000</span></span>
-<span><span class="co">#&gt; 5 GVB206.3  GJV10         0.10000000        0.11111111 4.200000e-02 0.01400000</span></span>
-<span><span class="co">#&gt; 6 GVB206.3  GJV10         0.01098901        0.01111111 8.420000e-01 0.02288889</span></span>
-<span><span class="co">#&gt;   fitness_total fitness_ratio_A_B</span></span>
-<span><span class="co">#&gt; 1  1.200000e-07                NA</span></span>
-<span><span class="co">#&gt; 2  1.978022e-07        0.03888889</span></span>
-<span><span class="co">#&gt; 3  2.820000e-06        0.54166667</span></span>
-<span><span class="co">#&gt; 4  9.940000e-04        0.27435897</span></span>
-<span><span class="co">#&gt; 5  1.680000e-02        3.00000000</span></span>
-<span><span class="co">#&gt; 6  3.189011e-02       36.78640777</span></span></code></pre></div>
-<!-- `calculate_mix_fitness()` works with most types of microbial abundance data including strain density, total group density, and strain frequency.  -->
-<p>microbimixr works with most types of microbial abundance data including cell count, cell density, and strain frequency.</p>
+<span><span class="co">#&gt;    name_A    name_B initial_fraction_A initial_ratio_A_B    fitness_A</span></span>
+<span><span class="co">#&gt; 1 evolved ancestral         1.00000000               Inf 1.200000e-07</span></span>
+<span><span class="co">#&gt; 2 evolved ancestral         0.98901099       90.00000000 1.555556e-07</span></span>
+<span><span class="co">#&gt; 3 evolved ancestral         0.90000000        9.00000000 2.600000e-06</span></span>
+<span><span class="co">#&gt; 4 evolved ancestral         0.50000000        1.00000000 4.280000e-04</span></span>
+<span><span class="co">#&gt; 5 evolved ancestral         0.10000000        0.11111111 4.200000e-02</span></span>
+<span><span class="co">#&gt; 6 evolved ancestral         0.01098901        0.01111111 8.420000e-01</span></span>
+<span><span class="co">#&gt;    fitness_B fitness_total fitness_ratio_A_B</span></span>
+<span><span class="co">#&gt; 1         NA  1.200000e-07                NA</span></span>
+<span><span class="co">#&gt; 2 0.00000400  1.978022e-07        0.03888889</span></span>
+<span><span class="co">#&gt; 3 0.00000480  2.820000e-06        0.54166667</span></span>
+<span><span class="co">#&gt; 4 0.00156000  9.940000e-04        0.27435897</span></span>
+<span><span class="co">#&gt; 5 0.01400000  1.680000e-02        3.00000000</span></span>
+<span><span class="co">#&gt; 6 0.02288889  3.189011e-02       36.78640777</span></span></code></pre></div>
+<p>microbimixr works with most types of microbial abundance data including cell counts, cell density, optical density, and strain frequency.</p>
 </div>
 <div class="section level2">
-<h2 id="compare-fitness-measures">Compare fitness measures<a class="anchor" aria-label="anchor" href="#compare-fitness-measures"></a>
+<h2 id="identify-fitness-response">Identify fitness response<a class="anchor" aria-label="anchor" href="#identify-fitness-response"></a>
 </h2>
-<p>To quickly see what fitness measures would be most useful for your data, use <code><a href="reference/plot_mix_fitness.html">plot_mix_fitness()</a></code>. It draws a combined figure with strain fitness, total group fitness, and relative within-group fitness plotted against two measures of mix frequency.</p>
+<p>To quickly see what fitness measures would be most useful for your research question and data, use <code><a href="reference/plot_mix_fitness.html">plot_mix_fitness()</a></code>. It draws a combined figure that lets you compare strain fitness, total fitness, and the relative ratio of strain fitnesses. It also lets you compare linear and logarithmic measures of strain frequency.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/plot_mix_fitness.html">plot_mix_fitness</a></span><span class="op">(</span><span class="va">fitness_myxo</span><span class="op">)</span></span></code></pre></div>
-<!-- ggsave("README-compare-measures.png", width = 6.25, height = 4.5) -->
+<!-- ggplot2::ggsave("README-compare-measures.png", width = 6.25, height = 4.5) -->
 <p><img src="./reference/figures/README-compare-measures.png"></p>
-<p>This interaction between two genotypes of <em>Myxococcus</em> bacteria would be easiest to interpret in terms of total-group fitness as a function of initial genotype frequency and the within-group fitness ratio as a function of initial genotype ratio. These fitness effects are nearly linear (on log scales) and would be easiest to fit statistical models to.</p>
+<p>For example, this interaction between two genotypes of <em>Myxococcus</em> bacteria would be easiest to interpret and analyze as total fitness as a function of initial genotype fraction and fitness ratio as a function of initial genotype ratio. Those are the simplest fitness responses and easiest to fit statistical models to. These plots also let you interpret your data in terms of the fitness outcomes used by different theories of social evolution like kin selection, multilevel selection, and game theory.</p>
 </div>
 <div class="section level2">
-<h2 id="visualize-interaction-effects">Visualize interaction effects<a class="anchor" aria-label="anchor" href="#visualize-interaction-effects"></a>
+<h2 id="visualize-fitness-effects">Visualize fitness effects<a class="anchor" aria-label="anchor" href="#visualize-fitness-effects"></a>
 </h2>
-<p>Make publication-quality figures easily with <code><a href="reference/plot_strain_fitness.html">plot_strain_fitness()</a></code>, <code><a href="reference/plot_total_fitness.html">plot_total_fitness()</a></code>, and <code><a href="reference/plot_fitness_ratio.html">plot_fitness_ratio()</a></code>:</p>
-<!--
-Once you know which fitness measures to focus on, you can use microbimixr to visualize them. The simplest way is to use its built-in plot functions. They make figures with default settings suited to fitness data and have some basic graphical options.
-
-microbimixr provides convenience functions to make publication-quality figures with default settings appropriate for fitness data.
-
-fig_total <- plot_total_fitness(fitness_myxo)
-fig_within <- plot_fitness_ratio(
-    fitness_myxo, mix_scale = "ratio", ylim = c(1e-3, 1e3)
-)
-fig_total + fig_within
--->
+<p>Once you know which fitness measures to analyze, you can use microbimixr to make publication-quality figures. The package includes convenience functions to plot data with default settings appropriate for mix experiments. Fitness axes are plotted on <span class="math inline">\(\log_{10}\)</span> scales, for example, include 1 for reference (no net change in abundance), and have a minimum ten-fold range.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://patchwork.data-imaginist.com" class="external-link">"patchwork"</a></span><span class="op">)</span></span>
-<span><span class="fu"><a href="reference/plot_total_fitness.html">plot_total_fitness</a></span><span class="op">(</span><span class="va">fitness_myxo</span>, ylim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1e-8</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span><span class="fu"><a href="reference/plot_fitness_ratio.html">plot_fitness_ratio</a></span><span class="op">(</span><span class="va">fitness_myxo</span>, mix_scale <span class="op">=</span> <span class="st">"ratio"</span>, ylim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1e-4</span>, <span class="fl">1e4</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span><span class="fu"><a href="https://patchwork.data-imaginist.com/reference/plot_annotation.html" class="external-link">plot_annotation</a></span><span class="op">(</span>tag_levels <span class="op">=</span> <span class="st">"A"</span><span class="op">)</span></span></code></pre></div>
-<!-- ggsave("README-plot-functions.png", width = 5, height = 2.25) -->
-<p><img src="./reference/figures/README-plot-functions.png"></p>
-<p>You can also use the individual axes and other components of microbimixr plots with ggplot2:</p>
+<span><span class="va">fig_total</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/plot_total_fitness.html">plot_total_fitness</a></span><span class="op">(</span><span class="va">fitness_myxo</span><span class="op">)</span></span>
+<span><span class="va">fig_ratio</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/plot_fitness_ratio.html">plot_fitness_ratio</a></span><span class="op">(</span><span class="va">fitness_myxo</span>, mix_scale <span class="op">=</span> <span class="st">"ratio"</span>, ylim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1e-4</span>, <span class="fl">1e4</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">fig_total</span> <span class="op">+</span> <span class="va">fig_ratio</span></span></code></pre></div>
+<!-- ggsave("README-plots-simple.png", width = 5, height = 2.25) -->
+<p><img src="./reference/figures/README-plots-simple.png"></p>
+<p>You can also customize these plots using the ggplot2 graphics package:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://ggplot2.tidyverse.org" class="external-link">"ggplot2"</a></span><span class="op">)</span></span>
 <span><span class="va">fitness_myxo</span> <span class="op">|&gt;</span></span>
-<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">initial_fraction_A</span>, y <span class="op">=</span> <span class="va">fitness_total</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu"><a href="reference/scale_x_initial_fraction.html">scale_x_initial_fraction</a></span><span class="op">(</span>name <span class="op">=</span> <span class="st">"Initial frequency of evolved strain"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu"><a href="reference/scale_y_fitness_total.html">scale_y_fitness_total</a></span><span class="op">(</span>name <span class="op">=</span> <span class="st">"Group sporulation success\n(spores/cell)"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_smooth.html" class="external-link">geom_smooth</a></span><span class="op">(</span>method <span class="op">=</span> <span class="st">"lm"</span>, se <span class="op">=</span> <span class="cn">FALSE</span>, formula <span class="op">=</span> <span class="va">y</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/stats/poly.html" class="external-link">poly</a></span><span class="op">(</span><span class="va">x</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu"><a href="reference/geom_point_overlap.html">geom_point_overlap</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="st">"lightblue"</span>, color <span class="op">=</span> <span class="st">"darkblue"</span>, size <span class="op">=</span> <span class="fl">2</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_bw</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<!-- ggsave("README-plot-elements.png", width = 3, height = 2.25) -->
-<p><img src="./reference/figures/README-plot-elements.png" style="width:50.0%"></p>
+<span>    <span class="fu"><a href="reference/plot_total_fitness.html">plot_total_fitness</a></span><span class="op">(</span></span>
+<span>        xlab <span class="op">=</span> <span class="st">"Initial frequency of evolved strain"</span>,</span>
+<span>        ylab <span class="op">=</span> <span class="st">"Total sporulation\n(spores/cell)"</span>, </span>
+<span>        ylim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1e-8</span>, <span class="fl">1</span><span class="op">)</span>, color <span class="op">=</span> <span class="st">"darkblue"</span>, fill <span class="op">=</span> <span class="st">"skyblue"</span></span>
+<span>    <span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_smooth.html" class="external-link">geom_smooth</a></span><span class="op">(</span></span>
+<span>        method <span class="op">=</span> <span class="st">"lm"</span>, formula <span class="op">=</span> <span class="va">y</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/stats/poly.html" class="external-link">poly</a></span><span class="op">(</span><span class="va">x</span>, <span class="fl">2</span><span class="op">)</span>, </span>
+<span>        se <span class="op">=</span> <span class="cn">FALSE</span>, linewidth <span class="op">=</span> <span class="fl">0.5</span></span>
+<span>    <span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_bw</a></span><span class="op">(</span>base_size <span class="op">=</span> <span class="fl">9</span><span class="op">)</span></span></code></pre></div>
+<!-- ggsave("README-plots-custom.png", width = 2.5, height = 2) -->
+<p><img src="./reference/figures/README-plots-custom.png" style="width:50.0%"></p>
 </div>
 <div class="section level2">
-<h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
+<h2 id="install-microbimixr">Install microbimixr<a class="anchor" aria-label="anchor" href="#install-microbimixr"></a>
 </h2>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># The development version from GitHub:</span></span>
+<code class="sourceCode R"><span><span class="co"># Install the development version from GitHub:</span></span>
 <span><span class="co"># install.packages("devtools")</span></span>
-<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"matryoshkev/microbimixr"</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"matryoshkev/microbimixr"</span>, build_vignettes <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="further-reading">Further reading<a class="anchor" aria-label="anchor" href="#further-reading"></a>
@@ -167,25 +160,7 @@ fig_total + fig_within
 </li>
 </ul>
 <!--
-## Example
-
-This is a basic example which shows you how to solve a common problem:
-
-
-``` r
-# library(microbimixr)
-## basic example code
-```
-
-What is special about using `README.Rmd` instead of just `README.md`? You can include R chunks like so:
-
-You'll still need to render `README.Rmd` regularly, to keep `README.md` up-to-date. `devtools::build_readme()` is handy for this.
-
-You can also embed plots, for example:
-
-
-
-In that case, don't forget to commit and push the resulting figure files, so they display on GitHub and CRAN.
+Use `devtools::build_readme()` to render `README.Rmd` and keep `README.md` up-to-date.
 -->
 </div>
 </div>
