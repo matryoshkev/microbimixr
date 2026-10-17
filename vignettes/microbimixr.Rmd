@@ -90,8 +90,8 @@ fitness_ecoli <- calculate_mix_fitness(
 		initial_fraction_A = "fraction_resistant_initial",
 		final_number_total = "OD_final",
 		final_fraction_A = "fraction_resistant_final",
-		name_A = "AmpR",
-		name_B = "AmpS"
+		name_A = "resistant",
+		name_B = "sensitive"
 	)
 )
 ```
@@ -111,8 +111,8 @@ fitness_ecoli <-
 			initial_fraction_A = "fraction_resistant_initial",
 			final_number_total = "OD_final",
 			final_fraction_A = "fraction_resistant_final",
-			name_A = "AmpR",
-			name_B = "AmpS"
+			name_A = "resistant",
+			name_B = "sensitive"
 		), 
 		keep = c("ampicillin", "dilution")
 	)
@@ -173,28 +173,22 @@ For the *E. coli* results, total fitness is just a constant determined by experi
 
 ## Plot fitness data
 
-Once you know which fitness measures to focus on, you can use microbimixr to make figures for the paper. The simplest way is to use its built-in functions: `plot_strain_fitness()`, `plot_total_fitness()`, and `plot_fitness_ratio()`. They're a straight-forward way to make figures designed for fitness data. 
+Once you know which fitness measures to focus on, you can use microbimixr to make figures for the paper. The simplest way is to use its built-in functions: `plot_strain_fitness()`, `plot_total_fitness()`, and `plot_fitness_ratio()`. They're a straight-forward way to make figures designed for fitness data. They have some basic options. 
 
-```{r plot-myxo, fig.width = 5.5, fig.height = 2.25, fig.align = "center", out.width = "100%"}
-library(patchwork)
-plot_total_fitness(fitness_myxo) + 
-plot_fitness_ratio(fitness_myxo, mix_scale = "ratio")
-```
-
-The plot functions have some basic options: 
 ```{r plot-options, fig.width = 5.5, fig.height = 2.25, fig.align = "center", out.width = "100%"}
-plot_total_fitness(
+library(patchwork)
+fig_total <- plot_total_fitness(
 	fitness_myxo,
 	xlab = "Initial frequency of evolved strain",
 	ylab = "Total sporulation\n(spores/cell)"
-) +
-plot_fitness_ratio(
+)
+fig_ratio <- plot_fitness_ratio(
 	fitness_myxo, 
 	mix_scale = "ratio",
-	xlab = "Initial ratio evolved / ancestral",
 	ylab = "Relative sporulation\nevolved / ancestral",
 	ylim = c(1e-4, 1e4)
 )
+fig_total + fig_ratio + plot_annotation(tag_levels = "A")
 ```
 
 You can customize microbimixr plots even more with the [ggplot2](https://ggplot2.tidyverse.org/) package. This is great for showing different experimental conditions. 
@@ -215,6 +209,54 @@ fitness_ecoli |>
 	) +
 	facet_wrap(~ dilution, labeller = as_labeller(function(x) paste0(x, "-fold dilution"))) +
 	theme_bw(base_size = 9)
+```
+
+
+## Add fitted models to plots
+
+It's easy to plot fitted models along with your data. One way is to add a column to the fitness data frame for the predicted values. 
+
+```{r model-ratio}
+model_fitness_ratio <- lm(
+	log10(fitness_ratio_A_B) ~ log10(initial_ratio_A_B),
+	data = fitness_myxo, 
+	na.action = na.exclude
+)
+fitness_myxo$fitness_ratio_fitted <- 10^predict(model_fitness_ratio)
+```
+
+To show smooth nonlinear curves, you can also make a separate data frame for the fitted model. 
+
+```{r model-total}
+model_total_fitness <- lm(
+	log10(fitness_total) ~ initial_fraction_A + I(initial_fraction_A^2),
+	data = fitness_myxo, 
+	na.action = na.exclude
+)
+fitness_fitted <- data.frame(initial_fraction_A = seq(0, 1, by = 0.02))
+fitness_fitted$fitness_total <- 
+		10^predict(model_total_fitness, newdata = fitness_fitted)
+```
+
+Then show the models as lines. 
+
+```{r plot-models, fig.width = 5.5, fig.height = 2.25, fig.align = "center", out.width = "100%"}
+fig_ratio <- 
+	fitness_myxo |>
+	plot_fitness_ratio(
+		mix_scale = "ratio",
+		ylab = "Relative sporulation\n evolved / ancestral",
+		ylim = c(1e-4, 1e4)
+	) +
+	geom_line(mapping = aes(y = fitness_ratio_fitted))
+fig_total <- 
+	fitness_myxo |>
+	plot_total_fitness(
+		xlab = "Initial frequency of evolved strain",
+		ylab = "Total sporulation\n(spores/cell)"
+	) +
+	geom_line(data = fitness_fitted)
+fig_total + fig_ratio + plot_annotation(tag_levels = "A")
 ```
 
 ## References
