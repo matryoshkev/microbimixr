@@ -8,29 +8,38 @@ vignette: >
 ---
 
 ```{r, include = FALSE}
-knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
+knitr::opts_chunk$set(
+	collapse = TRUE, 
+	comment = "#>",
+	out.width = "100%"
+)
+# Load dependencies here so we don't get messages from R in the document
+library(ggplot2)
+library(patchwork)
 ```
 
-A common way to study interactions among microbes is to do mix experiments. You mix together different microbes (different strains of bacteria, for example) and then see how their behavior depends on mix frequency. How do they act differently together than on their own? How does mixing affect their survival and reproduction---their fitness?
+A common way to study cooperation and conflict among microbes is to do mix experiments: you mix together two different strains then measure how their behavior depends on mix frequency. How do they act differently together than they do on their own? How does mixing affect their survival and reproduction---their fitness?
 
-microbimixr is an R package that helps you analyze mix experiments. It helps you get the most out of your data by making it easy to:
+microbimixr helps you analyze mix experiments by making it easy to:
 
 * Calculate best-practice fitness measures
-* Identify which measures are best for your dataset and research question
-* Make publication-quality figures showing interaction effects
+* Identify which fitness measures are best for your data and research question
+* Visualize interaction effects as publication-quality figures
+
+![](img/workflow.png){width="100%"}
 
 The basic workflow is: 
 
-1. Start from a data frame of observed microbial abundances
+1. Start with a data frame of observed microbial abundances
 2. Calculate fitness measures with `calculate_mix_fitness()`
-3. Figure out which fitness and frequency measures to use with `plot_mix_fitness()`
-4. Plot the fitness data with microbimixr's built-in functions or its add-ins for ggplot2
+3. Identify which fitness and frequency measures to use with `plot_mix_fitness()`
+4. Plot fitness data using microbimixr's visualization tools
 5. Fit statistical models and plot them with your data
 
 
 ## Starting data
 
-The starting point for microbimixr is a data frame that has the observed abundance of each microbe at the beginning of the experiments and at the end. The data could be any combination of strain abundance (like cell counts or cell densities), strain frequency (the fraction of the total), or total group abundance (all strains added together)---anything that's enough to define the absolute abundance of each strain. Each row of the data frame should have all the data for a single observational unit: one experimental replicate with one strain combination, one mix frequency, one combination of experimental treatments, and so on.
+The starting point for microbimixr is a data frame that has the observed abundance of each microbe at the beginning of the experiments and at the end. The data could be any combination of strain abundance (like cell counts or cell densities), strain frequency (the fraction of the total), or total abundance (all strains added together)---anything that's enough to define the absolute abundance of each strain. Each row of the data frame should have all the data for a single observational unit: one experimental replicate with one strain combination, one mix frequency, one combination of experimental treatments, and so on.
 
 Here's an example with a dataset that's included in the package. This is from a small experiment mixing a wild-type strain of _Myxococcus_ bacteria with an experimentally-evolved cheater strain and letting them make multicellular fruiting bodies together (smith _et al._&nbsp;2010). The abundance quantities here are the number of cells from each strain before and after development. 
 
@@ -45,13 +54,12 @@ Here's another example. This is from an experiment that grew an antibiotic-sensi
 head(data_Yurtsev_2013)
 ```
 
-microbimixr works with most types of microbial abundance data. 
+microbimixr works with most types of microbial abundance data including cell counts, cell density, optical density, and strain frequency. 
 
 
-## Calculate fitness
+## Calculate fitness measures
 
 There are lots of quantities you can calculate to measure microbial survival and reproduction. Many of them work well enough for a particular system and particular research question. But only a few are robust enough to be quantitatively meaningful across different species and different types of interaction (smith & Inglis 2021). microbimixr makes it easy to calculate the good ones. 
-
 
 The function to calculate fitness is `calculate_mix_fitness()`. It takes an input data frame of microbial abundances and a character vector describing what the columns in the data are. Then it returns a data frame with several measures of fitness and two measures of mix frequency. Here's an example: 
 
@@ -63,20 +71,20 @@ fitness_myxo <- calculate_mix_fitness(
 		initial_number_B = "initial_cells_ancestral",
 		final_number_A = "final_spores_evolved",
 		final_number_B = "final_spores_ancestral", 
-		name_A = "GVB206.3", 
-		name_B = "GJV10"
+		name_A = "evolved", 
+		name_B = "ancestral"
 	)
 )
 head(fitness_myxo)
 ```
 
-The `var_names` argument tells the function what kinds of data you have and which strain is which. In the output, `initial_fraction_A` and `initial_ratio_A_B` are two measures of mix frequency. `fitness_A` and `fitness_B` are the absolute fitness of each strain. `fitness_total` is the fitness of the total group or subpopulation. And `fitness_ratio_A_B` is the relative fitness of A to B within the same group. 
+The `var_names` argument tells the function what kinds of data you have and which strain is which. In the output, `initial_fraction_A` and `initial_ratio_A_B` are two measures of strain frequency. `fitness_A` and `fitness_B` are the absolute fitness of each strain. `fitness_total` is the fitness of the total group or subpopulation. And `fitness_ratio_A_B` is the ratio of strain A fitness to strain B fitness. 
 
 Here's an example with the _E.&nbsp;coli_ data: 
 
-```{r fitness-ecoli}
+```{r }
 fitness_ecoli <- calculate_mix_fitness(
-	data_Yurtsev_2013, 
+	data = data_Yurtsev_2013,
 	var_names = c(
 		initial_number_total = "OD_initial",
 		initial_fraction_A = "fraction_resistant_initial",
@@ -84,20 +92,37 @@ fitness_ecoli <- calculate_mix_fitness(
 		final_fraction_A = "fraction_resistant_final",
 		name_A = "AmpR",
 		name_B = "AmpS"
-	), 
-	keep = c("ampicillin", "dilution")
+	)
 )
-
-head(fitness_ecoli)
 ```
 
-Notice the warning messages here. `calculate_mix_fitness()` will warn you if any of the data aren't biologically meaningful. There can't be a negative number of cells, for example, and fractions are bounded at zero and one. Some of the _E.&nbsp;coli_ data include negative fractions---probably a minor artifact of correcting for background fluorescence in flow cytometry. 
+Notice the warnings. `calculate_mix_fitness()` will warn you if any of the data aren't biologically meaningful. There can't be a negative number of cells, for example, and fractions are bounded at zero and one. Some of the _E.&nbsp;coli_ data include negative fractions---probably an artifact of correcting for background fluorescence in flow cytometry. Let's drop those points. 
 
-This example also shows how you can use the `keep` argument to include columns in the fitness results for experimental treatments, experimental block, and so on.
+```{r fitness-ecoli}
+fitness_ecoli <- 
+	data_Yurtsev_2013 |>
+	subset(
+		fraction_resistant_initial > 0 & fraction_resistant_initial < 1 &
+		fraction_resistant_final > 0 & fraction_resistant_final < 1
+	) |>
+	calculate_mix_fitness(
+		var_names = c(
+			initial_number_total = "OD_initial",
+			initial_fraction_A = "fraction_resistant_initial",
+			final_number_total = "OD_final",
+			final_fraction_A = "fraction_resistant_final",
+			name_A = "AmpR",
+			name_B = "AmpS"
+		), 
+		keep = c("ampicillin", "dilution")
+	)
+```
 
-<!-- 
-*`name_A` and `name_B` can be label or column. Column example = dicty data
--->
+The `keep` argument lets you include columns from the input data in the fitness output for experimental treatments, experimental block, and so on:
+
+```{r }
+head(fitness_ecoli)
+```
 
 
 ### Fitness math
@@ -111,9 +136,9 @@ $$\begin{aligned}
 	\texttt{fitness_ratio_A_B} &= \; w_A / w_B
 \end{aligned}$$
 
-These quantities are unscaled Wrightian fitness measured over the entire time period between the initial and final abundances. They measure fold change in absolute abundance. So if a bacterial strain's cell density increases 100-fold, for example, its fitness will be $w = 100$. If it decreases to 10% of its initial density, its fitness will be $w = 0.1$. They're usually best visualized and analyzed over $\log_{10}$ scales. 
+These quantities are absolute Wrightian fitness measured over the entire time period between the initial and final abundances. They measure fold change in abundance. So if a bacterial strain's cell density increases 100-fold, for example, its fitness will be $w = 100$. If it decreases to 10% of its initial density, its fitness will be $w = 0.1$. They're usually best visualized and analyzed over $\log_{10}$ scales. 
 
-These fitness measures are robust across different species and types of interaction (smith & Inglis 2021). They let you quantitatively compare fitness effects across systems. They're good for statistical analyses of effect sizes and confidence intervals. And they're directly comparable to fitness terms in theoretical models of microbial evolution. 
+These fitness measures are robust across different species and types of interaction (smith & Inglis 2021). They let you quantitatively compare fitness effects across systems. They're good for statistical analyses of effect sizes and confidence intervals. And they're directly comparable to fitness terms in theoretical models of microbial evolution. Kin selection and game theory approaches would use strain fitness. Multilevel selection would use total fitness and the fitness ratio. 
 
 The two measures of mix frequency are: 
 
@@ -125,129 +150,72 @@ $$\begin{aligned}
 `initial_fraction_A` runs from 0 to 1. `initial_ratio_A_B` runs from negative infinity to positive infinity and is best analyzed over $\log_{10}$ scales. 
 
 
-## Compare fitness measures
+## Identify which fitness measures to use 
 
-Some microbial interaction are easier to visualize, analyze, and interpret with strain-focused fitness outcomes. Others are easier with group-focused outcomes (smith & Inglis 2021). And effects can be more relevant or more linear over one frequency scale than the other. 
-
-To see which measures are most useful for analyzing your dataset, use `plot_mix_fitness()`. It draws a combined figure with strain fitness, total group fitness, and relative within-group fitness plotted against two measures of mix frequency.
+Microbial interactions are often easier to visualize, analyze, and interpret with some fitness outcomes more than others, but it's not always clear ahead of time which they'll be (smith & Inglis 2021). To see which measures would be best for your data and research question, use `plot_mix_fitness()`. It draws a combined plot that lets you compare strain fitness, total fitness, and the ratio of strain fitnesses. It also lets you compare linear and logarithmic measures of strain frequency. 
 
 ```{r compare-myxo, fig.width = 6.25, fig.height = 4.5, fig.align = "center", out.width = "100%"}
 plot_mix_fitness(fitness_myxo)
 ```
 
-These plots help you see which fitness measures and mixing scales are more informative or easier to analyze. For example, within-group competition among these _Myxo_ strains is negatively frequency-dependent and is a linear function of log mixing ratio. 
-
-<!--
-`plot_mix_fitness()` uses `log10` scales for fitness and mixing ratio, so it will return warnings when some of these values are zero---for data with only one strain, for example. 
-
-As a tool for data inspection, `plot_mix_fitness()` shows each data point individually instead of a statistical summary like the mean value with error bars. 
--->
+The _Myxo_ results would be easiest to interpret and analyze as total fitness as a function of initial genotype fraction and fitness ratio as a function of initial genotype ratio. They're the simplest fitness responses and easiest to fit statistical models to. 
 
 For complex datasets with many strain combinations or treatment conditions, it may be easier to inspect subsets of the data. 
 
-```{r compare-Yurtsev, fig.width = 6.25, fig.height = 4.5, fig.align = "center", out.width = "100%"}
+```{r compare-ecoli, fig.width = 6.25, fig.height = 4.5, fig.align = "center", out.width = "100%"}
 fitness_ecoli |>
 subset(ampicillin == 100 & dilution == 100) |>
 plot_mix_fitness()
 ```
 
-This example also shows that microbimixr functions work with the R pipe `|>`. 
-
-For the interaction between antibiotic-resistant and sensitive *E. coli* strains shown above, total group fitness is just a constant determined by experimental conditions---how much the culture was diluted when passaged. So the within-group fitness ratio would by itself be a succinct measure of the interesting effects. 
-
-<!--
-microbimixr's plotting functions can use fitness datasets that aren't made by `calculate_mix_fitness()`, but you may need to specify what the columns mean using the `var_names` option. 
--->
+For the *E. coli* results, total fitness is just a constant determined by experimental conditions---how much the culture was diluted when passaged. So fitness ratio by itself is a succinct measure of the interesting effects. The fitness response looks simpler on the linear frequency scale. 
 
 
-## Plot fitness with microbimixr functions
+## Plot fitness data
 
-Once you know which fitness measures to focus on, you can use microbimixr to visualize them. The simplest way is to use its built-in plot functions:
+Once you know which fitness measures to focus on, you can use microbimixr to make figures for the paper. The simplest way is to use its built-in functions: `plot_strain_fitness()`, `plot_total_fitness()`, and `plot_fitness_ratio()`. They're a straight-forward way to make figures designed for fitness data. 
 
-* `plot_strain_fitness()`: Plot fitness of each strain separately
-* `plot_total_fitness()` : Plot fitness of total group or subpopulation
-* `plot_fitness_ratio()` : Plot within-group ratio of strain fitnesses
-
-These functions let you reproduce the individual subplots from `plot_mix_fitness()`. They're a simple, straight-forward way to make figures designed for fitness data. 
-<!-- 
-They work best with simple mix experiments with two strains and no other treatment variables.  
--->
-
-```{r plot-smith2010, fig.width = 2.25, fig.height = 1.75, fig.align = "center", out.width = "50%"}
-plot_total_fitness(fitness_myxo)
+```{r plot-myxo, fig.width = 5.5, fig.height = 2.25, fig.align = "center", out.width = "100%"}
+library(patchwork)
+plot_total_fitness(fitness_myxo) + 
+plot_fitness_ratio(fitness_myxo, mix_scale = "ratio")
 ```
 
-They have some basic options:
-
-```{r plot-options-smith2010, fig.width = 5.5, fig.height = 2.25, fig.align = "center", out.width = "100%"}
-library(patchwork)
-fig_total <- plot_total_fitness(
+The plot functions have some basic options: 
+```{r plot-options, fig.width = 5.5, fig.height = 2.25, fig.align = "center", out.width = "100%"}
+plot_total_fitness(
 	fitness_myxo,
 	xlab = "Initial frequency of evolved strain",
-	ylab = "Total sporulation efficiency\n(spores/cell)"
-)
-fig_within <- plot_fitness_ratio(
+	ylab = "Total sporulation\n(spores/cell)"
+) +
+plot_fitness_ratio(
 	fitness_myxo, 
 	mix_scale = "ratio",
 	xlab = "Initial ratio evolved / ancestral",
-	ylab = "Relative efficiency\nevolved / ancestral",
-	ylim = c(0.01, 100)
+	ylab = "Relative sporulation\nevolved / ancestral",
+	ylim = c(1e-4, 1e4)
 )
-fig_total + fig_within + plot_annotation(tag_levels = "A")
 ```
 
-This example also shows how to use the patchwork package to combine subplots with `+`. 
+You can customize microbimixr plots even more with the [ggplot2](https://ggplot2.tidyverse.org/) package. This is great for showing different experimental conditions. 
 
-<!--
-The `plot_*_fitness()` functions return ggplot2 objects, so you can extend and modify them by adding or replacing scales, themes, and so on. 
--->
-
-
-## Plot fitness with ggplot2
-
-The fitness-plotting functions use graphics package ggplot2. You can also use microbimixr's various axes and other plot components when you make ggplot2 figures on your own. These include:
-
-* Mixing axes `scale_x_initial_fraction()` and `scale_x_initial_ratio()`
-* Fitness axes `scale_y_fitness()`, `scale_y_fitness_total()`, and `scale_y_fitness_ratio()`
-* Data points `geom_point_overlap()` that easier to read when they overlap
-
-These functions return custom plot elements for ggplot2 that have default settings appropriate for microbial mix experiments. 
-
-```{r elements-smith, fig.width = 3, fig.height = 2.25, fig.align = "center", out.width = "50%"}
+```{r plot-ggplot2, fig.width = 6.25, fig.height = 2.25, out.width = "100%", align = "center"}
 library(ggplot2)
-fitness_myxo |>
-	ggplot(aes(x = initial_fraction_A, y = fitness_total)) +
-	scale_x_initial_fraction(name = "Initial frequency of evolved strain") +
-	scale_y_fitness_total(name = "Sporulation efficiency\n(spores/cell)", limits = c(1e-8, 1)) +
-	geom_smooth(method = "lm", se = FALSE, formula = y ~ poly(x, 2)) +
-	geom_point_overlap(shape = 23, fill = "lightblue", color = "darkblue", size = 2) +
-	theme_bw()
-```
-
-The plot elements are especially useful for more-complex figures with different experimental conditions or multiple strain combinations.
-
-```{r elements-Yurtsev, fig.width = 6.25, fig.height = 2.25, out.width = "100%", align = "center"}
-name_amp <- "Ampicillin\n(\u03BCg/mL)"
 fitness_ecoli |>
-	subset(
-		ampicillin %in% c(0, 15, 50, 100) & dilution %in% c(200, 400, 800) &
-		fitness_ratio_A_B > 0 & is.finite(fitness_ratio_A_B)
-	) |>
-	ggplot(mapping = aes(
-		x = initial_fraction_A, y = fitness_ratio_A_B, 
-		fill = factor(ampicillin), color = factor(ampicillin))
+	subset(ampicillin %in% c(0, 15, 50, 100) & dilution %in% c(200, 400, 800)) |>
+	plot_fitness_ratio() +
+	aes(color = factor(ampicillin), fill = factor(ampicillin)) +
+	scale_color_viridis_d(
+		name = "Ampicillin\n(µg/mL)", option = "magma", 
+		direction = -1, begin = 0, end = 0.8
 	) +
-	geom_point_overlap(na.rm = TRUE) +
-	scale_x_initial_fraction(name = "Initial frequency resistant") +
-	scale_y_fitness_ratio(
-		name = "Fitness ratio\nresistant / sensitive", 
-		limits = c(1e-1, 1e4)
+	scale_fill_viridis_d(
+		name = "Ampicillin\n(µg/mL)", option = "magma",
+		direction = -1, begin = 0.5, end = 1
 	) +
-	scale_fill_viridis_d(name = name_amp, option = "magma", direction = -1, begin = 0.5, end = 1) +
-	scale_color_viridis_d(name = name_amp, option = "magma", direction = -1, begin = 0, end = 0.8) +
-	facet_wrap(~ dilution, labeller = as_labeller(function(x) paste0(x, "-fold dilution"))) 
+	facet_wrap(~ dilution, labeller = as_labeller(function(x) paste0(x, "-fold dilution"))) +
+	theme_bw(base_size = 9)
 ```
-
 
 ## References
 

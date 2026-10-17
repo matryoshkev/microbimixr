@@ -394,7 +394,7 @@ limits_log10 <- function(limits) {
 
 # Get breaks for log10 axes
 #   Assumes value range includes 1
-breaks_log10 <- function(n_min = 4, n_max = 6) {
+breaks_log10 <- function(n_min = 3, n_max = 7) {
 	force_all(n_min, n_max)
 	min_default <- n_min
 	max_default <- n_max

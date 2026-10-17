@@ -198,13 +198,13 @@ test_that("log10 breaks include 1", {
 	expect_true(any(get_breaks(c(2e-3, 2e4)) == 1))
 })
 
-test_that("at least four log10 breaks visible", {
+test_that("at least three log10 breaks visible", {
 	get_breaks <- breaks_log10()
 	trial_values <- list(c(0.2, 2), c(0.1, 10), c(2e-2, 2e2), c(2e-3, 3e4))
 	for (values in trial_values) {
 		breaks <- get_breaks(values)
 		breaks <- breaks[breaks >= min(values) & breaks <= max(values)]
-		expect_true(length(breaks) >= 4)
+		expect_true(length(breaks) >= 3)
 	}
 })
 

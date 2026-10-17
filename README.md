@@ -9,17 +9,18 @@ microbimixr
 coverage](https://codecov.io/gh/matryoshkev/microbimixr/graph/badge.svg)](https://app.codecov.io/gh/matryoshkev/microbimixr)
 <!-- badges: end -->
 
-microbimixr is an R package for analyzing microbial interactions in mix
-experiments. Studies of cooperation and conflict among microbes often
-use a common experimental design: mix together two microbes (different
-strains of bacteria, for example) then measure how their survival and
-reproduction depend on strain frequency. How do they act differently
-together than on their own? microbimixr helps you get the most out of
-your data by providing tools to:
+## Analyze microbial interactions in mix experiments
+
+Studies of cooperation and conflict among microbes often use a common
+experimental design: mix together two microbes (different strains of
+bacteria, for example) then measure how their survival and reproduction
+depend on strain frequency. How do they act differently together than
+they do on their own? microbimixr helps you get the most out of this
+data by providing tools to:
 
 -   Calculate best-practice fitness measures
--   Identify which fitness measures are best for your research question
-    and data
+-   Identify which fitness measures are best for your data and research
+    question
 -   Visualize interaction effects as publication-quality figures
 
 ![](./man/figures/README-workflow.png)
@@ -78,8 +79,8 @@ cell counts, cell density, optical density, and strain frequency.
 To quickly see what fitness measures would be most useful for your
 research question and data, use `plot_mix_fitness()`. It draws a
 combined figure that lets you compare strain fitness, total fitness, and
-the relative ratio of strain fitnesses. It also lets you compare linear
-and logarithmic measures of strain frequency.
+the ratio of strain fitnesses. It also lets you compare linear and
+logarithmic measures of strain frequency.
 
 ``` r
 plot_mix_fitness(fitness_myxo)
@@ -92,9 +93,9 @@ plot_mix_fitness(fitness_myxo)
 For example, this interaction between two genotypes of *Myxococcus*
 bacteria would be easiest to interpret and analyze as total fitness as a
 function of initial genotype fraction and fitness ratio as a function of
-initial genotype ratio. Those are the simplest fitness responses and
+initial genotype ratio. They’re the simplest fitness responses and
 easiest to fit statistical models to. These plots also let you interpret
-your data in terms of the fitness outcomes used by different theories of
+your data in terms of the different fitness outcomes used by theories of
 social evolution like kin selection, multilevel selection, and game
 theory.
 
@@ -118,7 +119,8 @@ fig_total + fig_ratio
 
 ![](./man/figures/README-plots-simple.png)
 
-You can also customize these plots using the ggplot2 graphics package:
+You can also customize these plots using the
+[ggplot2](https://ggplot2.tidyverse.org/) graphics package:
 
 ``` r
 library("ggplot2")
