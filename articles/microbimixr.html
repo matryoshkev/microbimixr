@@ -213,8 +213,8 @@ A fitness to strain B fitness.</p>
 <span>        initial_fraction_A <span class="op">=</span> <span class="st">"fraction_resistant_initial"</span>,</span>
 <span>        final_number_total <span class="op">=</span> <span class="st">"OD_final"</span>,</span>
 <span>        final_fraction_A <span class="op">=</span> <span class="st">"fraction_resistant_final"</span>,</span>
-<span>        name_A <span class="op">=</span> <span class="st">"AmpR"</span>,</span>
-<span>        name_B <span class="op">=</span> <span class="st">"AmpS"</span></span>
+<span>        name_A <span class="op">=</span> <span class="st">"resistant"</span>,</span>
+<span>        name_B <span class="op">=</span> <span class="st">"sensitive"</span></span>
 <span>    <span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt; Warning in calculate_mix_fitness(): Some fraction_resistant_initial values not</span></span>
@@ -240,8 +240,8 @@ in flow cytometry. Let’s drop those points.</p>
 <span>            initial_fraction_A <span class="op">=</span> <span class="st">"fraction_resistant_initial"</span>,</span>
 <span>            final_number_total <span class="op">=</span> <span class="st">"OD_final"</span>,</span>
 <span>            final_fraction_A <span class="op">=</span> <span class="st">"fraction_resistant_final"</span>,</span>
-<span>            name_A <span class="op">=</span> <span class="st">"AmpR"</span>,</span>
-<span>            name_B <span class="op">=</span> <span class="st">"AmpS"</span></span>
+<span>            name_A <span class="op">=</span> <span class="st">"resistant"</span>,</span>
+<span>            name_B <span class="op">=</span> <span class="st">"sensitive"</span></span>
 <span>        <span class="op">)</span>, </span>
 <span>        keep <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ampicillin"</span>, <span class="st">"dilution"</span><span class="op">)</span></span>
 <span>    <span class="op">)</span></span></code></pre></div>
@@ -250,13 +250,13 @@ input data in the fitness output for experimental treatments,
 experimental block, and so on:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">fitness_ecoli</span><span class="op">)</span></span>
-<span><span class="co">#&gt;   ampicillin dilution name_A name_B initial_fraction_A initial_ratio_A_B</span></span>
-<span><span class="co">#&gt; 2          0      100   AmpR   AmpS         0.04736746        0.04972269</span></span>
-<span><span class="co">#&gt; 3          0      100   AmpR   AmpS         0.08319440        0.09074377</span></span>
-<span><span class="co">#&gt; 4          0      100   AmpR   AmpS         0.13609704        0.15753742</span></span>
-<span><span class="co">#&gt; 5          0      100   AmpR   AmpS         0.19092077        0.23597290</span></span>
-<span><span class="co">#&gt; 6          0      100   AmpR   AmpS         0.23461783        0.30653683</span></span>
-<span><span class="co">#&gt; 7          0      100   AmpR   AmpS         0.26563355        0.36171798</span></span>
+<span><span class="co">#&gt;   ampicillin dilution    name_A    name_B initial_fraction_A initial_ratio_A_B</span></span>
+<span><span class="co">#&gt; 2          0      100 resistant sensitive         0.04736746        0.04972269</span></span>
+<span><span class="co">#&gt; 3          0      100 resistant sensitive         0.08319440        0.09074377</span></span>
+<span><span class="co">#&gt; 4          0      100 resistant sensitive         0.13609704        0.15753742</span></span>
+<span><span class="co">#&gt; 5          0      100 resistant sensitive         0.19092077        0.23597290</span></span>
+<span><span class="co">#&gt; 6          0      100 resistant sensitive         0.23461783        0.30653683</span></span>
+<span><span class="co">#&gt; 7          0      100 resistant sensitive         0.26563355        0.36171798</span></span>
 <span><span class="co">#&gt;   fitness_A fitness_B fitness_total fitness_ratio_A_B</span></span>
 <span><span class="co">#&gt; 2  55.19903  104.4084     102.07749         0.5286838</span></span>
 <span><span class="co">#&gt; 3  67.25088  102.9718     100.00000         0.6531001</span></span>
@@ -340,30 +340,26 @@ microbimixr to make figures for the paper. The simplest way is to use
 its built-in functions: <code><a href="../reference/plot_strain_fitness.html">plot_strain_fitness()</a></code>,
 <code><a href="../reference/plot_total_fitness.html">plot_total_fitness()</a></code>, and
 <code><a href="../reference/plot_fitness_ratio.html">plot_fitness_ratio()</a></code>. They’re a straight-forward way to
-make figures designed for fitness data.</p>
+make figures designed for fitness data. They have some basic
+options.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://patchwork.data-imaginist.com" class="external-link">patchwork</a></span><span class="op">)</span></span>
-<span><span class="fu"><a href="../reference/plot_total_fitness.html">plot_total_fitness</a></span><span class="op">(</span><span class="va">fitness_myxo</span><span class="op">)</span> <span class="op">+</span> </span>
-<span><span class="fu"><a href="../reference/plot_fitness_ratio.html">plot_fitness_ratio</a></span><span class="op">(</span><span class="va">fitness_myxo</span>, mix_scale <span class="op">=</span> <span class="st">"ratio"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="microbimixr_files/figure-html/plot-myxo-1.png" class="r-plt" alt="" width="100%" style="display: block; margin: auto;"></p>
-<p>The plot functions have some basic options:</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_total_fitness.html">plot_total_fitness</a></span><span class="op">(</span></span>
+<span><span class="va">fig_total</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/plot_total_fitness.html">plot_total_fitness</a></span><span class="op">(</span></span>
 <span>    <span class="va">fitness_myxo</span>,</span>
 <span>    xlab <span class="op">=</span> <span class="st">"Initial frequency of evolved strain"</span>,</span>
 <span>    ylab <span class="op">=</span> <span class="st">"Total sporulation\n(spores/cell)"</span></span>
-<span><span class="op">)</span> <span class="op">+</span></span>
-<span><span class="fu"><a href="../reference/plot_fitness_ratio.html">plot_fitness_ratio</a></span><span class="op">(</span></span>
+<span><span class="op">)</span></span>
+<span><span class="va">fig_ratio</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/plot_fitness_ratio.html">plot_fitness_ratio</a></span><span class="op">(</span></span>
 <span>    <span class="va">fitness_myxo</span>, </span>
 <span>    mix_scale <span class="op">=</span> <span class="st">"ratio"</span>,</span>
-<span>    xlab <span class="op">=</span> <span class="st">"Initial ratio evolved / ancestral"</span>,</span>
 <span>    ylab <span class="op">=</span> <span class="st">"Relative sporulation\nevolved / ancestral"</span>,</span>
 <span>    ylim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1e-4</span>, <span class="fl">1e4</span><span class="op">)</span></span>
-<span><span class="op">)</span></span></code></pre></div>
+<span><span class="op">)</span></span>
+<span><span class="va">fig_total</span> <span class="op">+</span> <span class="va">fig_ratio</span> <span class="op">+</span> <span class="fu"><a href="https://patchwork.data-imaginist.com/reference/plot_annotation.html" class="external-link">plot_annotation</a></span><span class="op">(</span>tag_levels <span class="op">=</span> <span class="st">"A"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="microbimixr_files/figure-html/plot-options-1.png" class="r-plt" alt="" width="100%" style="display: block; margin: auto;"></p>
 <p>You can customize microbimixr plots even more with the <a href="https://ggplot2.tidyverse.org/" class="external-link">ggplot2</a> package. This is great
 for showing different experimental conditions.</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
 <span><span class="va">fitness_ecoli</span> <span class="op">|&gt;</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">ampicillin</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">15</span>, <span class="fl">50</span>, <span class="fl">100</span><span class="op">)</span> <span class="op">&amp;</span> <span class="va">dilution</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">200</span>, <span class="fl">400</span>, <span class="fl">800</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
@@ -380,6 +376,49 @@ for showing different experimental conditions.</p>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html" class="external-link">facet_wrap</a></span><span class="op">(</span><span class="op">~</span> <span class="va">dilution</span>, labeller <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/as_labeller.html" class="external-link">as_labeller</a></span><span class="op">(</span><span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">x</span>, <span class="st">"-fold dilution"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_bw</a></span><span class="op">(</span>base_size <span class="op">=</span> <span class="fl">9</span><span class="op">)</span></span></code></pre></div>
 <p><img src="microbimixr_files/figure-html/plot-ggplot2-1.png" class="r-plt" alt="" width="100%"></p>
+</div>
+<div class="section level2">
+<h2 id="add-fitted-models-to-plots">Add fitted models to plots<a class="anchor" aria-label="anchor" href="#add-fitted-models-to-plots"></a>
+</h2>
+<p>It’s easy to plot fitted models along with your data. One way is to
+add a column to the fitness data frame for the predicted values.</p>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">model_fitness_ratio</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log10</a></span><span class="op">(</span><span class="va">fitness_ratio_A_B</span><span class="op">)</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log10</a></span><span class="op">(</span><span class="va">initial_ratio_A_B</span><span class="op">)</span>,</span>
+<span>    data <span class="op">=</span> <span class="va">fitness_myxo</span>, </span>
+<span>    na.action <span class="op">=</span> <span class="va">na.exclude</span></span>
+<span><span class="op">)</span></span>
+<span><span class="va">fitness_myxo</span><span class="op">$</span><span class="va">fitness_ratio_fitted</span> <span class="op">&lt;-</span> <span class="fl">10</span><span class="op">^</span><span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">model_fitness_ratio</span><span class="op">)</span></span></code></pre></div>
+<p>To show smooth nonlinear curves, you can also make a separate data
+frame for the fitted model.</p>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">model_total_fitness</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log10</a></span><span class="op">(</span><span class="va">fitness_total</span><span class="op">)</span> <span class="op">~</span> <span class="va">initial_fraction_A</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/AsIs.html" class="external-link">I</a></span><span class="op">(</span><span class="va">initial_fraction_A</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span>,</span>
+<span>    data <span class="op">=</span> <span class="va">fitness_myxo</span>, </span>
+<span>    na.action <span class="op">=</span> <span class="va">na.exclude</span></span>
+<span><span class="op">)</span></span>
+<span><span class="va">fitness_fitted</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>initial_fraction_A <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, by <span class="op">=</span> <span class="fl">0.02</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">fitness_fitted</span><span class="op">$</span><span class="va">fitness_total</span> <span class="op">&lt;-</span> </span>
+<span>        <span class="fl">10</span><span class="op">^</span><span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">model_total_fitness</span>, newdata <span class="op">=</span> <span class="va">fitness_fitted</span><span class="op">)</span></span></code></pre></div>
+<p>Then show the models as lines.</p>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">fig_ratio</span> <span class="op">&lt;-</span> </span>
+<span>    <span class="va">fitness_myxo</span> <span class="op">|&gt;</span></span>
+<span>    <span class="fu"><a href="../reference/plot_fitness_ratio.html">plot_fitness_ratio</a></span><span class="op">(</span></span>
+<span>        mix_scale <span class="op">=</span> <span class="st">"ratio"</span>,</span>
+<span>        ylab <span class="op">=</span> <span class="st">"Relative sporulation\n evolved / ancestral"</span>,</span>
+<span>        ylim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1e-4</span>, <span class="fl">1e4</span><span class="op">)</span></span>
+<span>    <span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html" class="external-link">geom_line</a></span><span class="op">(</span>mapping <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">fitness_ratio_fitted</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">fig_total</span> <span class="op">&lt;-</span> </span>
+<span>    <span class="va">fitness_myxo</span> <span class="op">|&gt;</span></span>
+<span>    <span class="fu"><a href="../reference/plot_total_fitness.html">plot_total_fitness</a></span><span class="op">(</span></span>
+<span>        xlab <span class="op">=</span> <span class="st">"Initial frequency of evolved strain"</span>,</span>
+<span>        ylab <span class="op">=</span> <span class="st">"Total sporulation\n(spores/cell)"</span></span>
+<span>    <span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html" class="external-link">geom_line</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">fitness_fitted</span><span class="op">)</span></span>
+<span><span class="va">fig_total</span> <span class="op">+</span> <span class="va">fig_ratio</span> <span class="op">+</span> <span class="fu"><a href="https://patchwork.data-imaginist.com/reference/plot_annotation.html" class="external-link">plot_annotation</a></span><span class="op">(</span>tag_levels <span class="op">=</span> <span class="st">"A"</span><span class="op">)</span></span></code></pre></div>
+<p><img src="microbimixr_files/figure-html/plot-models-1.png" class="r-plt" alt="" width="100%" style="display: block; margin: auto;"></p>
 </div>
 <div class="section level2">
 <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>

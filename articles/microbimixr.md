@@ -160,8 +160,8 @@ fitness_ecoli <- calculate_mix_fitness(
         initial_fraction_A = "fraction_resistant_initial",
         final_number_total = "OD_final",
         final_fraction_A = "fraction_resistant_final",
-        name_A = "AmpR",
-        name_B = "AmpS"
+        name_A = "resistant",
+        name_B = "sensitive"
     )
 )
 #> Warning in calculate_mix_fitness(): Some fraction_resistant_initial values not
@@ -192,8 +192,8 @@ fitness_ecoli <-
             initial_fraction_A = "fraction_resistant_initial",
             final_number_total = "OD_final",
             final_fraction_A = "fraction_resistant_final",
-            name_A = "AmpR",
-            name_B = "AmpS"
+            name_A = "resistant",
+            name_B = "sensitive"
         ), 
         keep = c("ampicillin", "dilution")
     )
@@ -206,13 +206,13 @@ on:
 ``` r
 
 head(fitness_ecoli)
-#>   ampicillin dilution name_A name_B initial_fraction_A initial_ratio_A_B
-#> 2          0      100   AmpR   AmpS         0.04736746        0.04972269
-#> 3          0      100   AmpR   AmpS         0.08319440        0.09074377
-#> 4          0      100   AmpR   AmpS         0.13609704        0.15753742
-#> 5          0      100   AmpR   AmpS         0.19092077        0.23597290
-#> 6          0      100   AmpR   AmpS         0.23461783        0.30653683
-#> 7          0      100   AmpR   AmpS         0.26563355        0.36171798
+#>   ampicillin dilution    name_A    name_B initial_fraction_A initial_ratio_A_B
+#> 2          0      100 resistant sensitive         0.04736746        0.04972269
+#> 3          0      100 resistant sensitive         0.08319440        0.09074377
+#> 4          0      100 resistant sensitive         0.13609704        0.15753742
+#> 5          0      100 resistant sensitive         0.19092077        0.23597290
+#> 6          0      100 resistant sensitive         0.23461783        0.30653683
+#> 7          0      100 resistant sensitive         0.26563355        0.36171798
 #>   fitness_A fitness_B fitness_total fitness_ratio_A_B
 #> 2  55.19903  104.4084     102.07749         0.5286838
 #> 3  67.25088  102.9718     100.00000         0.6531001
@@ -310,33 +310,23 @@ its built-in functions:
 and
 [`plot_fitness_ratio()`](https://matryoshkev.github.io/microbimixr/reference/plot_fitness_ratio.md).
 They’re a straight-forward way to make figures designed for fitness
-data.
+data. They have some basic options.
 
 ``` r
 
 library(patchwork)
-plot_total_fitness(fitness_myxo) + 
-plot_fitness_ratio(fitness_myxo, mix_scale = "ratio")
-```
-
-![](microbimixr_files/figure-html/plot-myxo-1.png)
-
-The plot functions have some basic options:
-
-``` r
-
-plot_total_fitness(
+fig_total <- plot_total_fitness(
     fitness_myxo,
     xlab = "Initial frequency of evolved strain",
     ylab = "Total sporulation\n(spores/cell)"
-) +
-plot_fitness_ratio(
+)
+fig_ratio <- plot_fitness_ratio(
     fitness_myxo, 
     mix_scale = "ratio",
-    xlab = "Initial ratio evolved / ancestral",
     ylab = "Relative sporulation\nevolved / ancestral",
     ylim = c(1e-4, 1e4)
 )
+fig_total + fig_ratio + plot_annotation(tag_levels = "A")
 ```
 
 ![](microbimixr_files/figure-html/plot-options-1.png)
@@ -365,6 +355,60 @@ fitness_ecoli |>
 ```
 
 ![](microbimixr_files/figure-html/plot-ggplot2-1.png)
+
+## Add fitted models to plots
+
+It’s easy to plot fitted models along with your data. One way is to add
+a column to the fitness data frame for the predicted values.
+
+``` r
+
+model_fitness_ratio <- lm(
+    log10(fitness_ratio_A_B) ~ log10(initial_ratio_A_B),
+    data = fitness_myxo, 
+    na.action = na.exclude
+)
+fitness_myxo$fitness_ratio_fitted <- 10^predict(model_fitness_ratio)
+```
+
+To show smooth nonlinear curves, you can also make a separate data frame
+for the fitted model.
+
+``` r
+
+model_total_fitness <- lm(
+    log10(fitness_total) ~ initial_fraction_A + I(initial_fraction_A^2),
+    data = fitness_myxo, 
+    na.action = na.exclude
+)
+fitness_fitted <- data.frame(initial_fraction_A = seq(0, 1, by = 0.02))
+fitness_fitted$fitness_total <- 
+        10^predict(model_total_fitness, newdata = fitness_fitted)
+```
+
+Then show the models as lines.
+
+``` r
+
+fig_ratio <- 
+    fitness_myxo |>
+    plot_fitness_ratio(
+        mix_scale = "ratio",
+        ylab = "Relative sporulation\n evolved / ancestral",
+        ylim = c(1e-4, 1e4)
+    ) +
+    geom_line(mapping = aes(y = fitness_ratio_fitted))
+fig_total <- 
+    fitness_myxo |>
+    plot_total_fitness(
+        xlab = "Initial frequency of evolved strain",
+        ylab = "Total sporulation\n(spores/cell)"
+    ) +
+    geom_line(data = fitness_fitted)
+fig_total + fig_ratio + plot_annotation(tag_levels = "A")
+```
+
+![](microbimixr_files/figure-html/plot-models-1.png)
 
 ## References
 
