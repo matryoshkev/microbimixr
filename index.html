@@ -58,13 +58,17 @@
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 <!-- badges: start -->
 
-<p>microbimixr is an R package for analyzing microbial interactions in mix experiments. Studies of cooperation and conflict among microbes often use a common experimental design: mix together two microbes (different strains of bacteria, for example) then measure how their survival and reproduction depend on strain frequency. How do they act differently together than on their own? microbimixr helps you get the most out of your data by providing tools to:</p>
+<div class="section level2">
+<h2 id="analyze-microbial-interactions-in-mix-experiments">Analyze microbial interactions in mix experiments<a class="anchor" aria-label="anchor" href="#analyze-microbial-interactions-in-mix-experiments"></a>
+</h2>
+<p>Studies of cooperation and conflict among microbes often use a common experimental design: mix together two microbes (different strains of bacteria, for example) then measure how their survival and reproduction depend on strain frequency. How do they act differently together than they do on their own? microbimixr helps you get the most out of this data by providing tools to:</p>
 <ul>
 <li>Calculate best-practice fitness measures</li>
-<li>Identify which fitness measures are best for your research question and data</li>
+<li>Identify which fitness measures are best for your data and research question</li>
 <li>Visualize interaction effects as publication-quality figures</li>
 </ul>
 <p><img src="./reference/figures/README-workflow.png"></p>
+</div>
 <div class="section level2">
 <h2 id="calculate-fitness-measures">Calculate fitness measures<a class="anchor" aria-label="anchor" href="#calculate-fitness-measures"></a>
 </h2>
@@ -109,12 +113,12 @@
 <div class="section level2">
 <h2 id="identify-fitness-response">Identify fitness response<a class="anchor" aria-label="anchor" href="#identify-fitness-response"></a>
 </h2>
-<p>To quickly see what fitness measures would be most useful for your research question and data, use <code><a href="reference/plot_mix_fitness.html">plot_mix_fitness()</a></code>. It draws a combined figure that lets you compare strain fitness, total fitness, and the relative ratio of strain fitnesses. It also lets you compare linear and logarithmic measures of strain frequency.</p>
+<p>To quickly see what fitness measures would be most useful for your research question and data, use <code><a href="reference/plot_mix_fitness.html">plot_mix_fitness()</a></code>. It draws a combined figure that lets you compare strain fitness, total fitness, and the ratio of strain fitnesses. It also lets you compare linear and logarithmic measures of strain frequency.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/plot_mix_fitness.html">plot_mix_fitness</a></span><span class="op">(</span><span class="va">fitness_myxo</span><span class="op">)</span></span></code></pre></div>
 <!-- ggplot2::ggsave("README-compare-measures.png", width = 6.25, height = 4.5) -->
 <p><img src="./reference/figures/README-compare-measures.png"></p>
-<p>For example, this interaction between two genotypes of <em>Myxococcus</em> bacteria would be easiest to interpret and analyze as total fitness as a function of initial genotype fraction and fitness ratio as a function of initial genotype ratio. Those are the simplest fitness responses and easiest to fit statistical models to. These plots also let you interpret your data in terms of the fitness outcomes used by different theories of social evolution like kin selection, multilevel selection, and game theory.</p>
+<p>For example, this interaction between two genotypes of <em>Myxococcus</em> bacteria would be easiest to interpret and analyze as total fitness as a function of initial genotype fraction and fitness ratio as a function of initial genotype ratio. They’re the simplest fitness responses and easiest to fit statistical models to. These plots also let you interpret your data in terms of the different fitness outcomes used by theories of social evolution like kin selection, multilevel selection, and game theory.</p>
 </div>
 <div class="section level2">
 <h2 id="visualize-fitness-effects">Visualize fitness effects<a class="anchor" aria-label="anchor" href="#visualize-fitness-effects"></a>
@@ -127,7 +131,7 @@
 <span><span class="va">fig_total</span> <span class="op">+</span> <span class="va">fig_ratio</span></span></code></pre></div>
 <!-- ggsave("README-plots-simple.png", width = 5, height = 2.25) -->
 <p><img src="./reference/figures/README-plots-simple.png"></p>
-<p>You can also customize these plots using the ggplot2 graphics package:</p>
+<p>You can also customize these plots using the <a href="https://ggplot2.tidyverse.org/" class="external-link">ggplot2</a> graphics package:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://ggplot2.tidyverse.org" class="external-link">"ggplot2"</a></span><span class="op">)</span></span>
 <span><span class="va">fitness_myxo</span> <span class="op">|&gt;</span></span>
