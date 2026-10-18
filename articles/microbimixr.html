@@ -226,7 +226,7 @@ you if any of the data aren’t biologically meaningful. There can’t be a
 negative number of cells, for example, and fractions are bounded at zero
 and one. Some of the <em>E. coli</em> data include negative
 fractions—probably an artifact of correcting for background fluorescence
-in flow cytometry. Let’s drop those points.</p>
+in flow cytometry. Let’s drop those points:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fitness_ecoli</span> <span class="op">&lt;-</span> </span>
 <span>    <span class="va">data_Yurtsev_2013</span> <span class="op">|&gt;</span></span>
@@ -319,8 +319,15 @@ strain frequency.</p>
 as total fitness as a function of initial genotype fraction and fitness
 ratio as a function of initial genotype ratio. They’re the simplest
 fitness responses and easiest to fit statistical models to.</p>
-<p>For complex datasets with many strain combinations or treatment
-conditions, it may be easier to inspect subsets of the data.</p>
+<p>These plots also let you interpret your data in terms of the fitness
+outcomes used by different theories of social evolution. Kin selection
+and game theory focus on how the fitness of individuals is affected by
+their own genotype and that of their social neighbors, so they would use
+strain fitness here. Multilevel selection focuses on fitness within and
+between groups of interacting individuals, so it would use total fitness
+and the relative ratio of strain fitnesses.</p>
+<p>For complex datasets with many experimental treatments of strain
+combinations, it may be easier to inspect subsets of the data:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fitness_ecoli</span> <span class="op">|&gt;</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">ampicillin</span> <span class="op">==</span> <span class="fl">100</span> <span class="op">&amp;</span> <span class="va">dilution</span> <span class="op">==</span> <span class="fl">100</span><span class="op">)</span> <span class="op">|&gt;</span></span>
@@ -335,13 +342,15 @@ frequency scale.</p>
 <div class="section level2">
 <h2 id="plot-fitness-data">Plot fitness data<a class="anchor" aria-label="anchor" href="#plot-fitness-data"></a>
 </h2>
-<p>Once you know which fitness measures to focus on, you can use
-microbimixr to make figures for the paper. The simplest way is to use
-its built-in functions: <code><a href="../reference/plot_strain_fitness.html">plot_strain_fitness()</a></code>,
+<p>Once you know which fitness measures to analyze, you can use
+microbimixr plot them as publication-quality figures. The simplest way
+is to use its built-in functions: <code><a href="../reference/plot_strain_fitness.html">plot_strain_fitness()</a></code>,
 <code><a href="../reference/plot_total_fitness.html">plot_total_fitness()</a></code>, and
 <code><a href="../reference/plot_fitness_ratio.html">plot_fitness_ratio()</a></code>. They’re a straight-forward way to
-make figures designed for fitness data. They have some basic
-options.</p>
+make figures designed for fitness data. Fitness axes are plotted on
+<span class="math inline">\(\log_{10}\)</span> scales, for example,
+include 1 for reference (no net change in abundance), and have a minimum
+ten-fold range. They have some basic options.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://patchwork.data-imaginist.com" class="external-link">patchwork</a></span><span class="op">)</span></span>
 <span><span class="va">fig_total</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/plot_total_fitness.html">plot_total_fitness</a></span><span class="op">(</span></span>

@@ -176,7 +176,7 @@ will warn you if any of the data aren’t biologically meaningful. There
 can’t be a negative number of cells, for example, and fractions are
 bounded at zero and one. Some of the *E. coli* data include negative
 fractions—probably an artifact of correcting for background fluorescence
-in flow cytometry. Let’s drop those points.
+in flow cytometry. Let’s drop those points:
 
 ``` r
 
@@ -282,8 +282,16 @@ fitness as a function of initial genotype fraction and fitness ratio as
 a function of initial genotype ratio. They’re the simplest fitness
 responses and easiest to fit statistical models to.
 
-For complex datasets with many strain combinations or treatment
-conditions, it may be easier to inspect subsets of the data.
+These plots also let you interpret your data in terms of the fitness
+outcomes used by different theories of social evolution. Kin selection
+and game theory focus on how the fitness of individuals is affected by
+their own genotype and that of their social neighbors, so they would use
+strain fitness here. Multilevel selection focuses on fitness within and
+between groups of interacting individuals, so it would use total fitness
+and the relative ratio of strain fitnesses.
+
+For complex datasets with many experimental treatments of strain
+combinations, it may be easier to inspect subsets of the data:
 
 ``` r
 
@@ -302,15 +310,17 @@ frequency scale.
 
 ## Plot fitness data
 
-Once you know which fitness measures to focus on, you can use
-microbimixr to make figures for the paper. The simplest way is to use
-its built-in functions:
+Once you know which fitness measures to analyze, you can use microbimixr
+plot them as publication-quality figures. The simplest way is to use its
+built-in functions:
 [`plot_strain_fitness()`](https://matryoshkev.github.io/microbimixr/reference/plot_strain_fitness.md),
 [`plot_total_fitness()`](https://matryoshkev.github.io/microbimixr/reference/plot_total_fitness.md),
 and
 [`plot_fitness_ratio()`](https://matryoshkev.github.io/microbimixr/reference/plot_fitness_ratio.md).
 They’re a straight-forward way to make figures designed for fitness
-data. They have some basic options.
+data. Fitness axes are plotted on \\\log\_{10}\\ scales, for example,
+include 1 for reference (no net change in abundance), and have a minimum
+ten-fold range. They have some basic options.
 
 ``` r
 
