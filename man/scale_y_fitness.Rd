@@ -2,7 +2,7 @@
 % Please edit documentation in R/axes.R
 \name{scale_y_fitness}
 \alias{scale_y_fitness}
-\title{Y-axis for strain fitnesses}
+\title{Y-axis for Wrightian fitness}
 \usage{
 scale_y_fitness(
   name = waiver(),
@@ -48,8 +48,8 @@ Y-axis position scale for use with the ggplot2 package
 }
 \description{
 \code{scale_y_fitness()} is a y-axis scale for the fitness of microbial strains
-and groups. It calls \code{ggplot2::scale_y_log10()} with default settings suited
-to Wrightian fitness data.
+and groups. It calls \code{ggplot2::scale_y_log10()} with default settings
+designed for Wrightian fitness data.
 }
 \details{
 \code{scale_y_fitness()} expects data that are absolute (unscaled) Wrightian
@@ -74,5 +74,5 @@ fig + scale_y_fitness(name = "Sporulation efficiency\n(spores/cell)")
 
 }
 \seealso{
-\code{\link[=scale_y_fitness_total]{scale_y_fitness_total()}}, \code{\link[=scale_y_fitness_ratio]{scale_y_fitness_ratio()}}
+\code{\link[=scale_y_fitness_ratio]{scale_y_fitness_ratio()}}
 }

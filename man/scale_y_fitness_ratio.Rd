@@ -92,5 +92,5 @@ fig + scale_y_fitness_ratio(
 
 }
 \seealso{
-\code{\link[=scale_y_fitness]{scale_y_fitness()}}, \code{\link[=scale_y_fitness_total]{scale_y_fitness_total()}}
+\code{\link[=scale_y_fitness]{scale_y_fitness()}}
 }

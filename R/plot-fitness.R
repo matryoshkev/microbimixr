@@ -437,7 +437,7 @@ plot_total_fitness <- function(
 
 	# Axis options
 	if (missing(xlab)) {xlab <- waiver()}
-	if (missing(ylab)) {ylab <- waiver()}
+	if (missing(ylab)) {ylab <- "Total fitness\n(final no. / initial no.)"}
 	if (missing(xlim)) {xlim <- NULL}
 	if (missing(ylim)) {ylim <- NULL}
 
@@ -451,7 +451,7 @@ plot_total_fitness <- function(
 		ggplot2::ggplot(data) +
 		ggplot2::aes(y = .data[[var_names$fitness_total]]) +
 		theme_total_fitness() +
-		scale_y_fitness_total(name = ylab, limits = ylim) +
+		scale_y_fitness(name = ylab, limits = ylim) +
 		do.call(geom_point_overlap, point_args)
 	fig_output <- fig_output |>
 		add_mix_axis(

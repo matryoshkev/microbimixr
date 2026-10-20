@@ -85,7 +85,7 @@ fitted_total_fitness <- fitted_total_fitness |>
 # Plot total sporulation success with fitted model
 fig_total_fitness <-
 	plot_total_fitness(
-		fitness_myxo, ylab = "Total sporulation success\n (spores/cell)"
+		fitness_myxo, ylab = "Total sporulation\n(spores/cell)"
 	) +
 	geom_line(data = fitted_total_fitness)
 dev.new(width = 2.5, height = 2.1, units = "in"); fig_total_fitness

@@ -143,11 +143,11 @@ scale_x_initial_ratio <- function(
 	)
 }
 
-#' Y-axis for strain fitnesses
+#' Y-axis for Wrightian fitness
 #'
 #' `scale_y_fitness()` is a y-axis scale for the fitness of microbial strains
-#' and groups. It calls `ggplot2::scale_y_log10()` with default settings suited
-#' to Wrightian fitness data.
+#' and groups. It calls `ggplot2::scale_y_log10()` with default settings
+#' designed for Wrightian fitness data.
 #'
 #' @inheritParams scale_x_initial_ratio
 #' @param name Character vector (or expression) for axis title. Or `waiver()`
@@ -169,7 +169,7 @@ scale_x_initial_ratio <- function(
 #' @returns
 #' Y-axis position scale for use with the ggplot2 package
 #'
-#' @seealso [scale_y_fitness_total()], [scale_y_fitness_ratio()]
+#' @seealso [scale_y_fitness_ratio()]
 #'
 #' @examples
 #' library("ggplot2")
@@ -205,65 +205,6 @@ scale_y_fitness <- function(
 		minor_breaks <- breaks_log10(n_min = 6, n_max = 17)
 	}
 	ggplot2::scale_y_log10(
-		name = name,
-		limits = limits,
-		breaks = breaks,
-		labels = labels,
-		minor_breaks = minor_breaks,
-		...
-	)
-}
-
-#' Y-axis for fitness of groups or subpopulations
-#'
-#' `scale_y_fitness_total()` is a y-axis scale for the total fitness of
-#' microbial groups or subpopulations. It calls `ggplot2::scale_y_log10()` with
-#' default settings suited to Wrightian fitness data.
-#'
-#' @inheritParams scale_y_fitness
-#'
-#' @details
-#' `scale_y_fitness_total()` expects data that are absolute (unscaled) Wrightian
-#' fitness, like the values produced by [calculate_mix_fitness()].
-#' If the initial abundance of a microbial group is \eqn{n} (measured as cfu/mL
-#' for example) and its final abundance is \eqn{n'}, then the group's Wrightian
-#' fitness measured over that entire time period is \eqn{w = n' / n}.
-#'
-#' @returns
-#' Y-axis position scale for use with the ggplot2 package
-#'
-#' @seealso [scale_y_fitness()], [scale_y_fitness_ratio()]
-#'
-#' @examples
-#' library("ggplot2")
-#' fitness_myxo <- calculate_mix_fitness(data_smith_2010, var_names_smith_2010)
-#' fig <- fitness_myxo |>
-#'   ggplot(aes(initial_fraction_A, fitness_total)) +
-#'   geom_point_overlap()
-#'
-#' fig + scale_y_log10()
-#' fig + scale_y_fitness_total()
-#'
-#' # Axis options
-#' fig + scale_y_fitness_total(
-#'   name = "Sporulation efficiency\n(spores/cell)",
-#'   limits = c(1e-8, 1)
-#' )
-#'
-#' @export
-#'
-scale_y_fitness_total <- function(
-	name = waiver(),
-	limits = NULL,
-	breaks = waiver(),
-	labels = waiver(),
-	minor_breaks = waiver(),
-	...
-) {
-	if (is_waiver(name)) {
-		name <- "Total fitness\n(final no. / initial no.)"
-	}
-	scale_y_fitness(
 		name = name,
 		limits = limits,
 		breaks = breaks,
@@ -311,7 +252,7 @@ scale_y_fitness_total <- function(
 #' @returns
 #' Y-axis position scale for use with the ggplot2 package
 #'
-#' @seealso [scale_y_fitness()], [scale_y_fitness_total()]
+#' @seealso [scale_y_fitness()]
 #'
 #' @examples
 #' library("ggplot2")

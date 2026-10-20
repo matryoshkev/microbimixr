@@ -26,7 +26,6 @@ reference:
   - scale_x_initial_ratio
   - scale_y_fitness
   - scale_y_fitness_ratio
-  - scale_y_fitness_total
 - title: Example datasets
   contents:
   - data_Madgwick_2018

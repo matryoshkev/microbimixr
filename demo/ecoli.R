@@ -50,7 +50,7 @@ fitness_ecoli |>
 	filter(ampicillin > 0) |>
 	ggplot(aes(x = ampicillin, y = fitness_total)) +
 	scale_x_log10(name = "Ampicillin (\u03BCg/mL)") +
-	scale_y_fitness_total() +
+	scale_y_fitness(name = "Total fitness") +
 	geom_point_overlap() +
 	geom_smooth(linewidth = 0.5) +
 	facet_wrap(
