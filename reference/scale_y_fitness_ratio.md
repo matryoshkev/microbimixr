@@ -94,8 +94,7 @@ q'\_B}{q_A / q_B}\$\$
 
 ## See also
 
-[`scale_y_fitness()`](https://matryoshkev.github.io/microbimixr/reference/scale_y_fitness.md),
-[`scale_y_fitness_total()`](https://matryoshkev.github.io/microbimixr/reference/scale_y_fitness_total.md)
+[`scale_y_fitness()`](https://matryoshkev.github.io/microbimixr/reference/scale_y_fitness.md)
 
 ## Examples
 

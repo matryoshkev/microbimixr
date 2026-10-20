@@ -27,11 +27,9 @@ Use axes and other plot components separately
 - [`scale_x_initial_ratio()`](https://matryoshkev.github.io/microbimixr/reference/scale_x_initial_ratio.md)
   : X-axis for initial strain ratio
 - [`scale_y_fitness()`](https://matryoshkev.github.io/microbimixr/reference/scale_y_fitness.md)
-  : Y-axis for strain fitnesses
+  : Y-axis for Wrightian fitness
 - [`scale_y_fitness_ratio()`](https://matryoshkev.github.io/microbimixr/reference/scale_y_fitness_ratio.md)
   : Y-axis for within-group ratio of strain fitnesses
-- [`scale_y_fitness_total()`](https://matryoshkev.github.io/microbimixr/reference/scale_y_fitness_total.md)
-  : Y-axis for fitness of groups or subpopulations
 
 ## Example datasets
 

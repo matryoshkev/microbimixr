@@ -1,9 +1,9 @@
-# Y-axis for strain fitnesses
+# Y-axis for Wrightian fitness
 
 `scale_y_fitness()` is a y-axis scale for the fitness of microbial
 strains and groups. It calls
 [`ggplot2::scale_y_log10()`](https://ggplot2.tidyverse.org/reference/scale_continuous.html)
-with default settings suited to Wrightian fitness data.
+with default settings designed for Wrightian fitness data.
 
 ## Usage
 
@@ -81,7 +81,6 @@ fitness measured over that entire time period is \\w = n' / n\\.
 
 ## See also
 
-[`scale_y_fitness_total()`](https://matryoshkev.github.io/microbimixr/reference/scale_y_fitness_total.md),
 [`scale_y_fitness_ratio()`](https://matryoshkev.github.io/microbimixr/reference/scale_y_fitness_ratio.md)
 
 ## Examples
