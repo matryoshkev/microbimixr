@@ -758,6 +758,31 @@ get_strain_names <- function(data, var_names) {
 	list(name_A = name_A, name_B = name_B)
 }
 
+# Convert wide-format strain fitness data to long format
+lengthen_strain_fitness <- function(data) {
+	data <- stats::reshape(
+		as.data.frame(data),  # reshape() chokes on tibbles
+		direction = "long",
+		varying = c("fitness_A", "fitness_B"),
+		v.names = "fitness",
+		timevar = "strain",
+		times = c("fitness_A", "fitness_B"),
+		idvar = "probably_unique_column"
+	)
+
+	# Drop cruft added by reshape()
+	data <- data[names(data) != "probably_unique_column"]
+	row.names(data) <- NULL
+
+	# Set strain to name_A or name_B as appropriate
+	is_A <- data$strain == "fitness_A"
+	is_B <- data$strain == "fitness_B"
+	data$strain[is_A] <- data$name_A[is_A]
+	data$strain[is_B] <- data$name_B[is_B]
+
+	data
+}
+
 # Drop single-strain data
 drop_unmixed_fraction <- function(data, var_names) {
 	mixvar <- var_names[["initial_fraction_A"]]

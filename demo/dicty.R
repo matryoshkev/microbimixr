@@ -1,4 +1,4 @@
-# Using microbimixr with multiple strain combinations ==========================
+# Working with strain fitness ==================================================
 
 # Dependencies
 library(dplyr)    # Data handling that makes code easier to read
@@ -9,43 +9,54 @@ library(ggh4x)    # Nested facets in plots
 # together, many different strain combinations
 head(data_Madgwick_2018)
 
-
-# Calculate and compare fitness measures ---------------------------------------
-
-# Fitness here is spores/cell
+# Calculate fitness measures
 fitness_dicty <-
 	data_Madgwick_2018 |>
 	tibble() |>
-	calculate_mix_fitness(
-		var_names = c(
-			initial_number_total = "input_cells_total",
-			initial_fraction_A = "input_freq_i",
-			final_number_total = "spores_total",
-			final_fraction_A = "output_freq_i",
-			name_A = "strain_i",
-			name_B = "strain_j"
-		),
-		keep = "replicate"
-	)
+	calculate_mix_fitness(var_names = c(
+		initial_number_total = "input_cells_total",
+		initial_fraction_A = "input_freq_i",
+		final_number_total = "spores_total",
+		final_fraction_A = "output_freq_i",
+		name_A = "strain_i",
+		name_B = "strain_j"
+	))
+	# Fitness here is spores/cell
+
+## One strain pair -------------------------------------------------------------
+# NC105.1 + NC34.2 is one of the pairs with more replicates
 
 # Compare fitness measures
-# NC105.1 + NC34.2 is one of the strain pairs with more replicates
-fitness_dicty |>
-	filter(name_A == "NC105.1", name_B == "NC34.2") |>
-	plot_mix_fitness()
-# Effect sizes are small: <10-fold
-# Fitness ratio is negatively frequency-dependent,
-# approx linear on log-ratio frequency scale
+fitness_pair <- fitness_dicty |> filter(name_A == "NC105.1", name_B == "NC34.2")
+plot_mix_fitness(fitness_pair)
+	# Effect sizes are small: <10-fold
+	# Fitness ratio is negatively frequency-dependent,
+	# approx linear on log-ratio frequency scale
 
 # Better view of the strain effects
 dev.new(width = 4, height = 2.5)
-fitness_dicty |>
-	filter(name_A == "NC105.1", name_B == "NC34.2") |>
-	plot_strain_fitness(ylab = "Spores/cell", facet_strains = TRUE)
-# Both strains make more spores when rare
+plot_strain_fitness(fitness_pair, ylab = "Spores/cell", facet_strains = TRUE)
+	# Both strains make more spores when rare
+
+# Plot data with models fit to each strain separately
+model_A <- lm(fitness_A ~ poly(initial_fraction_A, 3), data = fitness_pair)
+model_B <- update(model_A, fitness_B ~ poly(initial_fraction_A, 3))
+fitted_models <- tibble(initial_fraction_A = seq(0, 1, by = 0.02))
+fitted_models <- fitted_models |>
+	mutate(
+		fitness_A = predict(model_A, newdata = fitted_models),
+		fitness_B = predict(model_B, newdata = fitted_models),
+		name_A = "NC105.1",
+		name_B = "NC34.2",
+		fitness_A = case_when(initial_fraction_A < 0.04 ~ NA, TRUE ~ fitness_A),
+		fitness_B = case_when(initial_fraction_A > 0.96 ~ NA, TRUE ~ fitness_B)
+	)
+fitness_pair |>
+	plot_strain_fitness(ylab = "Spores/cell", facet_strains = TRUE) +
+	geom_line(data = lengthen_strain_fitness(fitted_models), na.rm = TRUE)
 
 
-# Compare strain pairs ---------------------------------------------------------
+## Compare strain pairs --------------------------------------------------------
 
 # Expand fitness frame so all strains get chance to be both A and B
 strain_order <- c(
@@ -90,8 +101,8 @@ fitness_focus |>
 		cols = vars(name_A), rows = vars(name_B),
 		labeller = labeller(name_B = function(x) paste("+", x))
 	)
-# Strains NC69.1 & NC71.1 do worse than the others
-# and frequency dependence might be different shape
+	# Strains NC69.1 & NC71.1 do worse than the others
+	# and frequency dependence might be different shape
 
 # Plot strain fitness (facet by strain)
 dev.new(width = 6.5, height = 4.25, units = "in")
@@ -119,4 +130,4 @@ fitness_focus |>
 		strip.text.x = element_text(color = "#AB6C02"),
 		strip.text.y = element_text(color = "#00259E")
 	)
-# NC69.1 & NC71.1 make fewer spores in mixes. Other strains make more.
+	# NC69.1 & NC71.1 make fewer spores in mixes. Other strains make more.
