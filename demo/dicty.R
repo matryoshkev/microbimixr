@@ -23,6 +23,7 @@ fitness_dicty <-
 	))
 	# Fitness here is spores/cell
 
+
 ## One strain pair -------------------------------------------------------------
 # NC105.1 + NC34.2 is one of the pairs with more replicates
 
@@ -55,8 +56,33 @@ fitness_pair |>
 	plot_strain_fitness(ylab = "Spores/cell", facet_strains = TRUE) +
 	geom_line(data = lengthen_strain_fitness(fitted_models), na.rm = TRUE)
 
+# Plot data with one model fit to data for both strains
+model_joint <- lm(
+	fitness ~ strain * poly(initial_fraction_A, 3),
+	data = lengthen_strain_fitness(fitness_pair)
+)
+fitted_joint <- expand.grid(
+	initial_fraction_A = seq(0, 1, by = 0.02),
+	strain = c("NC105.1", "NC34.2")
+)
+fitted_joint <-
+	tibble(fitted_joint) |>
+	mutate(
+		fitness = predict(model_joint, newdata = fitted_joint),
+		name_A = "NC105.1",
+		name_B = "NC34.2",
+		fitness = case_when(
+			initial_fraction_A == 0 & strain == name_A ~ NA,
+			initial_fraction_A == 1 & strain == name_B ~ NA,
+			TRUE ~ fitness
+		)
+	)
+fitness_pair |>
+	plot_strain_fitness(ylab = "Spores/cell", facet_strains = TRUE) +
+	geom_line(data = fitted_joint, na.rm = TRUE)
 
-## Compare strain pairs --------------------------------------------------------
+
+## Multiple strain pairs -------------------------------------------------------
 
 # Expand fitness frame so all strains get chance to be both A and B
 strain_order <- c(
