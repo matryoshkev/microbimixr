@@ -8,7 +8,6 @@ microbe strains as a function of their initial frequency
 ``` r
 plot_strain_fitness(
   data,
-  var_names = NULL,
   mix_scale = "fraction",
   facet_strains = FALSE,
   xlab = NA,
@@ -27,16 +26,8 @@ plot_strain_fitness(
 
 - data:
 
-  Data frame of fitness values and mix frequencies. Wide format: each
-  row must contain data for two microbes in the same population. Accepts
+  Data frame of fitness values and mix frequencies. See Details. Accepts
   data frame extensions like `tibble`.
-
-- var_names:
-
-  Named character vector identifying fitness and mixing variables in
-  `data`. If `NULL`, defaults to column names returned by
-  [`calculate_mix_fitness()`](https://matryoshkev.github.io/microbimixr/reference/calculate_mix_fitness.md).
-  See Details.
 
 - mix_scale:
 
@@ -84,20 +75,12 @@ A ggplot object that can be further modified using the ggplot2 package
 
 ## Details
 
-`var_names` must be a named vector or list that includes the following
-elements (shown here with default values):
+Expects data frame of Wrightian fitness values like those returned by
+[`calculate_mix_fitness()`](https://matryoshkev.github.io/microbimixr/reference/calculate_mix_fitness.md),
+with columns `name_A`, `name_B`, `initial_fraction_A`,
+`initial_ratio_A_B`, `fitness_A`, and `fitness_B`. Wide format: each row
+must contain data for two microbes in the same population.
 
-    var_names = c(
-      name_A = "name_A",
-      name_B = "name_B",
-      initial_fraction_A = "initial_fraction_A",
-      initial_ratio_A_B = "initial_ratio_A_B",
-      fitness_A = "fitness_A",
-      fitness_B = "fitness_B"
-    )
-
-Expects Wrightian fitness data like those returned by
-[`calculate_mix_fitness()`](https://matryoshkev.github.io/microbimixr/reference/calculate_mix_fitness.md).
 Does not try to plot single-strain data if `mix_scale = "ratio"`.
 
 ## See also

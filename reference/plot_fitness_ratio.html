@@ -54,7 +54,6 @@ fitness of strains A and B as a function of their initial frequency</p>
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">plot_fitness_ratio</span><span class="op">(</span></span>
 <span>  <span class="va">data</span>,</span>
-<span>  var_names <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  mix_scale <span class="op">=</span> <span class="st">"fraction"</span>,</span>
 <span>  xlab <span class="op">=</span> <span class="cn">NA</span>,</span>
 <span>  ylab <span class="op">=</span> <span class="cn">NA</span>,</span>
@@ -73,14 +72,8 @@ fitness of strains A and B as a function of their initial frequency</p>
 
 
 <dl><dt id="arg-data">data<a class="anchor" aria-label="anchor" href="#arg-data"></a></dt>
-<dd><p>Data frame of fitness values and mix frequencies.
+<dd><p>Data frame of fitness values and mix frequencies. See details.
 Accepts data frame extensions like <code>tibble</code>.</p></dd>
-
-
-<dt id="arg-var-names">var_names<a class="anchor" aria-label="anchor" href="#arg-var-names"></a></dt>
-<dd><p>Named character vector identifying fitness and mixing
-variables in <code>data</code>. If <code>NULL</code>, defaults to column names returned by
-<code><a href="calculate_mix_fitness.html">calculate_mix_fitness()</a></code>. See Details.</p></dd>
 
 
 <dt id="arg-mix-scale">mix_scale<a class="anchor" aria-label="anchor" href="#arg-mix-scale"></a></dt>
@@ -125,17 +118,10 @@ variable of data. <code>"ratio"</code> uses ratio of strain A to strain B (on
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p><code>var_names</code> must be a named vector or list that includes the following
-elements (shown here with default values):</p>
-<p></p><div class="sourceCode"><pre><code><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a>var_names <span class="ot">=</span> <span class="fu">c</span>(</span>
-<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a>  <span class="at">name_A =</span> <span class="st">"name_A"</span>,</span>
-<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a>  <span class="at">name_B =</span> <span class="st">"name_B"</span>,</span>
-<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a>  <span class="at">initial_fraction_A =</span> <span class="st">"initial_fraction_A"</span>,</span>
-<span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a>  <span class="at">initial_ratio_A_B =</span> <span class="st">"initial_ratio_A_B"</span>,</span>
-<span id="cb1-6"><a href="#cb1-6" tabindex="-1"></a>  <span class="at">fitness_ratio_A_B =</span> <span class="st">"fitness_ratio_A_B"</span></span>
-<span id="cb1-7"><a href="#cb1-7" tabindex="-1"></a>)</span></code></pre><p></p></div>
-<p>Expects Wrightian fitness data like those returned by
-<code><a href="calculate_mix_fitness.html">calculate_mix_fitness()</a></code>. Relative within-group fitness is measured as
+    <p>Expects data frame of Wrightian fitness values like those returned by
+<code><a href="calculate_mix_fitness.html">calculate_mix_fitness()</a></code>, with columns <code>name_A</code>, <code>name_B</code>,
+<code>initial_fraction_A</code>, <code>initial_ratio_A_B</code>, and <code>fitness_ratio_A_B</code>.
+Relative within-group fitness is measured as
 the ratio of strain A fitness to strain B fitness.
 Does not try to plot single-strain data.</p>
     </div>

@@ -8,7 +8,6 @@ of initial strain frequency
 ``` r
 plot_total_fitness(
   data,
-  var_names = NULL,
   mix_scale = "fraction",
   xlab = NA,
   ylab = NA,
@@ -26,15 +25,8 @@ plot_total_fitness(
 
 - data:
 
-  Data frame of fitness values and mix frequencies. Accepts data frame
-  extensions like `tibble`.
-
-- var_names:
-
-  Named character vector identifying fitness and mixing variables in
-  `data`. If `NULL`, defaults to column names returned by
-  [`calculate_mix_fitness()`](https://matryoshkev.github.io/microbimixr/reference/calculate_mix_fitness.md).
-  See Details.
+  Data frame of fitness values and mix frequencies. See details. Accepts
+  data frame extensions like `tibble`.
 
 - mix_scale:
 
@@ -78,20 +70,11 @@ A ggplot object that can be further modified using the ggplot2 package
 
 ## Details
 
-`var_names` must be a named vector or list that includes the following
-elements (shown here with default values):
-
-    var_names = c(
-      name_A = "name_A",
-      name_B = "name_B",
-      initial_fraction_A = "initial_fraction_A",
-      initial_ratio_A_B = "initial_ratio_A_B",
-      fitness_total = "fitness_total"
-    )
-
-Expects Wrightian fitness data like those returned by
-[`calculate_mix_fitness()`](https://matryoshkev.github.io/microbimixr/reference/calculate_mix_fitness.md).
-Does not try to plot single-strain data if `mix_scale = "ratio"`.
+Expects data frame of Wrightian fitness values like those returned by
+[`calculate_mix_fitness()`](https://matryoshkev.github.io/microbimixr/reference/calculate_mix_fitness.md),
+with columns `name_A`, `name_B`, `initial_fraction_A`,
+`initial_ratio_A_B`, and `fitness_total`. Does not try to plot
+single-strain data if `mix_scale = "ratio"`.
 
 ## See also
 
