@@ -6,7 +6,6 @@
 \usage{
 plot_fitness_ratio(
   data,
-  var_names = NULL,
   mix_scale = "fraction",
   xlab = NA,
   ylab = NA,
@@ -20,12 +19,8 @@ plot_fitness_ratio(
 )
 }
 \arguments{
-\item{data}{Data frame of fitness values and mix frequencies.
+\item{data}{Data frame of fitness values and mix frequencies. See details.
 Accepts data frame extensions like \code{tibble}.}
-
-\item{var_names}{Named character vector identifying fitness and mixing
-variables in \code{data}. If \code{NULL}, defaults to column names returned by
-\code{\link[=calculate_mix_fitness]{calculate_mix_fitness()}}. See Details.}
 
 \item{mix_scale}{Mixing scale for x axis. Default \code{"fraction"} uses initial
 frequency of strain A (proportion of total) from \code{initial_fraction_A}
@@ -55,20 +50,10 @@ A ggplot object that can be further modified using the ggplot2 package
 fitness of strains A and B as a function of their initial frequency
 }
 \details{
-\code{var_names} must be a named vector or list that includes the following
-elements (shown here with default values):
-
-\if{html}{\out{<div class="sourceCode">}}\preformatted{var_names = c(
-  name_A = "name_A",
-  name_B = "name_B",
-  initial_fraction_A = "initial_fraction_A",
-  initial_ratio_A_B = "initial_ratio_A_B",
-  fitness_ratio_A_B = "fitness_ratio_A_B"
-)
-}\if{html}{\out{</div>}}
-
-Expects Wrightian fitness data like those returned by
-\code{\link[=calculate_mix_fitness]{calculate_mix_fitness()}}. Relative within-group fitness is measured as
+Expects data frame of Wrightian fitness values like those returned by
+\code{\link[=calculate_mix_fitness]{calculate_mix_fitness()}}, with columns \code{name_A}, \code{name_B},
+\code{initial_fraction_A}, \code{initial_ratio_A_B}, and \code{fitness_ratio_A_B}.
+Relative within-group fitness is measured as
 the ratio of strain A fitness to strain B fitness.
 Does not try to plot single-strain data.
 }

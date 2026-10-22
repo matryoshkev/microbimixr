@@ -6,17 +6,14 @@
 #' in a dataset. Draws a combined plot of strain, total group, and relative
 #' within-group fitness against two measures of mix frequency.
 #'
-#' @param data Data frame of fitness values. Wide format: each row must contain
-#'   data for two microbes in the same population. Accepts data frame
-#'   extensions like `tibble`.
-#' @param var_names Named character vector identifying fitness and mixing
-#'   variables in `data`. If `NULL`, defaults to column names returned by
+#' @param data Data frame of fitness values like those returned by
 #'   [calculate_mix_fitness()]. See Details.
+#'   Accepts data frame extensions like `tibble`.
 #' @param mix_scale Mixing frequency scale for x axis. `"fraction"` uses
 #'   initial frequency of strain A (proportion of total) from
 #'   `initial_fraction_A` variable in data. `"ratio"` uses ratio of strain A to
 #'   strain B (on \eqn{\log_{10}} scale) from `initial_ratio_A_B`.
-#'    Defaults to show both.
+#'   Defaults to show both.
 #' @param color Point colors `c(strain_A, strain_B, total_group)`
 #' @param fill Point fill colors `c(strain_A, strain_B, total_group)`.
 #'   Only affects shapes 21--25.
@@ -26,23 +23,14 @@
 #'   `FALSE` to warn when removing missing values.
 #'
 #' @details
-#' `var_names` must be a named vector or list that includes the following
-#' elements (shown here with default values):
-#' ```
-#' var_names = c(
-#'   name_A = "name_A",
-#'   name_B = "name_B",
-#'   initial_fraction_A = "initial_fraction_A",
-#'   initial_ratio_A_B = "initial_ratio_A_B",
-#'   fitness_A = "fitness_A",
-#'   fitness_B = "fitness_B",
-#'   fitness_total = "fitness_total",
-#'   fitness_ratio_A_B = "fitness_ratio_A_B"
-#' )
-#' ```
+#' Expects data frame of Wrightian fitness values like those returned by
+#' [calculate_mix_fitness()],
+#' with columns `name_A`, `name_B`, `initial_fraction_A`,
+#' `initial_ratio_A_B`, `fitness_A`, `fitness_B`, `fitness_total`, and
+#' `fitness_ratio_A_B`.
+#' Wide format: each row must contain data for two microbes in the same
+#' population.
 #'
-#' Expects Wrightian fitness data like those returned by
-#' [calculate_mix_fitness()].
 #' Does not try to plot single-strain data for plots with `mix_scale = "ratio"`.
 #'
 #' @returns A ggplot object
@@ -67,7 +55,6 @@
 #'
 plot_mix_fitness <- function(
 	data,
-	var_names = NULL,
 	mix_scale = c("fraction", "ratio"),
 	color = c(NULL, NULL, NULL),
 	fill = c(NULL, NULL, NULL),
@@ -76,26 +63,19 @@ plot_mix_fitness <- function(
 	drop_NA = TRUE
 ) {
 	# Check inputs
-	# Do it here because we need the data for the shared y-limits
+	# Do it here because we use the data to get comparable y-axis scales
 	mix_scale <- rlang::arg_match(
 		mix_scale, c("fraction", "ratio"), multiple = TRUE
 	)
-	var_names <- check_fitness_names(
-		var_names = var_names,
-		vars = c("fitness_A", "fitness_B", "fitness_total", "fitness_ratio_A_B"),
-		mix_scale = mix_scale,
-		caller = "plot_mix_fitness"
-	)
 	data <- check_fitness_data(
 		data,
-		var_names = var_names,
 		vars = c("fitness_A", "fitness_B", "fitness_total", "fitness_ratio_A_B"),
 		mix_scale = mix_scale,
 		caller = "plot_mix_fitness"
 	)
 
 	# Axis options
-	ylim <- get_ylim_mix_fitness(data, var_names)
+	ylim <- get_ylim_mix_fitness(data)
 
 	# Point options
 	if (is.null(color)) {
@@ -119,7 +99,6 @@ plot_mix_fitness <- function(
 	if ("fraction" %in% mix_scale) {
 		figA <- plot_fitness_strain_total(
 			data,
-			var_names,
 			mix_scale = "fraction",
 			ylim = ylim$fitness,
 			color = color_strain_group,
@@ -130,7 +109,6 @@ plot_mix_fitness <- function(
 		)
 		figB <- plot_fitness_ratio(
 			data,
-			var_names,
 			mix_scale = "fraction",
 			ylim = ylim$fitness_ratio,
 			color = color_group,
@@ -143,7 +121,6 @@ plot_mix_fitness <- function(
 	if ("ratio" %in% mix_scale) {
 		figC <- plot_fitness_strain_total(
 			data,
-			var_names,
 			mix_scale = "ratio",
 			ylim = ylim$fitness,
 			color = color_strain_group,
@@ -154,7 +131,6 @@ plot_mix_fitness <- function(
 		)
 		figD <- plot_fitness_ratio(
 			data,
-			var_names,
 			mix_scale = "ratio",
 			ylim = ylim$fitness_ratio,
 			color = color_group,
@@ -190,12 +166,8 @@ plot_mix_fitness <- function(
 #' `plot_strain_fitness()` draws a plot of absolute fitness for each of two
 #' microbe strains as a function of their initial frequency
 #'
-#' @param data Data frame of fitness values and mix frequencies. Wide format:
-#'   each row must contain data for two microbes in the same population.
+#' @param data Data frame of fitness values and mix frequencies. See Details.
 #'   Accepts data frame extensions like `tibble`.
-#' @param var_names Named character vector identifying fitness and mixing
-#'   variables in `data`. If `NULL`, defaults to column names returned by
-#'   [calculate_mix_fitness()]. See Details.
 #' @param mix_scale Mixing scale for x axis. Default `"fraction"` uses initial
 #'   frequency of strain A (proportion of total) from `initial_fraction_A`
 #'   variable of data. `"ratio"` uses ratio of strain A to strain B (on
@@ -211,21 +183,13 @@ plot_mix_fitness <- function(
 #'   `FALSE` to warn when removing missing values.
 #'
 #' @details
-#' `var_names` must be a named vector or list that includes the following
-#' elements (shown here with default values):
-#' ```
-#' var_names = c(
-#'   name_A = "name_A",
-#'   name_B = "name_B",
-#'   initial_fraction_A = "initial_fraction_A",
-#'   initial_ratio_A_B = "initial_ratio_A_B",
-#'   fitness_A = "fitness_A",
-#'   fitness_B = "fitness_B"
-#' )
-#' ```
+#' Expects data frame of Wrightian fitness values like those returned by
+#' [calculate_mix_fitness()],
+#' with columns `name_A`, `name_B`, `initial_fraction_A`,
+#' `initial_ratio_A_B`, `fitness_A`, and `fitness_B`.
+#' Wide format: each row must contain data for two microbes in the same
+#' population.
 #'
-#' Expects Wrightian fitness data like those returned by
-#' [calculate_mix_fitness()].
 #' Does not try to plot single-strain data if `mix_scale = "ratio"`.
 #'
 #' @returns
@@ -253,7 +217,6 @@ plot_mix_fitness <- function(
 #'
 plot_strain_fitness <- function(
 	data,
-	var_names = NULL,
 	mix_scale = "fraction",
 	facet_strains = FALSE,
 	xlab = NA,
@@ -267,29 +230,19 @@ plot_strain_fitness <- function(
 	drop_NA = TRUE
 ) {
 	mix_scale <- rlang::arg_match(mix_scale, c("fraction", "ratio"))
-
-	# Variable and strain names
-	var_names <- check_fitness_names(
-		var_names = var_names,
-		vars = c("fitness_A", "fitness_B"),
-		mix_scale = mix_scale,
-		caller = "plot_strain_fitness"
-	)
 	data <- check_fitness_data(
 		data,
-		var_names = var_names,
 		vars = c("fitness_A", "fitness_B"),
 		mix_scale = mix_scale,
 		caller = "plot_strain_fitness"
 	)
-	var_names$fitness <- "fitness"
-	strain_names <- get_strain_names(data, var_names)
+	strain_names <- get_strain_names(data)
 
 	# Make long-format data frame for plot
 	data_to_plot <- stats::reshape(
 		as.data.frame(data),  # reshape() chokes on tibbles
 		direction = "long",
-		varying = c(var_names$fitness_A, var_names$fitness_B),
+		varying = c("fitness_A", "fitness_B"),
 		v.names = "fitness",
 		timevar = "strain",
 		times = c(strain_names$name_A, strain_names$name_B)
@@ -299,9 +252,7 @@ plot_strain_fitness <- function(
 	)
 
 	# Drop single-strain data if using ratio mixing scale
-	if (mix_scale == "ratio") {
-		data_to_plot <- drop_unmixed_ratio(data_to_plot, var_names)
-	}
+	if (mix_scale == "ratio") {data_to_plot <- drop_unmixed_ratio(data_to_plot)}
 
 	# Axis options
 	if (missing(xlab)) {xlab <- waiver()}
@@ -332,7 +283,6 @@ plot_strain_fitness <- function(
 	fig_output <- fig_output |>
 		add_mix_axis(
 			mix_scale = mix_scale,
-			var_names = var_names,
 			strain_names = strain_names,
 			xlab = xlab,
 			xlim = xlim
@@ -352,26 +302,15 @@ plot_strain_fitness <- function(
 #' function of initial strain frequency
 #'
 #' @inheritParams plot_strain_fitness
-#' @param data Data frame of fitness values and mix frequencies.
+#' @param data Data frame of fitness values and mix frequencies. See details.
 #'   Accepts data frame extensions like `tibble`.
 #' @param color Point color
 #' @param fill Point fill color. Only affects shapes 21-25.
 #'
 #' @details
-#' `var_names` must be a named vector or list that includes the following
-#' elements (shown here with default values):
-#' ```
-#' var_names = c(
-#'   name_A = "name_A",
-#'   name_B = "name_B",
-#'   initial_fraction_A = "initial_fraction_A",
-#'   initial_ratio_A_B = "initial_ratio_A_B",
-#'   fitness_total = "fitness_total"
-#' )
-#' ```
-#'
-#' Expects Wrightian fitness data like those returned by
-#' [calculate_mix_fitness()].
+#' Expects data frame of Wrightian fitness values like those returned by
+#' [calculate_mix_fitness()], with columns `name_A`, `name_B`,
+#' `initial_fraction_A`, `initial_ratio_A_B`, and `fitness_total`.
 #' Does not try to plot single-strain data if `mix_scale = "ratio"`.
 #'
 #' @returns
@@ -402,7 +341,6 @@ plot_strain_fitness <- function(
 #'
 plot_total_fitness <- function(
 	data,
-	var_names = NULL,
 	mix_scale = "fraction",
 	xlab = NA,
 	ylab = NA,
@@ -415,25 +353,16 @@ plot_total_fitness <- function(
 	drop_NA = TRUE
 ) {
 	mix_scale <- rlang::arg_match(mix_scale, c("fraction", "ratio"))
-
-	# Variable and strain names
-	var_names <- check_fitness_names(
-		var_names = var_names,
-		vars = "fitness_total",
-		mix_scale = mix_scale,
-		caller = "plot_total_fitness"
-	)
 	data <- check_fitness_data(
 		data,
-		var_names = var_names,
 		vars = "fitness_total",
 		mix_scale = mix_scale,
 		caller = "plot_total_fitness"
 	)
-	strain_names <- get_strain_names(data, var_names)
+	strain_names <- get_strain_names(data)
 
 	# Drop single-strain data if using ratio mixing scale
-	if (mix_scale == "ratio") {data <- drop_unmixed_ratio(data, var_names)}
+	if (mix_scale == "ratio") {data <- drop_unmixed_ratio(data)}
 
 	# Axis options
 	if (missing(xlab)) {xlab <- waiver()}
@@ -449,14 +378,13 @@ plot_total_fitness <- function(
 	# Make plot
 	fig_output <-
 		ggplot2::ggplot(data) +
-		ggplot2::aes(y = .data[[var_names$fitness_total]]) +
+		ggplot2::aes(y = .data[["fitness_total"]]) +
 		theme_total_fitness() +
 		scale_y_fitness(name = ylab, limits = ylim) +
 		do.call(geom_point_overlap, point_args)
 	fig_output <- fig_output |>
 		add_mix_axis(
 			mix_scale = mix_scale,
-			var_names = var_names,
 			strain_names = strain_names,
 			xlab = xlab,
 			xlim = xlim
@@ -473,20 +401,10 @@ plot_total_fitness <- function(
 #' @inheritParams plot_total_fitness
 #'
 #' @details
-#' `var_names` must be a named vector or list that includes the following
-#' elements (shown here with default values):
-#' ```
-#' var_names = c(
-#'   name_A = "name_A",
-#'   name_B = "name_B",
-#'   initial_fraction_A = "initial_fraction_A",
-#'   initial_ratio_A_B = "initial_ratio_A_B",
-#'   fitness_ratio_A_B = "fitness_ratio_A_B"
-#' )
-#' ```
-#'
-#' Expects Wrightian fitness data like those returned by
-#' [calculate_mix_fitness()]. Relative within-group fitness is measured as
+#' Expects data frame of Wrightian fitness values like those returned by
+#' [calculate_mix_fitness()], with columns `name_A`, `name_B`,
+#' `initial_fraction_A`, `initial_ratio_A_B`, and `fitness_ratio_A_B`.
+#' Relative within-group fitness is measured as
 #' the ratio of strain A fitness to strain B fitness.
 #' Does not try to plot single-strain data.
 #'
@@ -519,7 +437,6 @@ plot_total_fitness <- function(
 #'
 plot_fitness_ratio <- function(
 	data,
-	var_names = NULL,
 	mix_scale = "fraction",
 	xlab = NA,
 	ylab = NA,
@@ -532,28 +449,19 @@ plot_fitness_ratio <- function(
 	drop_NA = TRUE
 ) {
 	mix_scale <- rlang::arg_match(mix_scale, c("fraction", "ratio"))
-
-	# Variable and strain names
-	var_names <- check_fitness_names(
-		var_names = var_names,
-		vars = "fitness_ratio_A_B",
-		mix_scale = mix_scale,
-		caller = "plot_fitness_ratio"
-	)
 	data <- check_fitness_data(
 		data,
-		var_names = var_names,
 		vars = "fitness_ratio_A_B",
 		mix_scale = mix_scale,
 		caller = "plot_fitness_ratio"
 	)
-	strain_names <- get_strain_names(data, var_names)
+	strain_names <- get_strain_names(data)
 
 	# Drop single-strain data
 	if (mix_scale == "fraction") {
-		data <- drop_unmixed_fraction(data, var_names)
+		data <- drop_unmixed_fraction(data)
 	} else if (mix_scale == "ratio") {
-		data <- drop_unmixed_ratio(data, var_names)
+		data <- drop_unmixed_ratio(data)
 	}
 
 	# Axis options
@@ -574,14 +482,13 @@ plot_fitness_ratio <- function(
 	# Make plot
 	fig_output <-
 		ggplot2::ggplot(data) +
-		ggplot2::aes(y = .data[[var_names$fitness_ratio_A_B]]) +
+		ggplot2::aes(y = .data[["fitness_ratio_A_B"]]) +
 		theme_fitness_ratio() +
 		scale_y_fitness_ratio(name = ylab, limits = ylim) +
 		do.call(geom_point_overlap, point_args)
 	fig_output <- fig_output |>
 		add_mix_axis(
 			mix_scale = mix_scale,
-			var_names = var_names,
 			strain_names = strain_names,
 			xlab = xlab,
 			xlim = xlim
@@ -593,10 +500,10 @@ plot_fitness_ratio <- function(
 
 # Helper functions =============================================================
 
-# Plot strain and total-group fitness. Called by plot_mix_fitness()
+# Plot strain and total-group fitness
+#   Unexported. Called by plot_mix_fitness()
 plot_fitness_strain_total <- function(
 	data,
-	var_names = fitness_vars_default(),
 	mix_scale = "fraction",
 	ylim = NULL,
 	color = waiver(),
@@ -606,16 +513,8 @@ plot_fitness_strain_total <- function(
 	drop_NA = TRUE
 ) {
 	mix_scale <- rlang::arg_match(mix_scale, c("fraction", "ratio"))
-
-	# Variable names
-	var_names <- check_fitness_names(
-		var_names = var_names,
-		vars = c("fitness_A", "fitness_B", "fitness_total"),
-		mix_scale = mix_scale,
-		caller = "plot_fitness_strain_total"
-	)
-	var_names$fitness <- "fitness"
-	strain_names <- get_strain_names(data, var_names)
+	# TODO: check_fitness_data() here
+	strain_names <- get_strain_names(data)
 	name_total <- "total"
 
 	# Point options
@@ -627,16 +526,11 @@ plot_fitness_strain_total <- function(
 	}
 	point_args <- get_point_args(shape = shape, size = size, drop_NA = drop_NA)
 
-	# # Drop single-strain data if using ratio mixing scale
-	# if (mix_scale == "ratio") {data <- drop_unmixed_ratio(data, var_names)}
-
 	# Make long-format data
 	data_for_plot <- stats::reshape(
 		as.data.frame(data),
 		direction = "long",
-		varying = c(
-			var_names$fitness_A, var_names$fitness_B, var_names$fitness_total
-		),
+		varying = c("fitness_A", "fitness_B", "fitness_total"),
 		v.names = "fitness",
 		timevar = "strain",
 		times = c(strain_names$name_A, strain_names$name_B, name_total)
@@ -648,9 +542,7 @@ plot_fitness_strain_total <- function(
 	data_for_plot$my_facet <- data_for_plot$strain == name_total
 
 	# Drop single-strain data if using ratio mixing scale
-	if (mix_scale == "ratio") {
-		data_for_plot <- drop_unmixed_ratio(data_for_plot, var_names)
-	}
+	if (mix_scale == "ratio") {data_for_plot <- drop_unmixed_ratio(data_for_plot)}
 
 	# Make plot
 	fig_output <-
@@ -663,11 +555,7 @@ plot_fitness_strain_total <- function(
 		ggplot2::scale_fill_manual(values = fill, na.value = NA, name = "") +
 		ggplot2::facet_wrap(~ my_facet, nrow = 1)
 	fig_output <- fig_output |>
-		add_mix_axis(
-			mix_scale = mix_scale,
-			var_names = var_names,
-			strain_names = strain_names
-		)
+		add_mix_axis(mix_scale = mix_scale, strain_names = strain_names)
 
 	fig_output
 }
@@ -675,21 +563,19 @@ plot_fitness_strain_total <- function(
 # Get shared y-axis limits for fitness & fitness_ratio
 #   So log10(fitness) and log10(fitness_ratio) are visually comparable
 #   Used by plot_mix_fitness()
-get_ylim_mix_fitness <- function(data, var_names) {
-	var_names <- as.list(var_names)
-
+get_ylim_mix_fitness <- function(data) {
 	# Range: strain & total-group fitness
 	fitness <- c(
-		data[[var_names$fitness_A]],
-		data[[var_names$fitness_B]],
-		data[[var_names$fitness_total]],
+		data[["fitness_A"]],
+		data[["fitness_B"]],
+		data[["fitness_total"]],
 		1
 	)
 	fitness <- fitness[is.finite(fitness) & fitness > 0]
 	span_fitness <- log10(range(fitness)[2] / range(fitness)[1])
 
 	# Range: Within-group fitness ratio
-	fitness_ratio <- c(data[[var_names$fitness_ratio_A_B]], 1)
+	fitness_ratio <- c(data[["fitness_ratio_A_B"]], 1)
 	fitness_ratio <- fitness_ratio[is.finite(fitness_ratio) & fitness_ratio > 0]
 	span_fitness_ratio <- log10(range(fitness_ratio)[2] / range(fitness_ratio)[1])
 
@@ -735,10 +621,11 @@ get_point_args <- function(
 	point_args
 }
 
+# TODO: Refactor
 # Get strain names from names object or data column
-get_strain_names <- function(data, var_names) {
-	name_A <- var_names[["name_A"]]
-	name_B <- var_names[["name_B"]]
+get_strain_names <- function(data) {
+	name_A <- "name_A"  # TODO: Refactor these
+	name_B <- "name_B"
 	is_multistrain <- FALSE
 	if (utils::hasName(data, name_A)) {
 		name_A <- unique(data[[name_A]])
@@ -784,12 +671,12 @@ lengthen_strain_fitness <- function(data) {
 }
 
 # Drop single-strain data
-drop_unmixed_fraction <- function(data, var_names) {
-	mixvar <- var_names[["initial_fraction_A"]]
+drop_unmixed_fraction <- function(data) {
+	mixvar <- "initial_fraction_A"
 	data[(data[[mixvar]] > 0) & (data[[mixvar]] < 1), ]
 }
-drop_unmixed_ratio <- function(data, var_names) {
-	mixvar <- var_names[["initial_ratio_A_B"]]
+drop_unmixed_ratio <- function(data) {
+	mixvar <- "initial_ratio_A_B"
 	data[(data[[mixvar]] > 0) & (is.finite(data[[mixvar]])), ]
 }
 
@@ -797,7 +684,6 @@ drop_unmixed_ratio <- function(data, var_names) {
 add_mix_axis <- function(
 	fig_input,
 	mix_scale,
-	var_names,
 	strain_names,
 	xlab = waiver(),
 	xlim = NULL
@@ -817,117 +703,33 @@ add_mix_axis <- function(
 	fig_input + switch(
 		mix_scale,
 		fraction = list(
-			ggplot2::aes(x = .data[[var_names$initial_fraction_A]]),
+			ggplot2::aes(x = .data[["initial_fraction_A"]]),
 			scale_x_initial_fraction(name = xlab, limits = xlim)
 		),
 		ratio = list(
-			ggplot2::aes(x = .data[[var_names$initial_ratio_A_B]]),
+			ggplot2::aes(x = .data[["initial_ratio_A_B"]]),
 			scale_x_initial_ratio(name = xlab, limits = xlim)
 		)
 	)
 }
 
-# Format data to plot strain and/or total-group fitness
-# format_to_plot_fitness <- function(
-# 	data,
-# 	var_names = fitness_vars_default(),
-# 	mix_scale
-# ) {
-# 	var_names <- as.list(var_names)
-# 	# name_A <- data[[var_names$name_A]][[1]]
-# 	# name_B <- data[[var_names$name_B]][[1]]
-# 	name_A <- var_names$name_A[[1]]
-# 	name_B <- var_names$name_B[[1]]
-# 	name_total <- "Total group"
-#
-# 	output <- as.data.frame(data)  # So reshape() doesn't choke on tibbles
-# 	output$initial_fraction_A <- output[[var_names$initial_fraction_A]]
-# 	output$initial_ratio_A_B  <- output[[var_names$initial_ratio_A_B]]
-# 	output$fitness_A          <- output[[var_names$fitness_A]]
-# 	output$fitness_B          <- output[[var_names$fitness_B]]
-# 	output$fitness_total      <- output[[var_names$fitness_total]]
-# 	output <- subset(
-# 		output,
-# 		select = c(
-# 			"initial_fraction_A", "initial_ratio_A_B",
-# 			"fitness_A", "fitness_B", "fitness_total"
-# 		)
-# 	)
-# 	output <- stats::reshape(
-# 		output,
-# 		direction = "long",
-# 		varying = c("fitness_A", "fitness_B", "fitness_total"),
-# 		v.names = c("fitness"),
-# 		times = c(name_A, name_B, name_total),
-# 		timevar = "strain"
-# 	)
-# 	output$strain <- factor(
-# 		output$strain,
-# 		levels = c(name_A, name_B, name_total)
-# 	)
-# 	output$my_facet <- output$strain == name_total
-#
-# 	# Drop rows with no value for fitness
-# 	if (mix_scale == "ratio") {
-# 		# Drop rows where mixing ratio undefined on log scale
-# 		output <- output[is.finite(output$initial_fraction_A), ]
-# 		output <- output[output$initial_ratio_A_B > 0, ]
-# 		# output <- output[is.finite(output[[var_initial_ratio]]), ]
-# 		# output <- output[output[[var_initial_ratio]] > 0, ]
-# 	}
-#
-# 	output
-# }
-
 
 # Check functions ==============================================================
 
-# Check var_names lists variables we want to plot
-check_fitness_names <- function(var_names, vars, mix_scale, caller) {
-	# Use default names if none given
-	if (is.null(var_names)) return(as.list(fitness_vars_default()))
-
-	# Validate given var_names and report missing items
-	missing <- NULL
-	for (var in vars) {
-		if (!utils::hasName(var_names, var)) {missing <- c(missing, var)}
-	}
-	if ("fraction" %in% mix_scale &&
-		  !utils::hasName(var_names, "initial_fraction_A")
-	) {
-		missing <- c(missing, "initial_fraction_A")
-	}
-	if ("ratio" %in% mix_scale &&
-			!utils::hasName(var_names, "initial_ratio_A_B")
-	) {
-		missing <- c(missing, "initial_ratio_A_B")
-	}
-	if (!is.null(missing)) {
-		rlang::abort(
-			paste0("'", missing, "' not found in var_names"), call = call(caller)
-		)
-	}
-	as.list(var_names)
-}
-
-# TODO:
-# check_strain_names <- function(var_names) {}
-
-check_fitness_data <- function(data, var_names, vars, mix_scale, caller) {
+check_fitness_data <- function(data, vars, mix_scale, caller) {
 	data |>
-	check_fitness_columns(var_names, vars, mix_scale, caller) |>
-	check_mix_values(var_names, vars, mix_scale, caller) |>
-	check_fitness_values(var_names, vars, mix_scale, caller)
+	check_fitness_columns(vars, mix_scale, caller) |>
+	check_mix_values(vars, mix_scale, caller) |>
+	check_fitness_values(vars, mix_scale, caller)
 }
 
 # Check variables we want to plot are columns in data
-check_fitness_columns <- function(data, var_names, vars, mix_scale, caller) {
+check_fitness_columns <- function(data, vars, mix_scale, caller) {
 	if ("fraction" %in% mix_scale) {vars <- c(vars, "initial_fraction_A")}
 	if ("ratio" %in% mix_scale) {vars <- c(vars, "initial_ratio_A_B")}
 	missing <- NULL
 	for (var in vars) {
-		var_name <- var_names[[var]]
-		if (!utils::hasName(data, var_name)) {missing <- c(missing, var_name)}
+		if (!utils::hasName(data, var)) {missing <- c(missing, var)}
 	}
 	if (!is.null(missing)) {
 		rlang::abort(
@@ -938,10 +740,10 @@ check_fitness_columns <- function(data, var_names, vars, mix_scale, caller) {
 }
 
 # Check data for nonbiological initial frequencies
-check_mix_values <- function (data, var_names, vars, mix_scale, caller) {
+check_mix_values <- function (data, vars, mix_scale, caller) {
 	# Initial fraction not in [0, 1]
 	if ("fraction" %in% mix_scale) {
-		mix_var <- var_names[["initial_fraction_A"]]
+		mix_var <- "initial_fraction_A"
 		if (any(!is.na(data[[mix_var]]) & data[[mix_var]] < 0)) {
 			rlang::warn(
 				paste("Some", mix_var, "values < 0 -- not biologically meaningful"),
@@ -958,7 +760,7 @@ check_mix_values <- function (data, var_names, vars, mix_scale, caller) {
 	}
 	# Initial ratio < 0
 	if ("ratio" %in% mix_scale) {
-		mix_var <- var_names[["initial_ratio_A_B"]]
+		mix_var <- "initial_ratio_A_B"
 		if (any(!is.na(data[[mix_var]]) & data[[mix_var]] < 0)) {
 			data[!is.na(data[[mix_var]]) & data[[mix_var]] < 0, mix_var] <- NA
 			rlang::warn(
@@ -971,40 +773,36 @@ check_mix_values <- function (data, var_names, vars, mix_scale, caller) {
 }
 
 # Check for unplottable fitness values & replace with NA
-check_fitness_values <- function(
-	data, var_names, vars, mix_scale = NULL, caller
-) {
+check_fitness_values <- function(data, vars, mix_scale = NULL, caller) {
 	# Wrightian fitness measures range from zero to infinity:
-	#   fitness_A     [0, Inf)
-	#   fitness_B     [0, Inf)
-	#   fitness_total [0, Inf)
-	#   fitness_ratio [0, Inf]
+	#   fitness_A          [0, Inf)
+	#   fitness_B          [0, Inf)
+	#   fitness_total      [0, Inf)
+	#   fitness_ratio_A_B  [0, Inf]
 	for (var in vars) {
-		var_name <- var_names[[var]]
-
 		# Fitness < 0 not biologically meaningful
-		if (any(!is.na(data[[var_name]]) & data[[var_name]] < 0)) {
-			data[!is.na(data[[var_name]]) & data[[var_name]] < 0, var_name] <- NA
+		if (any(!is.na(data[[var]]) & data[[var]] < 0)) {
+			data[!is.na(data[[var]]) & data[[var]] < 0, var] <- NA
 			rlang::warn(
-				paste("Some", var_name, "values < 0 -- not biologically meaningful"),
+				paste("Some", var, "values < 0 -- not biologically meaningful"),
 				call = call(caller)
 			)
 		}
 
 		# Fitness zeros undefined on log scale
-		if (any(data[[var_name]] == 0, na.rm = TRUE)) {
-			data[data[[var_name]] == 0, var_name] <- NA
+		if (any(data[[var]] == 0, na.rm = TRUE)) {
+			data[data[[var]] == 0, var] <- NA
 			rlang::warn(
-				paste("Some", var_name, "values = 0 -- undefined on log scale"),
+				paste("Some", var, "values = 0 -- undefined on log scale"),
 				call = call(caller)
 			)
 		}
 
 		# Fitness Inf not plotted
-		if (any(is.infinite(data[[var_name]]), na.rm = TRUE)) {
-			data[is.infinite(data[[var_name]]), var_name] <- NA
+		if (any(is.infinite(data[[var]]), na.rm = TRUE)) {
+			data[is.infinite(data[[var]]), var] <- NA
 			rlang::warn(
-				paste("Some", var_name, "values infinite, not plotted"),
+				paste("Some", var, "values infinite, not plotted"),
 				call = call(caller)
 			)
 		}
@@ -1012,4 +810,5 @@ check_fitness_values <- function(
 	data
 }
 
+# TODO: check_strain_names <- function(data, caller) {}
 

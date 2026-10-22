@@ -6,7 +6,6 @@
 \usage{
 plot_strain_fitness(
   data,
-  var_names = NULL,
   mix_scale = "fraction",
   facet_strains = FALSE,
   xlab = NA,
@@ -21,13 +20,8 @@ plot_strain_fitness(
 )
 }
 \arguments{
-\item{data}{Data frame of fitness values and mix frequencies. Wide format:
-each row must contain data for two microbes in the same population.
+\item{data}{Data frame of fitness values and mix frequencies. See Details.
 Accepts data frame extensions like \code{tibble}.}
-
-\item{var_names}{Named character vector identifying fitness and mixing
-variables in \code{data}. If \code{NULL}, defaults to column names returned by
-\code{\link[=calculate_mix_fitness]{calculate_mix_fitness()}}. See Details.}
 
 \item{mix_scale}{Mixing scale for x axis. Default \code{"fraction"} uses initial
 frequency of strain A (proportion of total) from \code{initial_fraction_A}
@@ -59,21 +53,13 @@ A ggplot object that can be further modified using the ggplot2 package
 microbe strains as a function of their initial frequency
 }
 \details{
-\code{var_names} must be a named vector or list that includes the following
-elements (shown here with default values):
+Expects data frame of Wrightian fitness values like those returned by
+\code{\link[=calculate_mix_fitness]{calculate_mix_fitness()}},
+with columns \code{name_A}, \code{name_B}, \code{initial_fraction_A},
+\code{initial_ratio_A_B}, \code{fitness_A}, and \code{fitness_B}.
+Wide format: each row must contain data for two microbes in the same
+population.
 
-\if{html}{\out{<div class="sourceCode">}}\preformatted{var_names = c(
-  name_A = "name_A",
-  name_B = "name_B",
-  initial_fraction_A = "initial_fraction_A",
-  initial_ratio_A_B = "initial_ratio_A_B",
-  fitness_A = "fitness_A",
-  fitness_B = "fitness_B"
-)
-}\if{html}{\out{</div>}}
-
-Expects Wrightian fitness data like those returned by
-\code{\link[=calculate_mix_fitness]{calculate_mix_fitness()}}.
 Does not try to plot single-strain data if \code{mix_scale = "ratio"}.
 }
 \examples{
