@@ -61,6 +61,8 @@ test_that("plot functions don't require unused mix_scale data", {
 
 test_that("plot functions report missing data columns", {
 	data <- data.frame(
+		name_A = "A",
+		name_B = "B",
 		initial_fraction_A = 0.5,
 		initial_ratio_A_B = 1,
 		fitness_A = 10,
@@ -70,7 +72,7 @@ test_that("plot functions report missing data columns", {
 	)
 
 	# Comparing fitness measures
-	for (i in 1:length(data)) {
+	for (i in 3:length(data)) {
 		expect_error(regexp = "not found in data",
 			plot_mix_fitness(data[-i])
 		)
@@ -123,7 +125,9 @@ test_that("plot functions warn about nonsensical strain frequencies", {
 		fitness_A = 1,
 		fitness_B = 1,
 		fitness_total = 1,
-		fitness_ratio_A_B = 1
+		fitness_ratio_A_B = 1,
+		name_A = "A",
+		name_B = "B"
 	)
 
 	# Initial fraction not in [0, 1]
@@ -153,7 +157,9 @@ test_that("plot functions warn about nonsensical strain frequencies", {
 		fitness_A = c(1, 1),
 		fitness_B = c(1, 1),
 		fitness_total = c(1, 1),
-		fitness_ratio_A_B = c(1, 1)
+		fitness_ratio_A_B = c(1, 1),
+		name_A = "A",
+		name_B = "B"
 	)
 	expect_warning(regexp = "biologically meaningful", {
 		plot_mix_fitness(suspect_data, mix_scale = "ratio")
@@ -177,7 +183,9 @@ test_that("plot functions warn about nonsensical fitness values", {
 		fitness_A = 1,
 		fitness_B = 1,
 		fitness_total = 1,
-		fitness_ratio_A_B = 1
+		fitness_ratio_A_B = 1,
+		name_A = "A",
+		name_B = "B"
 	)
 	for (i in c("fitness_A", "fitness_B", "fitness_total", "fitness_ratio_A_B")) {
 		bad_data <- good_data
@@ -188,21 +196,25 @@ test_that("plot functions warn about nonsensical fitness values", {
 	}
 	expect_warning(regexp = "biologically meaningful", {
 		plot_strain_fitness(data.frame(
+			name_A = "A", name_B = "B",
 			initial_fraction_A = 0.5, fitness_A = -1, fitness_B = 1
 		))
 	})
 	expect_warning(regexp = "biologically meaningful", {
 		plot_strain_fitness(data.frame(
+			name_A = "A", name_B = "B",
 			initial_fraction_A = 0.5, fitness_A = 1, fitness_B = -1
 		))
 	})
 	expect_warning(regexp = "biologically meaningful", {
 		plot_total_fitness(data.frame(
+			name_A = "A", name_B = "B",
 			initial_fraction_A = 0.5, fitness_total = -1
 		))
 	})
 	expect_warning(regexp = "biologically meaningful", {
 		plot_fitness_ratio(data.frame(
+			name_A = "A", name_B = "B",
 			initial_fraction_A = 0.5, fitness_ratio_A_B = -1
 		))
 	})
@@ -219,7 +231,9 @@ test_that("plot functions warn about fitness zeros", {
 		fitness_A = 1,
 		fitness_B = 1,
 		fitness_total = 1,
-		fitness_ratio_A_B = 1
+		fitness_ratio_A_B = 1,
+		name_A = "A",
+		name_B = "B"
 	)
 	for (i in c("fitness_A", "fitness_B", "fitness_total", "fitness_ratio_A_B")) {
 		fitness_zero <- fitness
@@ -230,21 +244,25 @@ test_that("plot functions warn about fitness zeros", {
 	}
 	expect_warning(regexp = "undefined on log scale", {
 		plot_strain_fitness(data.frame(
+			name_A = "A", name_B = "B",
 			initial_fraction_A = 0.5, fitness_A = 0, fitness_B = 1
 		))
 	})
 	expect_warning(regexp = "undefined on log scale", {
 		plot_strain_fitness(data.frame(
+			name_A = "A", name_B = "B",
 			initial_fraction_A = 0.5, fitness_A = 1, fitness_B = 0
 		))
 	})
 	expect_warning(regexp = "undefined on log scale", {
 		plot_total_fitness(data.frame(
+			name_A = "A", name_B = "B",
 			initial_fraction_A = 0.5, fitness_total = 0
 		))
 	})
 	expect_warning(regexp = "undefined on log scale", {
 		plot_fitness_ratio(data.frame(
+			name_A = "A", name_B = "B",
 			initial_fraction_A = 0.5, fitness_ratio_A_B = 0
 		))
 	})
@@ -257,7 +275,9 @@ test_that("plot functions warn about infinite fitness values", {
 		fitness_A = 1,
 		fitness_B = 1,
 		fitness_total = 1,
-		fitness_ratio_A_B = 1
+		fitness_ratio_A_B = 1,
+		name_A = "A",
+		name_B = "B"
 	)
 	for (i in c("fitness_A", "fitness_B", "fitness_total", "fitness_ratio_A_B")) {
 		fitness_inf <- fitness
@@ -268,21 +288,25 @@ test_that("plot functions warn about infinite fitness values", {
 	}
 	expect_warning(regexp = "infinite", {
 		plot_strain_fitness(data.frame(
+			name_A = "A", name_B = "B",
 			initial_fraction_A = 0.5, fitness_A = Inf, fitness_B = 1
 		))
 	})
 	expect_warning(regexp = "infinite", {
 		plot_strain_fitness(data.frame(
+			name_A = "A", name_B = "B",
 			initial_fraction_A = 0.5, fitness_A = 1, fitness_B = Inf
 		))
 	})
 	expect_warning(regexp = "infinite", {
 		plot_total_fitness(data.frame(
+			name_A = "A", name_B = "B",
 			initial_fraction_A = 0.5, fitness_total = Inf
 		))
 	})
 	expect_warning(regexp = "infinite", {
 		plot_fitness_ratio(data.frame(
+			name_A = "A", name_B = "B",
 			initial_fraction_A = 0.5, fitness_ratio_A_B = Inf
 		))
 	})

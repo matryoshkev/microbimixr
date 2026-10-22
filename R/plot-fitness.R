@@ -236,7 +236,7 @@ plot_strain_fitness <- function(
 		mix_scale = mix_scale,
 		caller = "plot_strain_fitness"
 	)
-	strain_names <- get_strain_names(data)
+	strain_labels <- get_strain_labels(data)
 
 	# Make long-format data frame for plot
 	data_to_plot <- stats::reshape(
@@ -245,14 +245,20 @@ plot_strain_fitness <- function(
 		varying = c("fitness_A", "fitness_B"),
 		v.names = "fitness",
 		timevar = "strain",
-		times = c(strain_names$name_A, strain_names$name_B)
+		times = c(strain_labels$A, strain_labels$B)
 	)
+	# data_to_plot <- lengthen_strain_fitness(data)
+	# TODO: Fix facet issue here: strain vs strain_label
+
+	# List strain A first
 	data_to_plot$strain <- factor(
-		data_to_plot$strain, levels = c(strain_names$name_A, strain_names$name_B)
+		data_to_plot$strain, levels = c(strain_labels$A, strain_labels$B)
 	)
 
 	# Drop single-strain data if using ratio mixing scale
-	if (mix_scale == "ratio") {data_to_plot <- drop_unmixed_ratio(data_to_plot)}
+	if (mix_scale == "ratio") {
+		data_to_plot <- drop_unmixed(data_to_plot, mix_scale)
+	}
 
 	# Axis options
 	if (missing(xlab)) {xlab <- waiver()}
@@ -283,7 +289,7 @@ plot_strain_fitness <- function(
 	fig_output <- fig_output |>
 		add_mix_axis(
 			mix_scale = mix_scale,
-			strain_names = strain_names,
+			strain_labels = strain_labels,
 			xlab = xlab,
 			xlim = xlim
 		)
@@ -359,10 +365,10 @@ plot_total_fitness <- function(
 		mix_scale = mix_scale,
 		caller = "plot_total_fitness"
 	)
-	strain_names <- get_strain_names(data)
+	strain_labels <- get_strain_labels(data)
 
 	# Drop single-strain data if using ratio mixing scale
-	if (mix_scale == "ratio") {data <- drop_unmixed_ratio(data)}
+	if (mix_scale == "ratio") {data <- drop_unmixed(data, mix_scale)}
 
 	# Axis options
 	if (missing(xlab)) {xlab <- waiver()}
@@ -385,7 +391,7 @@ plot_total_fitness <- function(
 	fig_output <- fig_output |>
 		add_mix_axis(
 			mix_scale = mix_scale,
-			strain_names = strain_names,
+			strain_labels = strain_labels,
 			xlab = xlab,
 			xlim = xlim
 		)
@@ -455,21 +461,15 @@ plot_fitness_ratio <- function(
 		mix_scale = mix_scale,
 		caller = "plot_fitness_ratio"
 	)
-	strain_names <- get_strain_names(data)
+	strain_labels <- get_strain_labels(data)
 
 	# Drop single-strain data
-	if (mix_scale == "fraction") {
-		data <- drop_unmixed_fraction(data)
-	} else if (mix_scale == "ratio") {
-		data <- drop_unmixed_ratio(data)
-	}
+	data <- drop_unmixed(data, mix_scale)
 
 	# Axis options
 	if (missing(xlab)) {xlab <- waiver()}
 	if (missing(ylab)) {
-		ylab <- paste(
-			"Fitness ratio\n", strain_names[["name_A"]], "/", strain_names[["name_B"]]
-		)
+		ylab <- paste("Fitness ratio\n", strain_labels$A, "/", strain_labels$B)
 	}
 	if (missing(xlim)) {xlim <- NULL}
 	if (missing(ylim)) {ylim <- NULL}
@@ -489,16 +489,13 @@ plot_fitness_ratio <- function(
 	fig_output <- fig_output |>
 		add_mix_axis(
 			mix_scale = mix_scale,
-			strain_names = strain_names,
+			strain_labels = strain_labels,
 			xlab = xlab,
 			xlim = xlim
 		)
 
 	fig_output
 }
-
-
-# Helper functions =============================================================
 
 # Plot strain and total-group fitness
 #   Unexported. Called by plot_mix_fitness()
@@ -514,7 +511,7 @@ plot_fitness_strain_total <- function(
 ) {
 	mix_scale <- rlang::arg_match(mix_scale, c("fraction", "ratio"))
 	# TODO: check_fitness_data() here
-	strain_names <- get_strain_names(data)
+	strain_labels <- get_strain_labels(data)
 	name_total <- "total"
 
 	# Point options
@@ -533,16 +530,18 @@ plot_fitness_strain_total <- function(
 		varying = c("fitness_A", "fitness_B", "fitness_total"),
 		v.names = "fitness",
 		timevar = "strain",
-		times = c(strain_names$name_A, strain_names$name_B, name_total)
+		times = c(strain_labels$A, strain_labels$B, name_total)
 	)
 	data_for_plot$strain <- factor(
 		data_for_plot$strain,
-		levels = c(strain_names$name_A, strain_names$name_B, name_total)
+		levels = c(strain_labels$A, strain_labels$B, name_total)
 	)
 	data_for_plot$my_facet <- data_for_plot$strain == name_total
 
 	# Drop single-strain data if using ratio mixing scale
-	if (mix_scale == "ratio") {data_for_plot <- drop_unmixed_ratio(data_for_plot)}
+	if (mix_scale == "ratio") {
+		data_for_plot <- drop_unmixed(data_for_plot, mix_scale)
+	}
 
 	# Make plot
 	fig_output <-
@@ -555,10 +554,13 @@ plot_fitness_strain_total <- function(
 		ggplot2::scale_fill_manual(values = fill, na.value = NA, name = "") +
 		ggplot2::facet_wrap(~ my_facet, nrow = 1)
 	fig_output <- fig_output |>
-		add_mix_axis(mix_scale = mix_scale, strain_names = strain_names)
+		add_mix_axis(mix_scale = mix_scale, strain_labels = strain_labels)
 
 	fig_output
 }
+
+
+# Helper functions =============================================================
 
 # Get shared y-axis limits for fitness & fitness_ratio
 #   So log10(fitness) and log10(fitness_ratio) are visually comparable
@@ -621,28 +623,22 @@ get_point_args <- function(
 	point_args
 }
 
-# TODO: Refactor
-# Get strain names from names object or data column
-get_strain_names <- function(data) {
-	name_A <- "name_A"  # TODO: Refactor these
-	name_B <- "name_B"
+# Get strain labels from data
+#   Use "strain A" and/or "strain B" if there's >1 strain combo
+get_strain_labels <- function(data) {
 	is_multistrain <- FALSE
-	if (utils::hasName(data, name_A)) {
-		name_A <- unique(data[[name_A]])
-		if (length(name_A) > 1) {
-			is_multistrain <- TRUE
-			name_A <- "Strain A"
-		}
+	label_A <- unique(data[["name_A"]])
+	label_B <- unique(data[["name_B"]])
+	if (length(label_A) > 1) {
+		is_multistrain <- TRUE
+		label_A <- "strain A"
 	}
-	if (utils::hasName(data, name_B)) {
-		name_B <- unique(data[[name_B]])
-		if (length(name_B) > 1) {
-			is_multistrain <- TRUE
-			name_B <- "Strain B"
-		}
+	if (length(label_B) > 1) {
+		is_multistrain <- TRUE
+		label_B <- "strain B"
 	}
 	if (is_multistrain) message("Note: >1 strain combination in data")
-	list(name_A = name_A, name_B = name_B)
+	list(A = label_A, B = label_B)
 }
 
 # Convert wide-format strain fitness data to long format
@@ -671,32 +667,29 @@ lengthen_strain_fitness <- function(data) {
 }
 
 # Drop single-strain data
-drop_unmixed_fraction <- function(data) {
-	mixvar <- "initial_fraction_A"
-	data[(data[[mixvar]] > 0) & (data[[mixvar]] < 1), ]
-}
-drop_unmixed_ratio <- function(data) {
-	mixvar <- "initial_ratio_A_B"
-	data[(data[[mixvar]] > 0) & (is.finite(data[[mixvar]])), ]
+drop_unmixed <- function(data, mix_scale) {
+	if (mix_scale == "fraction") {
+		keep <- data$initial_fraction_A > 0 & data$initial_fraction_A < 1
+	} else if (mix_scale == "ratio") {
+		keep <- data$initial_ratio_A_B > 0 & is.finite(data$initial_ratio_A_B)
+	}
+	data[keep, ]
 }
 
 # Add x-axis mixing scale to ggplot object
 add_mix_axis <- function(
 	fig_input,
 	mix_scale,
-	strain_names,
+	strain_labels,
 	xlab = waiver(),
 	xlim = NULL
 ) {
-	# Set default axis name using strain names
+	# Set default axis name using strain lables
 	if (is_waiver(xlab)) {
 		if (mix_scale == "fraction") {
-			xlab <- paste("Initial fraction", strain_names[["name_A"]])
+			xlab <- paste("Initial fraction", strain_labels$A)
 		} else if (mix_scale == "ratio") {
-			xlab <- paste(
-				"Initial ratio",
-				strain_names[["name_A"]], "/", strain_names[["name_B"]]
-			)
+			xlab <- paste("Initial ratio", strain_labels$A, "/", strain_labels$B)
 		}
 	}
 
