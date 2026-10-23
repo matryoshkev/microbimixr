@@ -2,12 +2,12 @@
 title: "Working with strain fitness"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Analyzing strain fitness}
+  %\VignetteIndexEntry{Working with strain fitness}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r, include = FALSE}
+```{r setup, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
@@ -27,7 +27,7 @@ It can be very useful to analyze how microbial interactions affect the absolute 
 
 Total fitness and the relative ratio of strain fitnesses are fundamentally different quantities from each other, so they need their own plots and their own fitted models. But the fitness of one strain is the same kind of quantity as the fitness of another strain. They can be plotted on the same axis. 
 
-Let's look at a dataset included in microbimixr where different natural isolates of starving _Dictyostelium_ amoebae were mixed and allowed to form fruiting bodies together (Madgwick et al.&nbsp;2018). 
+Let's look at a dataset included in microbimixr where different natural isolates of _Dictyostelium_ amoebae were starved, mixed, and allowed to form fruiting bodies together (Madgwick et al.&nbsp;2018). 
 
 ```{r data}
 library(microbimixr)
@@ -43,20 +43,103 @@ fitness_dicty <-
 	))
 ```
 
-Here we're measuring fitness as the number of cells that survived as spores instead of dying and becoming part of the fruiting body's stalk. There are a bunch of different strain pairs in the dataset. Let's focus on one of them: 
+Here fitness is measuring cells that survived as spores instead of dying and becoming part of the fruiting body's stalk. There are a bunch of different strain pairs in the dataset. Let's focus on one of them: 
 
 ```{r compare, fig.width = 6.3, fig.height = 2.25}
 fitness_pair <- subset(fitness_dicty, name_A == "NC105.1" & name_B == "NC34.2") 
 plot_mix_fitness(fitness_pair, mix_scale = "fraction")
 ```
 
-Here the strain fitness plot shows that both strains produce more spores when they're rare (because they contribute fewer cells to the stalk). That result isn't visible in the plots of total fitness or fitness ratio. The fitness ratio plot shows that sporulation is negatively frequency-dependent, but it doesn't show how much each strain contributes to that. 
+The strain-fitness plot shows that both strains make more spores when they're rare (because they contribute fewer cells to the stalk). That result isn't visible in the plots of total fitness or fitness ratio. The fitness ratio plot shows that sporulation is negatively frequency-dependent, but it doesn't show how much each strain contributes to that. 
 
 Strain fitness plots are often crowded, so it can be useful to use the `facet_strains` argument: 
 
 ```{r plot-strain-pair, fig.width = 4, fig.height = 2.5, out.width = "65%"}
-plot_strain_fitness(fitness_pair, ylab = "Spores/cell", facet_strains = TRUE)
+fig_strain_fitness <- 
+	plot_strain_fitness(fitness_pair, ylab = "Spores/cell", facet_strains = TRUE)
+fig_strain_fitness
 ```
+
+Behind the scenes, `plot_strain_fitness()` converts fitness data from wide format (where each row has data for both strains) to long format (where each strain has its own row). With long-format data we can plot both strains on the same `fitness` axis and `strain` can be mapped to point color or used as a facetting variable. 
+
+
+## Models of strain fitness
+
+When you make figures to show your data in papers and talks, it's a good idea to also plot the models you use to analyze the data. This helps your audience understand how the models explain the data. It also helps you make sure the model is doing what you want it to! 
+
+### Wide-format models
+
+One approach is to use models that predict wide-format fitness. This could be a set of differential equations describing what happens to each strain between the initial and final states of the mix experiment (Yurtsev et al.&nbsp;2013). Or it could just be descriptive statistical models fit separately to each strain: 
+
+```{r model-wide}
+model_A <- lm(fitness_A ~ poly(initial_fraction_A, 3), data = fitness_pair)
+model_B <- update(model_A, fitness_B ~ poly(initial_fraction_A, 3))
+```
+
+To show the predicted fitness values as smooth curves, make a new data frame for them with a range of intermediate mixing frequencies. Here we'll do that using [dplyr](https://dplyr.tidyverse.org), which can make data-wrangling easier to read: 
+
+```{r fitted-wide}
+library(dplyr)
+fitted_wide <- data.frame(initial_fraction_A = seq(0, 1, by = 0.02))
+fitted_wide <- fitted_wide |>
+	mutate(
+		fitness_A = predict(model_A, newdata = fitted_wide),
+		fitness_B = predict(model_B, newdata = fitted_wide),
+		name_A = "NC105.1",
+		name_B = "NC34.2"
+	)
+```
+
+To plot the fitted model we need to need to convert its predicted values to long format. You could do that yourself using `reshape()` in base R or `tidyr::pivot_longer()`, but microbimixr includes `lengthen_strain_fitness()` to make it easy. Then add it to the figure as a line using [ggplot2](https://ggplot2.tidyverse.org/):
+
+```{r plot-wide, fig.width = 4, fig.height = 2.5, out.width = "65%"}
+library(ggplot2)
+fig_strain_fitness +
+	geom_line(data = lengthen_strain_fitness(fitted_wide), na.rm = TRUE)
+```
+
+### Long-format models
+
+Another approach is to fit a single model where fitness is a function of two variables: strain and mixing frequency. This is analogous to the "neighbor-modulated fitness" formulation of kin selection (Taylor & Frank 1996). For these you fit the model to long-format data: 
+
+```{r model-long}
+model_long <- lm(
+	fitness ~ strain * poly(initial_fraction_A, 3),
+	data = lengthen_strain_fitness(fitness_pair)
+)
+```
+
+Then make a long-format data frame for the fitted model's predicted values:
+
+```{r fitted-long}
+fitted_long <- expand.grid(
+	initial_fraction_A = seq(0, 1, by = 0.02),
+	strain = c("NC105.1", "NC34.2")
+)
+fitted_long$fitness <- predict(model_long, newdata = fitted_long)
+```
+
+And add it to the plotted figure: 
+
+```{r plot-long, fig.width = 4, fig.height = 2.5, out.width = "65%"}
+fig_strain_fitness + geom_line(data = fitted_long, na.rm = TRUE)
+```
+
+<!-- TODO
+## Multiple strain combinations
+```{plot-multistrain, fig.width = 4, fig.height = 4, out.width = "60%"}
+library(dplyr)
+library(ggplot2)
+fitness_dicty |>
+	tibble() |>
+	filter(name_A == "NC105.1" & name_B %in% c("NC34.2", "NC28.1")) |>
+	mutate(strain_pair = paste(name_A, "+", name_B)) |>
+	plot_strain_fitness(ylab = "Spores/cell") +
+	facet_grid(cols = vars(strain), rows = vars(strain_pair))
+# How should plot_strain_fitness() deal with strain combinations?
+```
+-->
+
 
 ## References
 
@@ -65,3 +148,7 @@ plot_strain_fitness(fitness_pair, ylab = "Spores/cell", facet_strains = TRUE)
 * smith j and Inglis RF (2021) Evaluating kin and group selection as tools for 
 quantitative analysis of microbial data. *Proceedings B* **288:** 20201657.
 [https://doi.org/10.1098/rspb.2020.1657](https://doi.org/10.1098/rspb.2020.1657)
+
+* Taylor PD and Frank SA (1996) How to make a kin selection model. _Journal of Theoretical Biology_ **180:** 27-37. [https://10.1006/jtbi.1996.0075](https://10.1006/jtbi.1996.0075)
+
+* Yurtsev EA, Chao HX, Datta MS, Artemova T, and Gore J (2013) Bacterial cheating drives the population dynamics of cooperative antibiotic resistance plasmids. _Molecular Systems Biology_ **9:** 683. [https://10.1038/msb.2013.39](https://10.1038/msb.2013.39)

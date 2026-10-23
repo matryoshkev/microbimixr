@@ -193,7 +193,7 @@ fig_ratio <- plot_fitness_ratio(
 fig_total + fig_ratio + plot_annotation(tag_levels = "A")
 ```
 
-You can customize microbimixr plots even more with the [ggplot2](https://ggplot2.tidyverse.org/) package. This is great for showing different experimental conditions. 
+You can customize microbimixr plots even more with [ggplot2](https://ggplot2.tidyverse.org/). This is great for showing different experimental conditions. 
 
 ```{r plot-ggplot2, fig.width = 6.25, fig.height = 2.25, out.width = "100%", align = "center"}
 library(ggplot2)
