@@ -376,3 +376,15 @@ test_that("plot functions accept point args", {
 	})
 })
 
+test_that("lengthen_strain_fitness() works", {
+	data <- data.frame(
+		initial_fraction_A = c(0, 0.5, 1),
+		fitness_A = c(NA, 150, 100),
+		fitness_B = c(100, 50, NA)
+	)
+	data$name_A <- "Evolved"
+	data$name_B <- "Ancestral"
+	data$exptl_block <- "A"
+	expect_no_error(lengthen_strain_fitness(data))
+})
+
