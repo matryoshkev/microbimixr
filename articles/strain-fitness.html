@@ -84,7 +84,7 @@ own plots and their own fitted models. But the fitness of one strain is
 the same kind of quantity as the fitness of another strain. They can be
 plotted on the same axis.</p>
 <p>Let’s look at a dataset included in microbimixr where different
-natural isolates of starving <em>Dictyostelium</em> amoebae were mixed
+natural isolates of <em>Dictyostelium</em> amoebae were starved, mixed,
 and allowed to form fruiting bodies together (Madgwick et al. 2018).</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://matryoshkev.github.io/microbimixr/">microbimixr</a></span><span class="op">)</span></span>
@@ -98,25 +98,116 @@ and allowed to form fruiting bodies together (Madgwick et al. 2018).</p>
 <span>        name_A <span class="op">=</span> <span class="st">"strain_i"</span>,</span>
 <span>        name_B <span class="op">=</span> <span class="st">"strain_j"</span></span>
 <span>    <span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p>Here we’re measuring fitness as the number of cells that survived as
-spores instead of dying and becoming part of the fruiting body’s stalk.
-There are a bunch of different strain pairs in the dataset. Let’s focus
-on one of them:</p>
+<p>Here fitness is measuring cells that survived as spores instead of
+dying and becoming part of the fruiting body’s stalk. There are a bunch
+of different strain pairs in the dataset. Let’s focus on one of
+them:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fitness_pair</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">fitness_dicty</span>, <span class="va">name_A</span> <span class="op">==</span> <span class="st">"NC105.1"</span> <span class="op">&amp;</span> <span class="va">name_B</span> <span class="op">==</span> <span class="st">"NC34.2"</span><span class="op">)</span> </span>
 <span><span class="fu"><a href="../reference/plot_mix_fitness.html">plot_mix_fitness</a></span><span class="op">(</span><span class="va">fitness_pair</span>, mix_scale <span class="op">=</span> <span class="st">"fraction"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="strain-fitness_files/figure-html/compare-1.png" class="r-plt" alt="" width="100%" style="display: block; margin: auto;"></p>
-<p>Here the strain fitness plot shows that both strains produce more
-spores when they’re rare (because they contribute fewer cells to the
-stalk). That result isn’t visible in the plots of total fitness or
-fitness ratio. The fitness ratio plot shows that sporulation is
-negatively frequency-dependent, but it doesn’t show how much each strain
+<p>The strain-fitness plot shows that both strains make more spores when
+they’re rare (because they contribute fewer cells to the stalk). That
+result isn’t visible in the plots of total fitness or fitness ratio. The
+fitness ratio plot shows that sporulation is negatively
+frequency-dependent, but it doesn’t show how much each strain
 contributes to that.</p>
 <p>Strain fitness plots are often crowded, so it can be useful to use
 the <code>facet_strains</code> argument:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_strain_fitness.html">plot_strain_fitness</a></span><span class="op">(</span><span class="va">fitness_pair</span>, ylab <span class="op">=</span> <span class="st">"Spores/cell"</span>, facet_strains <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">fig_strain_fitness</span> <span class="op">&lt;-</span> </span>
+<span>    <span class="fu"><a href="../reference/plot_strain_fitness.html">plot_strain_fitness</a></span><span class="op">(</span><span class="va">fitness_pair</span>, ylab <span class="op">=</span> <span class="st">"Spores/cell"</span>, facet_strains <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="va">fig_strain_fitness</span></span></code></pre></div>
 <p><img src="strain-fitness_files/figure-html/plot-strain-pair-1.png" class="r-plt" alt="" width="65%" style="display: block; margin: auto;"></p>
+<p>Behind the scenes, <code><a href="../reference/plot_strain_fitness.html">plot_strain_fitness()</a></code> converts
+fitness data from wide format (where each row has data for both strains)
+to long format (where each strain has its own row). With long-format
+data we can plot both strains on the same <code>fitness</code> axis and
+<code>strain</code> can be mapped to point color or used as a facetting
+variable.</p>
+</div>
+<div class="section level2">
+<h2 id="models-of-strain-fitness">Models of strain fitness<a class="anchor" aria-label="anchor" href="#models-of-strain-fitness"></a>
+</h2>
+<p>When you make figures to show your data in papers and talks, it’s a
+good idea to also plot the models you use to analyze the data. This
+helps your audience understand how the models explain the data. It also
+helps you make sure the model is doing what you want it to!</p>
+<div class="section level3">
+<h3 id="wide-format-models">Wide-format models<a class="anchor" aria-label="anchor" href="#wide-format-models"></a>
+</h3>
+<p>One approach is to use models that predict wide-format fitness. This
+could be a set of differential equations describing what happens to each
+strain between the initial and final states of the mix experiment
+(Yurtsev et al. 2013). Or it could just be descriptive statistical
+models fit separately to each strain:</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">model_A</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">fitness_A</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/stats/poly.html" class="external-link">poly</a></span><span class="op">(</span><span class="va">initial_fraction_A</span>, <span class="fl">3</span><span class="op">)</span>, data <span class="op">=</span> <span class="va">fitness_pair</span><span class="op">)</span></span>
+<span><span class="va">model_B</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/update.html" class="external-link">update</a></span><span class="op">(</span><span class="va">model_A</span>, <span class="va">fitness_B</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/stats/poly.html" class="external-link">poly</a></span><span class="op">(</span><span class="va">initial_fraction_A</span>, <span class="fl">3</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<p>To show the predicted fitness values as smooth curves, make a new
+data frame for them with a range of intermediate mixing frequencies.
+Here we’ll do that using <a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a>, which can make
+data-wrangling easier to read:</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
+<span><span class="va">fitted_wide</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>initial_fraction_A <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, by <span class="op">=</span> <span class="fl">0.02</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">fitted_wide</span> <span class="op">&lt;-</span> <span class="va">fitted_wide</span> <span class="op">|&gt;</span></span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
+<span>        fitness_A <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">model_A</span>, newdata <span class="op">=</span> <span class="va">fitted_wide</span><span class="op">)</span>,</span>
+<span>        fitness_B <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">model_B</span>, newdata <span class="op">=</span> <span class="va">fitted_wide</span><span class="op">)</span>,</span>
+<span>        name_A <span class="op">=</span> <span class="st">"NC105.1"</span>,</span>
+<span>        name_B <span class="op">=</span> <span class="st">"NC34.2"</span></span>
+<span>    <span class="op">)</span></span></code></pre></div>
+<p>To plot the fitted model we need to need to convert its predicted
+values to long format. You could do that yourself using
+<code><a href="https://rdrr.io/r/stats/reshape.html" class="external-link">reshape()</a></code> in base R or <code>tidyr::pivot_longer()</code>,
+but microbimixr includes <code><a href="../reference/lengthen_strain_fitness.html">lengthen_strain_fitness()</a></code> to make
+it easy. Then add it to the figure as a line using <a href="https://ggplot2.tidyverse.org/" class="external-link">ggplot2</a>:</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
+<span><span class="va">fig_strain_fitness</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html" class="external-link">geom_line</a></span><span class="op">(</span>data <span class="op">=</span> <span class="fu"><a href="../reference/lengthen_strain_fitness.html">lengthen_strain_fitness</a></span><span class="op">(</span><span class="va">fitted_wide</span><span class="op">)</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<p><img src="strain-fitness_files/figure-html/plot-wide-1.png" class="r-plt" alt="" width="65%" style="display: block; margin: auto;"></p>
+</div>
+<div class="section level3">
+<h3 id="long-format-models">Long-format models<a class="anchor" aria-label="anchor" href="#long-format-models"></a>
+</h3>
+<p>Another approach is to fit a single model where fitness is a function
+of two variables: strain and mixing frequency. This is analogous to the
+“neighbor-modulated fitness” formulation of kin selection (Taylor &amp;
+Frank 1996). For these you fit the model to long-format data:</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">model_long</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span></span>
+<span>    <span class="va">fitness</span> <span class="op">~</span> <span class="va">strain</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/stats/poly.html" class="external-link">poly</a></span><span class="op">(</span><span class="va">initial_fraction_A</span>, <span class="fl">3</span><span class="op">)</span>,</span>
+<span>    data <span class="op">=</span> <span class="fu"><a href="../reference/lengthen_strain_fitness.html">lengthen_strain_fitness</a></span><span class="op">(</span><span class="va">fitness_pair</span><span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<p>Then make a long-format data frame for the fitted model’s predicted
+values:</p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">fitted_long</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/expand.grid.html" class="external-link">expand.grid</a></span><span class="op">(</span></span>
+<span>    initial_fraction_A <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, by <span class="op">=</span> <span class="fl">0.02</span><span class="op">)</span>,</span>
+<span>    strain <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"NC105.1"</span>, <span class="st">"NC34.2"</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span><span class="va">fitted_long</span><span class="op">$</span><span class="va">fitness</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">model_long</span>, newdata <span class="op">=</span> <span class="va">fitted_long</span><span class="op">)</span></span></code></pre></div>
+<p>And add it to the plotted figure:</p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">fig_strain_fitness</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html" class="external-link">geom_line</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">fitted_long</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<p><img src="strain-fitness_files/figure-html/plot-long-1.png" class="r-plt" alt="" width="65%" style="display: block; margin: auto;"></p>
+<!-- TODO
+## Multiple strain combinations
+```{plot-multistrain, fig.width = 4, fig.height = 4, out.width = "60%"}
+library(dplyr)
+library(ggplot2)
+fitness_dicty |>
+    tibble() |>
+    filter(name_A == "NC105.1" & name_B %in% c("NC34.2", "NC28.1")) |>
+    mutate(strain_pair = paste(name_A, "+", name_B)) |>
+    plot_strain_fitness(ylab = "Spores/cell") +
+    facet_grid(cols = vars(strain), rows = vars(strain_pair))
+# How should plot_strain_fitness() deal with strain combinations?
+```
+-->
+</div>
 </div>
 <div class="section level2">
 <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
@@ -129,6 +220,12 @@ cheating in a microbe. <em>PNAS</em> <strong>115:</strong> E4823-E4832.
 <li><p>smith j and Inglis RF (2021) Evaluating kin and group selection
 as tools for quantitative analysis of microbial data. <em>Proceedings
 B</em> <strong>288:</strong> 20201657. <a href="https://doi.org/10.1098/rspb.2020.1657" class="external-link">https://doi.org/10.1098/rspb.2020.1657</a></p></li>
+<li><p>Taylor PD and Frank SA (1996) How to make a kin selection model.
+<em>Journal of Theoretical Biology</em> <strong>180:</strong> 27-37. <a href="https://10.1006/jtbi.1996.0075" class="external-link">https://10.1006/jtbi.1996.0075</a></p></li>
+<li><p>Yurtsev EA, Chao HX, Datta MS, Artemova T, and Gore J (2013)
+Bacterial cheating drives the population dynamics of cooperative
+antibiotic resistance plasmids. <em>Molecular Systems Biology</em>
+<strong>9:</strong> 683. <a href="https://10.1038/msb.2013.39" class="external-link">https://10.1038/msb.2013.39</a></p></li>
 </ul>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

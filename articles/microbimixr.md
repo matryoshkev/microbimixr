@@ -341,9 +341,9 @@ fig_total + fig_ratio + plot_annotation(tag_levels = "A")
 
 ![](microbimixr_files/figure-html/plot-options-1.png)
 
-You can customize microbimixr plots even more with the
-[ggplot2](https://ggplot2.tidyverse.org/) package. This is great for
-showing different experimental conditions.
+You can customize microbimixr plots even more with
+[ggplot2](https://ggplot2.tidyverse.org/). This is great for showing
+different experimental conditions.
 
 ``` r
 

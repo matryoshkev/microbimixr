@@ -2,12 +2,17 @@
 
 ## Calculate and compare fitness measures
 
+Calculate best-practice fitness measures and identify which are best for
+your data and research question
+
 - [`calculate_mix_fitness()`](https://matryoshkev.github.io/microbimixr/reference/calculate_mix_fitness.md)
   : Calculate fitness measures
 - [`plot_mix_fitness()`](https://matryoshkev.github.io/microbimixr/reference/plot_mix_fitness.md)
   : Draw plots to compare fitness measures
 
 ## Plot fitness with microbimixr functions
+
+An easy way to make publication-quality figures
 
 - [`plot_strain_fitness()`](https://matryoshkev.github.io/microbimixr/reference/plot_strain_fitness.md)
   : Plot fitness of each strain separately
@@ -18,10 +23,8 @@
 
 ## Plot fitness with ggplot2
 
-Use axes and other plot components separately
+Use microbimixr’s axes and other plot components in your own plots
 
-- [`geom_point_overlap()`](https://matryoshkev.github.io/microbimixr/reference/geom_point_overlap.md)
-  : Points with improved overlap readability
 - [`scale_x_initial_fraction()`](https://matryoshkev.github.io/microbimixr/reference/scale_x_initial_fraction.md)
   : X-axis for initial strain frequency
 - [`scale_x_initial_ratio()`](https://matryoshkev.github.io/microbimixr/reference/scale_x_initial_ratio.md)
@@ -30,8 +33,14 @@ Use axes and other plot components separately
   : Y-axis for Wrightian fitness
 - [`scale_y_fitness_ratio()`](https://matryoshkev.github.io/microbimixr/reference/scale_y_fitness_ratio.md)
   : Y-axis for within-group ratio of strain fitnesses
+- [`geom_point_overlap()`](https://matryoshkev.github.io/microbimixr/reference/geom_point_overlap.md)
+  : Points with improved overlap readability
+- [`lengthen_strain_fitness()`](https://matryoshkev.github.io/microbimixr/reference/lengthen_strain_fitness.md)
+  : Convert strain fitness data from wide to long format
 
 ## Example datasets
+
+Results from published mix experiments
 
 - [`data_Madgwick_2018`](https://matryoshkev.github.io/microbimixr/reference/data_Madgwick_2018.md)
   :
