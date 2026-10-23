@@ -236,6 +236,7 @@ plot_strain_fitness <- function(
 		mix_scale = mix_scale,
 		caller = "plot_strain_fitness"
 	)
+	check_fitness_strains(data, caller = "plot_strain_fitness")
 	strain_labels <- get_strain_labels(data)
 
 	# Make long-format data frame for plot
@@ -365,6 +366,7 @@ plot_total_fitness <- function(
 		mix_scale = mix_scale,
 		caller = "plot_total_fitness"
 	)
+	check_fitness_strains(data, caller = "plot_total_fitness")
 	strain_labels <- get_strain_labels(data)
 
 	# Drop single-strain data if using ratio mixing scale
@@ -461,6 +463,7 @@ plot_fitness_ratio <- function(
 		mix_scale = mix_scale,
 		caller = "plot_fitness_ratio"
 	)
+	check_fitness_strains(data, caller = "plot_fitness_ratio")
 	strain_labels <- get_strain_labels(data)
 
 	# Drop single-strain data
@@ -511,6 +514,7 @@ plot_fitness_strain_total <- function(
 ) {
 	mix_scale <- rlang::arg_match(mix_scale, c("fraction", "ratio"))
 	# TODO: check_fitness_data() here
+	check_fitness_strains(data, caller = "plot_mix_fitness")
 	strain_labels <- get_strain_labels(data)
 	name_total <- "total"
 
@@ -803,5 +807,13 @@ check_fitness_values <- function(data, vars, mix_scale = NULL, caller) {
 	data
 }
 
-# TODO: check_strain_names <- function(data, caller) {}
+# Check that strain names are a column in the fitness data frame
+check_fitness_strains <- function(data, caller) {
+	if (!utils::hasName(data, "name_A")) {
+		rlang::abort("Column `name_A` not found in data", call = call(caller))
+	}
+	if (!utils::hasName(data, "name_B")) {
+		rlang::abort("Column `name_B` not found in data", call = call(caller))
+	}
+}
 

@@ -59,6 +59,33 @@ test_that("plot functions don't require unused mix_scale data", {
 # Input validation -------------------------------------------------------------
 # with informative errors, warnings, and messages
 
+test_that("plot functions report strain names missing from data", {
+	data <- data.frame(
+		name_A = "A",
+		name_B = "B",
+		initial_fraction_A = 0.5,
+		initial_ratio_A_B = 1,
+		fitness_A = 10,
+		fitness_B = 20,
+		fitness_total = 15,
+		fitness_ratio_A_B = 10/20
+	)
+
+	# Strain A
+	data_no_A <- data[names(data) != "name_A"]
+	expect_error(regexp = "not found in data", plot_mix_fitness(data_no_A))
+	expect_error(regexp = "not found in data", plot_strain_fitness(data_no_A))
+	expect_error(regexp = "not found in data", plot_total_fitness(data_no_A))
+	expect_error(regexp = "not found in data", plot_fitness_ratio(data_no_A))
+
+	# Strain B
+	data_no_B <- data[names(data) != "name_B"]
+	expect_error(regexp = "not found in data", plot_mix_fitness(data_no_B))
+	expect_error(regexp = "not found in data", plot_strain_fitness(data_no_B))
+	expect_error(regexp = "not found in data", plot_total_fitness(data_no_B))
+	expect_error(regexp = "not found in data", plot_fitness_ratio(data_no_B))
+})
+
 test_that("plot functions report missing data columns", {
 	data <- data.frame(
 		name_A = "A",
