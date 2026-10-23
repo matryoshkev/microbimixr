@@ -2,6 +2,7 @@
 
 export(calculate_mix_fitness)
 export(geom_point_overlap)
+export(lengthen_strain_fitness)
 export(plot_fitness_ratio)
 export(plot_mix_fitness)
 export(plot_strain_fitness)

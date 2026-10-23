@@ -645,7 +645,42 @@ get_strain_labels <- function(data) {
 	list(A = label_A, B = label_B)
 }
 
-# Convert wide-format strain fitness data to long format
+#' Convert strain fitness data from wide to long format
+#'
+#' `lengthen_strain_fitness()` converts wide-format fitness data (where each row
+#' has values for both strains in an experiment)
+#' to its equivalent long format (where each strain has its own row).
+#' Useful when fitting models to strain fitness data.
+#' For more details see the strain fitness vignette:
+#' \code{vignette("strain-fitness", package = "microbimixr")}.
+#'
+#' @param data Data frame with columns `name_A`, `name_B`, `fitness_A`, and
+#'   `fitness_B`.
+#'
+#' @return
+#' Returns a data frame with
+#' a new `strain` column containing values from `name_A` or `name_B`
+#' and a new `fitness` column replacing `fitness_A` and `fitness_B`.
+#' `name_A` and `name_B` kept to identify strain pairs.
+#' Other columns kept as-is.
+#'
+#' @examples
+#' # Make example data
+#' strain_fitness <- data.frame(
+#'   initial_fraction_A = c(0, 0.5, 1),
+#'   fitness_A = c(NA, 150, 100),
+#'   fitness_B = c(100, 50, NA)
+#' )
+#' strain_fitness$name_A <- "Evolved"
+#' strain_fitness$name_B <- "Ancestral"
+#' strain_fitness$exptl_block <- "A"
+#'
+#' # Show wide and long formats
+#' strain_fitness
+#' lengthen_strain_fitness(strain_fitness)
+#'
+#' @export
+#'
 lengthen_strain_fitness <- function(data) {
 	data <- stats::reshape(
 		as.data.frame(data),  # reshape() chokes on tibbles

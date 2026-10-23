@@ -10,23 +10,27 @@ template:
 
 reference:
 - title: Calculate and compare fitness measures
+  desc: Calculate best-practice fitness measures and identify which are best for your data and research question
   contents:
   - calculate_mix_fitness
   - plot_mix_fitness
 - title: Plot fitness with microbimixr functions
+  desc: An easy way to make publication-quality figures
   contents:
   - plot_strain_fitness
   - plot_total_fitness
   - plot_fitness_ratio
 - title: Plot fitness with ggplot2
-  desc: Use axes and other plot components separately
+  desc: Use microbimixr's axes and other plot components in your own plots
   contents:
-  - geom_point_overlap
   - scale_x_initial_fraction
   - scale_x_initial_ratio
   - scale_y_fitness
   - scale_y_fitness_ratio
+  - geom_point_overlap
+  - lengthen_strain_fitness
 - title: Example datasets
+  desc: Results from published mix experiments
   contents:
   - data_Madgwick_2018
   - data_smith_2010
