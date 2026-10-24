@@ -62,8 +62,7 @@ plot_mix_fitness <- function(
 	size = NULL,
 	drop_NA = TRUE
 ) {
-	# Check inputs
-	# Do it here because we use the data to get comparable y-axis scales
+	# Check inputs here because we use them to set y-limits
 	mix_scale <- rlang::arg_match(
 		mix_scale, c("fraction", "ratio"), multiple = TRUE
 	)
@@ -74,24 +73,14 @@ plot_mix_fitness <- function(
 		caller = "plot_mix_fitness"
 	)
 
-	# Axis options
+	# Set y-limits so effect sizes are visually comparable
 	ylim <- get_ylim_mix_fitness(data)
 
 	# Point options
-	if (is.null(color)) {
-		color_strain_group <- waiver()
-		color_group <- waiver()
-	} else {
-		color_strain_group <- color
-		color_group <- color[[3]]
-	}
-	if (is.null(fill)) {
-		fill_strain_group <- waiver()
-		fill_group <- waiver()
-	} else {
-		fill_strain_group <- fill
-		fill_group <- fill[[3]]
-	}
+	color_strain_total <- if (is.null(color)) waiver() else color
+	fill_strain_total <- if (is.null(fill)) waiver() else fill
+	color_ratio <- if (is.null(color)) waiver() else color[[3]]
+	fill_ratio <- if (is.null(fill)) waiver() else fill[[3]]
 	if (is.null(shape)) {shape <- waiver()}
 	if (is.null(size)) {size <- waiver()}
 
@@ -101,8 +90,8 @@ plot_mix_fitness <- function(
 			data,
 			mix_scale = "fraction",
 			ylim = ylim$fitness,
-			color = color_strain_group,
-			fill = fill_strain_group,
+			color = color_strain_total,
+			fill = fill_strain_total,
 			shape = shape,
 			size = size,
 			drop_NA = drop_NA
@@ -111,8 +100,8 @@ plot_mix_fitness <- function(
 			data,
 			mix_scale = "fraction",
 			ylim = ylim$fitness_ratio,
-			color = color_group,
-			fill = fill_group,
+			color = color_ratio,
+			fill = fill_ratio,
 			shape = shape,
 			size = size,
 			drop_NA = drop_NA
@@ -123,8 +112,8 @@ plot_mix_fitness <- function(
 			data,
 			mix_scale = "ratio",
 			ylim = ylim$fitness,
-			color = color_strain_group,
-			fill = fill_strain_group,
+			color = color_strain_total,
+			fill = fill_strain_total,
 			shape = shape,
 			size = size,
 			drop_NA = drop_NA
@@ -133,8 +122,8 @@ plot_mix_fitness <- function(
 			data,
 			mix_scale = "ratio",
 			ylim = ylim$fitness_ratio,
-			color = color_group,
-			fill = fill_group,
+			color = color_ratio,
+			fill = fill_ratio,
 			shape = shape,
 			size = size,
 			drop_NA = drop_NA
@@ -142,21 +131,21 @@ plot_mix_fitness <- function(
 	}
 
 	# Combine subplots
-	if (("fraction" %in% mix_scale) & ("ratio" %in% mix_scale)) {
-		fig_output <- figA + figB + figC + figD
-	} else if ("ratio" %in% mix_scale) {
-		fig_output <- figC + figD
-	} else {
-		fig_output <- figA + figB
-	}
+	fig_output <-
+		if (("fraction" %in% mix_scale) && ("ratio" %in% mix_scale)) {
+			figA + figB + figC + figD
+		} else if ("ratio" %in% mix_scale) {
+			figC + figD
+		} else {
+			figA + figB
+		}
 
 	# Size plots for page-width figure
-	fig_output <- fig_output +
-		patchwork::plot_layout(
-			widths = grid::unit(c(3.2, 1.6), "inches"),
-			heights = grid::unit(1.4, "inches")
-			# Units affect plotting area, not total size
-		)
+	fig_output <- fig_output + plot_layout(
+		widths = grid::unit(c(3.2, 1.6), "inches"),
+		heights = grid::unit(1.4, "inches")
+		# Units affect plotting area, not total size
+	)
 
 	fig_output
 }
@@ -236,7 +225,6 @@ plot_strain_fitness <- function(
 		mix_scale = mix_scale,
 		caller = "plot_strain_fitness"
 	)
-	check_fitness_strains(data, caller = "plot_strain_fitness")
 	strain_labels <- get_strain_labels(data)
 
 	# Make long-format data frame for plot
@@ -366,7 +354,6 @@ plot_total_fitness <- function(
 		mix_scale = mix_scale,
 		caller = "plot_total_fitness"
 	)
-	check_fitness_strains(data, caller = "plot_total_fitness")
 	strain_labels <- get_strain_labels(data)
 
 	# Drop single-strain data if using ratio mixing scale
@@ -463,7 +450,6 @@ plot_fitness_ratio <- function(
 		mix_scale = mix_scale,
 		caller = "plot_fitness_ratio"
 	)
-	check_fitness_strains(data, caller = "plot_fitness_ratio")
 	strain_labels <- get_strain_labels(data)
 
 	# Drop single-strain data
@@ -513,8 +499,7 @@ plot_fitness_strain_total <- function(
 	drop_NA = TRUE
 ) {
 	mix_scale <- rlang::arg_match(mix_scale, c("fraction", "ratio"))
-	# check_fitness_data() already called by plot_mix_fitness()
-	check_fitness_strains(data, caller = "plot_mix_fitness")
+	# Data already checked by plot_mix_fitness()
 	strain_labels <- get_strain_labels(data)
 	name_total <- "total"
 
@@ -605,7 +590,7 @@ get_ylim_mix_fitness <- function(data) {
 }
 
 # Collect arguments for geom_point_overlap()
-# Don't include if not given so we can use ggplot scale instead
+#   Don't include if not given so we can use ggplot scale instead
 get_point_args <- function(
 	color = waiver(),
 	fill = waiver(),

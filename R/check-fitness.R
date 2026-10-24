@@ -1,13 +1,26 @@
-# Check fitness data to plot ===================================================
+# Validate fitness data to plot ================================================
+# and replace unplottable values with NA
 
 check_fitness_data <- function(data, vars, mix_scale, caller) {
-	data |>
-	check_fitness_columns(vars, mix_scale, caller) |>
-	check_mix_values(vars, mix_scale, caller) |>
-	check_fitness_values(vars, mix_scale, caller)
+	check_fitness_strains(data, caller)
+	data <- data |>
+		check_fitness_columns(vars, mix_scale, caller) |>
+		check_mix_values(vars, mix_scale, caller) |>
+		check_fitness_values(vars, mix_scale, caller)
+	data
 }
 
-# Check variables we want to plot are columns in data
+# Require strain names
+check_fitness_strains <- function(data, caller) {
+	if (!utils::hasName(data, "name_A")) {
+		rlang::abort("Column `name_A` not found in data", call = call(caller))
+	}
+	if (!utils::hasName(data, "name_B")) {
+		rlang::abort("Column `name_B` not found in data", call = call(caller))
+	}
+}
+
+# Require variables we want to plot
 check_fitness_columns <- function(data, vars, mix_scale, caller) {
 	if ("fraction" %in% mix_scale) {vars <- c(vars, "initial_fraction_A")}
 	if ("ratio" %in% mix_scale) {vars <- c(vars, "initial_ratio_A_B")}
@@ -92,15 +105,5 @@ check_fitness_values <- function(data, vars, mix_scale = NULL, caller) {
 		}
 	}
 	data
-}
-
-# Check that strain names are a column in the fitness data frame
-check_fitness_strains <- function(data, caller) {
-	if (!utils::hasName(data, "name_A")) {
-		rlang::abort("Column `name_A` not found in data", call = call(caller))
-	}
-	if (!utils::hasName(data, "name_B")) {
-		rlang::abort("Column `name_B` not found in data", call = call(caller))
-	}
 }
 
