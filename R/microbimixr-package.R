@@ -13,6 +13,7 @@
 "_PACKAGE"
 
 ## usethis namespace: start
+#' @importFrom utils hasName
 #' @importFrom rlang .data
 #' @importFrom ggplot2 waiver
 #' @importFrom patchwork plot_layout

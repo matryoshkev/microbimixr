@@ -107,16 +107,14 @@
 #' @export
 #'
 calculate_mix_fitness <- function(data, var_names, keep = NULL) {
-	check_data_names(var_names)
-	check_data_values(data, var_names)
-
+	check_data(data, var_names)
 	data |>
-	rename_data_vars(var_names) |>
-	set_strain_names(var_names) |>
-	calculate_population("initial") |>
-	calculate_population("final") |>
-	calculate_fitness_measures() |>
-	clean_up_fitness_frame(keep)
+		set_strain_names(var_names) |>
+		rename_data_vars(var_names) |>
+		calculate_population("initial") |>
+		calculate_population("final") |>
+		calculate_fitness_measures() |>
+		clean_up_fitness_frame(keep)
 }
 
 
@@ -137,11 +135,19 @@ vars_possible <- function() {c(
 	"final_fraction_B"
 )}
 
-# Set standardized variable names in abundance data
+# Label which strain is A and which is B if not already in data
+set_strain_names <- function(data, var_names) {
+	if (!hasName(data, "name_A")) {data["name_A"] <- var_names[["name_A"]]}
+	if (!hasName(data, "name_B")) {data["name_B"] <- var_names[["name_B"]]}
+	data
+}
+
+# Set standardized variable names
 rename_data_vars <- function(data, var_names) {
 	for (new_name in vars_possible()) {
-		if (utils::hasName(var_names, new_name)) {
-			names(data)[names(data) == var_names[[new_name]]] <- new_name
+		if (hasName(var_names, new_name)) {
+			old_name <- var_names[[new_name]]
+			names(data)[names(data) == old_name] <- new_name
 		}
 	}
 	data
@@ -156,20 +162,20 @@ calculate_population <- function(data, time_point) {
 	fraction_A   <- paste0(time_point, "_fraction_A")
 	fraction_B   <- paste0(time_point, "_fraction_B")
 
-	if (!is.null(data[[number_A]]) & !is.null(data[[number_B]])) {
+	if (hasName(data, number_A) && hasName(data, number_B)) {
 		data[number_total] <- data[number_A] + data[number_B]
 		data[fraction_A]   <- data[number_A] / data[number_total]
-	} else if (!is.null(data[[number_total]]) & !is.null(data[[fraction_A]])) {
+	} else if (hasName(data, number_total) && hasName(data, fraction_A)) {
 		data[number_A]     <- data[number_total] * data[fraction_A]
 		data[number_B]     <- data[number_total] * (1 - data[fraction_A])
-	} else if (!is.null(data[[number_total]]) & !is.null(data[[fraction_B]])) {
+	} else if (hasName(data, number_total) && hasName(data, fraction_B)) {
 		data[fraction_A]   <- 1 - data[fraction_B]
 		data[number_A]     <- data[number_total] * data[fraction_A]
 		data[number_B]     <- data[number_total] * (1 - data[fraction_A])
-	} else if (!is.null(data[[number_total]]) & !is.null(data[[number_A]])) {
+	} else if (hasName(data, number_total) && hasName(data, number_A)) {
 		data[number_B]     <- data[number_total] - data[number_A]
 		data[fraction_A]   <- data[number_A] / data[number_total]
-	} else if (!is.null(data[[number_total]]) & !is.null(data[[number_B]])) {
+	} else if (hasName(data, number_total) && hasName(data, number_B)) {
 		data[number_A]     <- data[number_total] - data[number_B]
 		data[fraction_A]   <- data[number_A] / data[number_total]
 	} else {
@@ -186,14 +192,6 @@ calculate_population <- function(data, time_point) {
 	data
 }
 
-# Label which strain is A and which is B if not already in data
-set_strain_names <- function(data, var_names) {
-	# rename_data_vars() called previously
-	if (is.null(data[["name_A"]])) {data["name_A"] <- var_names[["name_A"]]}
-	if (is.null(data[["name_B"]])) {data["name_B"] <- var_names[["name_B"]]}
-	data
-}
-
 # Calculate Wrightian fitness measures from initial and final population states
 calculate_fitness_measures <- function(data) {
 	data["fitness_A"] <- data["final_number_A"] / data["initial_number_A"]
@@ -204,14 +202,16 @@ calculate_fitness_measures <- function(data) {
 	data
 }
 
+# Clean up fitness output
+#   Replace any NaNs from single-strain experiments
+#   Reorder frame and drop extra columns
 clean_up_fitness_frame <- function(data, keep) {
-	# Replace any NaNs from single-strain experiments
 	data[sapply(data, is.nan)] <- NA
-	# Reorder frame and drop extra columns
 	data[c(keep, fitness_vars_default())]
 }
 
 # Default names for fitness and mixing variables
+#   ordered by appearance in fitness output
 fitness_vars_default <- function() {c(
 	name_A = "name_A",
 	name_B = "name_B",

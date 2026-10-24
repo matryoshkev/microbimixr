@@ -1,4 +1,8 @@
-# Check abundance data =========================================================
+# Validate input data for calculate_mix_fitness()
+check_data <- function(data, var_names) {
+	check_data_names(var_names)
+	check_data_values(data, var_names)
+}
 
 check_data_names <- function(var_names) {
 	# Require var_names
