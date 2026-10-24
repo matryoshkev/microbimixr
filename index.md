@@ -1,7 +1,7 @@
 # microbimixr
 
-microbimixr is an R package to analyze microbial interactions in mix
-experiments. Studies of cooperation and conflict among microbes often
+microbimixr is an R package to analyze the fitness effects of microbial
+interactions. Studies of conflict and cooperation among microbes often
 use a common experimental design: mix together two strains then measure
 how their survival and reproduction depend on strain frequency. How do
 they act differently together than they do on their own?

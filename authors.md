@@ -10,12 +10,12 @@
 Source:
 [`DESCRIPTION`](https://github.com/matryoshkev/microbimixr/blob/main/DESCRIPTION)
 
-smith j (2026). *microbimixr: Analyze Microbial Interactions in Mix
-Experiments*. R package version 0.0.0.9000,
+smith j (2026). *microbimixr: Analyze Fitness Effects of Microbial
+Interactions*. R package version 0.0.0.9000,
 <https://matryoshkev.github.io/microbimixr/>.
 
     @Manual{,
-      title = {microbimixr: Analyze Microbial Interactions in Mix Experiments},
+      title = {microbimixr: Analyze Fitness Effects of Microbial Interactions},
       author = {jeff smith},
       year = {2026},
       note = {R package version 0.0.0.9000},
