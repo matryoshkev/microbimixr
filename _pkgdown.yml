@@ -1,8 +1,8 @@
 url: https://matryoshkev.github.io/microbimixr/
 
 home:
-  title: Analyze microbial interactions in mix experiments
-  description: Calculate, compare, and plot best-practice fitness measures
+  title: Analyze fitness effects of microbial interactions
+  description: Calculate, compare, and plot best-practice fitness measures for microbial conflict and cooperation
 
 template:
   bootstrap: 5

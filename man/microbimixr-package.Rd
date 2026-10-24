@@ -4,7 +4,7 @@
 \name{microbimixr-package}
 \alias{microbimixr}
 \alias{microbimixr-package}
-\title{microbimixr: Analyze Microbial Interactions in Mix Experiments}
+\title{microbimixr: Analyze the fitness effects of microbial interactions}
 \description{
 A common experimental design is to mix together two microbes (different
 strains of bacteria, for example) then measure how their survival and

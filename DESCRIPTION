@@ -1,5 +1,5 @@
 Package: microbimixr
-Title: Analyze Microbial Interactions in Mix Experiments
+Title: Analyze Fitness Effects of Microbial Interactions
 Version: 0.0.0.9000
 Authors@R: 
     person(
@@ -8,14 +8,14 @@ Authors@R:
     	role = c("aut", "cre", "cph"),
     	comment = c(ORCID = "0000-0001-8445-586X")
     )
-Description: A common experimental design is to mix together two microbes 
-    (different strains of bacteria, for example) then measure how their survival 
-    and reproduction depend on mix frequency. How do they act differently 
-    together than on their own? 'microbimixr' helps researchers get the most out 
-    of the data from these experiments by providing tools to calculate 
-    best-practice fitness measures, identify which measures are best for a 
-    specific dataset and research question, and make publication-quality figures 
-    showing interaction effects.
+Description: Studies of conflict and cooperation among microbes often use a 
+    common experimental design: mix together two strains then measure how their 
+    survival and reproduction depend on mix frequency. How do they act 
+    differently together than on their own? 'microbimixr' helps researchers get 
+    the most out of the data from these experiments by providing tools to 
+    calculate best-practice fitness measures, identify which measures are best 
+    for their dataset and research question, and make publication-quality 
+    figures.
 License: GPL (>= 3)
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)

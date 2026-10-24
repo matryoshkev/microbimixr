@@ -1,4 +1,4 @@
-#' microbimixr: Analyze Microbial Interactions in Mix Experiments
+#' microbimixr: Analyze the fitness effects of microbial interactions
 #'
 #' A common experimental design is to mix together two microbes (different
 #' strains of bacteria, for example) then measure how their survival and
