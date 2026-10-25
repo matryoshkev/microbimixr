@@ -250,10 +250,10 @@ plot_strain_fitness <- function(
 	}
 
 	# Axis options
-	if (missing(xlab)) {xlab <- waiver()}
-	if (missing(ylab)) {ylab <- waiver()}
-	if (missing(xlim)) {xlim <- NULL}
-	if (missing(ylim)) {ylim <- NULL}
+	if (!is.expression(xlab) && !is.null(xlab) && is.na(xlab)) {xlab <- waiver()}
+	if (!is.expression(ylab) && !is.null(ylab) && is.na(ylab)) {ylab <- waiver()}
+	if (any(is.na(xlim))) {xlim <- NULL}
+	if (any(is.na(ylim))) {ylim <- NULL}
 
 	# Point options
 	if (is.null(color) || is_waiver(color)) {
@@ -360,10 +360,12 @@ plot_total_fitness <- function(
 	if (mix_scale == "ratio") {data <- drop_unmixed(data, mix_scale)}
 
 	# Axis options
-	if (missing(xlab)) {xlab <- waiver()}
-	if (missing(ylab)) {ylab <- "Total fitness\n(final no. / initial no.)"}
-	if (missing(xlim)) {xlim <- NULL}
-	if (missing(ylim)) {ylim <- NULL}
+	if (!is.expression(xlab) && !is.null(xlab) && is.na(xlab)) {xlab <- waiver()}
+	if (!is.expression(ylab) && !is.null(ylab) && is.na(ylab)) {
+		ylab <- "Total fitness\n(final no. / initial no.)"
+	}
+	if (any(is.na(xlim))) {xlim <- NULL}
+	if (any(is.na(ylim))) {ylim <- NULL}
 
 	# Point options
 	point_args <- get_point_args(
@@ -373,7 +375,7 @@ plot_total_fitness <- function(
 	# Make plot
 	fig_output <-
 		ggplot2::ggplot(data) +
-		ggplot2::aes(y = .data[["fitness_total"]]) +
+		ggplot2::aes(y = .data$fitness_total) +
 		theme_total_fitness() +
 		scale_y_fitness(name = ylab, limits = ylim) +
 		do.call(geom_point_overlap, point_args)
@@ -456,12 +458,12 @@ plot_fitness_ratio <- function(
 	data <- drop_unmixed(data, mix_scale)
 
 	# Axis options
-	if (missing(xlab)) {xlab <- waiver()}
-	if (missing(ylab)) {
+	if (!is.expression(xlab) && !is.null(xlab) && is.na(xlab)) {xlab <- waiver()}
+	if (!is.expression(ylab) && !is.null(ylab) && is.na(ylab)) {
 		ylab <- paste("Fitness ratio\n", strain_labels$A, "/", strain_labels$B)
 	}
-	if (missing(xlim)) {xlim <- NULL}
-	if (missing(ylim)) {ylim <- NULL}
+	if (any(is.na(xlim))) {xlim <- NULL}
+	if (any(is.na(ylim))) {ylim <- NULL}
 
 	# Point options
 	point_args <- get_point_args(
@@ -471,7 +473,7 @@ plot_fitness_ratio <- function(
 	# Make plot
 	fig_output <-
 		ggplot2::ggplot(data) +
-		ggplot2::aes(y = .data[["fitness_ratio_A_B"]]) +
+		ggplot2::aes(y = .data$fitness_ratio_A_B) +
 		theme_fitness_ratio() +
 		scale_y_fitness_ratio(name = ylab, limits = ylim) +
 		do.call(geom_point_overlap, point_args)
@@ -556,17 +558,12 @@ plot_fitness_strain_total <- function(
 #   Used by plot_mix_fitness()
 get_ylim_mix_fitness <- function(data) {
 	# Range: strain & total-group fitness
-	fitness <- c(
-		data[["fitness_A"]],
-		data[["fitness_B"]],
-		data[["fitness_total"]],
-		1
-	)
+	fitness <- c(data$fitness_A, data$fitness_B, data$fitness_total, 1)
 	fitness <- fitness[is.finite(fitness) & fitness > 0]
 	span_fitness <- log10(range(fitness)[2] / range(fitness)[1])
 
 	# Range: Within-group fitness ratio
-	fitness_ratio <- c(data[["fitness_ratio_A_B"]], 1)
+	fitness_ratio <- c(data$fitness_ratio_A_B, 1)
 	fitness_ratio <- fitness_ratio[is.finite(fitness_ratio) & fitness_ratio > 0]
 	span_fitness_ratio <- log10(range(fitness_ratio)[2] / range(fitness_ratio)[1])
 
@@ -606,9 +603,7 @@ get_point_args <- function(
 			point_args[[arg_name]] <- arg_value
 		}
 	}
-	if (!is_waiver(drop_NA) && !is.null(drop_NA)) {
-		point_args[["na.rm"]] <- drop_NA
-	}
+	if (!is_waiver(drop_NA) && !is.null(drop_NA)) {point_args$na.rm <- drop_NA}
 	point_args
 }
 
@@ -616,8 +611,8 @@ get_point_args <- function(
 #   Use "strain A" and/or "strain B" if there's >1 strain combo
 get_strain_labels <- function(data) {
 	is_multistrain <- FALSE
-	label_A <- unique(data[["name_A"]])
-	label_B <- unique(data[["name_B"]])
+	label_A <- unique(data$name_A)
+	label_B <- unique(data$name_B)
 	if (length(label_A) > 1) {
 		is_multistrain <- TRUE
 		label_A <- "strain A"
@@ -720,11 +715,11 @@ add_mix_axis <- function(
 	fig_input + switch(
 		mix_scale,
 		fraction = list(
-			ggplot2::aes(x = .data[["initial_fraction_A"]]),
+			ggplot2::aes(x = .data$initial_fraction_A),
 			scale_x_initial_fraction(name = xlab, limits = xlim)
 		),
 		ratio = list(
-			ggplot2::aes(x = .data[["initial_ratio_A_B"]]),
+			ggplot2::aes(x = .data$initial_ratio_A_B),
 			scale_x_initial_ratio(name = xlab, limits = xlim)
 		)
 	)

@@ -282,14 +282,9 @@ scale_y_fitness_ratio <- function(
 	minor_breaks = waiver(),
 	...
 ) {
+	# With Wrightian fitness, ratio has same numerical properties as single
 	if (is_waiver(name)) {name <-	"Fitness ratio\n strain A / strain B"}
-	if (is.null(limits)) {limits <- limits_log10()}
-	if (is_waiver(breaks)) {breaks <- breaks_log10()}
-	if (is_waiver(labels)) {labels <- label_log10()}
-	if (is_waiver(minor_breaks)) {
-		minor_breaks <- breaks_log10(n_min = 6, n_max = 16)
-	}
-	ggplot2::scale_y_log10(
+	scale_y_fitness(
 		name = name,
 		limits = limits,
 		breaks = breaks,
@@ -305,10 +300,10 @@ scale_y_fitness_ratio <- function(
 # like their counterparts in the scales package
 
 # Test for ggplot2 waiver object
-is_waiver <- function(x) inherits(x, "waiver")
+is_waiver <- function(x) {inherits(x, "waiver")}
 
 # Evaluate all arguments
-force_all <- function(...) list(...)
+force_all <- function(...) {list(...)}
 
 # Expand ggplot's automatic limits for fraction scales
 #   to include zero and one

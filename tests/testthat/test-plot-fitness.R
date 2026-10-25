@@ -68,6 +68,15 @@ test_that("plot functions accept expression() axis labels", {
 	})
 })
 
+test_that("plot functions accept NULL axis labels", {
+	fitness_myxo <- calculate_mix_fitness(data_smith_2010, var_names_smith_2010)
+	expect_no_error({
+		plot_strain_fitness(fitness_myxo, xlab = NULL, ylab = NULL)
+		plot_total_fitness(fitness_myxo, xlab = NULL, ylab = NULL)
+		plot_fitness_ratio(fitness_myxo, xlab = NULL, ylab = NULL)
+	})
+})
+
 test_that("plot functions accept point args", {
 	fitness_myxo <- calculate_mix_fitness(data_smith_2010, var_names_smith_2010)
 	color <- c("black", "grey55", "grey35")
