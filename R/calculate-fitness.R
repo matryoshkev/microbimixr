@@ -137,8 +137,8 @@ vars_possible <- function() {c(
 
 # Label which strain is A and which is B if not already in data
 set_strain_names <- function(data, var_names) {
-	if (!hasName(data, "name_A")) {data["name_A"] <- var_names[["name_A"]]}
-	if (!hasName(data, "name_B")) {data["name_B"] <- var_names[["name_B"]]}
+	if (!hasName(data, "name_A")) {data$name_A <- var_names[["name_A"]]}
+	if (!hasName(data, "name_B")) {data$name_B <- var_names[["name_B"]]}
 	data
 }
 
@@ -194,11 +194,10 @@ calculate_population <- function(data, time_point) {
 
 # Calculate Wrightian fitness measures from initial and final population states
 calculate_fitness_measures <- function(data) {
-	data["fitness_A"] <- data["final_number_A"] / data["initial_number_A"]
-	data["fitness_B"] <- data["final_number_B"] / data["initial_number_B"]
-	data["fitness_total"] <-
-		data["final_number_total"] / data["initial_number_total"]
-	data["fitness_ratio_A_B"] <- data["fitness_A"] / data["fitness_B"]
+	data$fitness_A <- data$final_number_A / data$initial_number_A
+	data$fitness_B <- data$final_number_B / data$initial_number_B
+	data$fitness_total <- data$final_number_total / data$initial_number_total
+	data$fitness_ratio_A_B <- data$fitness_A / data$fitness_B
 	data
 }
 
