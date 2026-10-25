@@ -175,9 +175,9 @@ fig_strain_fitness + geom_line(data = fitted_long, na.rm = TRUE)
 
 - Taylor PD and Frank SA (1996) How to make a kin selection model.
   *Journal of Theoretical Biology* **180:** 27-37.
-  <https://10.1006/jtbi.1996.0075>
+  <https://doi.org/10.1006/jtbi.1996.0075>
 
 - Yurtsev EA, Chao HX, Datta MS, Artemova T, and Gore J (2013) Bacterial
   cheating drives the population dynamics of cooperative antibiotic
   resistance plasmids. *Molecular Systems Biology* **9:** 683.
-  <https://10.1038/msb.2013.39>
+  <https://doi.org/10.1038/msb.2013.39>
