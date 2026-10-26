@@ -1,3 +1,41 @@
+test_that("calculate_mix_fitness() warns if `data` is missing or wrong type", {
+	my_vars <- vars_possible()
+	names(my_vars) <- vars_possible()
+	expect_error(regexp = "missing", calculate_mix_fitness(var_names = my_vars))
+	expect_error(regexp = "missing",
+		calculate_mix_fitness(data = NULL, var_names = my_vars)
+	)
+	expect_error(regexp = "data frame", calculate_mix_fitness(my_vars))
+	expect_error(regexp = "data frame",
+		calculate_mix_fitness(1, var_names = my_vars)
+	)
+})
+
+test_that("calculate_mix_fitness() gives informative var_names errors", {
+	data <- data.frame(init_A = 1, init_B = 2, final_A = 3, final_B = 4)
+	my_vars <- c(
+			initial_number_A = "init_A", initial_number_B = "init_B",
+			final_number_A = "final_A", final_number_B = "final_B",
+			name_A = "A", name_B = "B"
+	)
+	expect_error(regexp = "missing", calculate_mix_fitness(data))
+	expect_error(regexp = "vector or list",
+		calculate_mix_fitness(data, var_names = 1)
+	)
+	expect_error(regexp = "not found",
+		calculate_mix_fitness(data, my_vars[names(my_vars) != "name_A"])
+	)
+	expect_error(regexp = "not found",
+		calculate_mix_fitness(data, my_vars[names(my_vars) != "name_B"])
+	)
+	expect_error(regexp = "calculate initial",
+		calculate_mix_fitness(data, my_vars[names(my_vars) != "initial_number_A"])
+	)
+	expect_error(regexp = "calculate final",
+		calculate_mix_fitness(data, my_vars[names(my_vars) != "final_number_A"])
+	)
+})
+
 test_that("calculate_mix_fitness() warns of nonbiological data values", {
 	vars <- c(
 		initial_number_A = "nA_init",
@@ -111,41 +149,16 @@ test_that("calculate_mix_fitness() warns of nonbiological data values", {
 	)
 })
 
-test_that("calculate_mix_fitness() gives informative var_names errors", {
-	data <- data.frame(init_A = 1, init_B = 2, final_A = 3, final_B = 4)
-	expect_error(calculate_mix_fitness(data), regexp = "missing")
-	expect_error(calculate_mix_fitness(data, var_names = 1), regexp = "must be")
-	expect_error(
-		calculate_mix_fitness(data, var_names = c(
-			initial_number_A = "init_A", # initial_number_B = "init_A",
-			final_number_A = "final_A", final_number_B = "final_B",
-			name_A = "A", name_B = "B"
-		)),
-		regexp = "calculate initial"
-	)
-	expect_error(
-		calculate_mix_fitness(data, var_names = c(
-			initial_number_A = "init_A", initial_number_B = "init_B",
-			final_number_A = "final_A", # final_number_B = "final_B",
-			name_A = "A", name_B = "B"
-		)),
-		regexp = "calculate final"
-	)
-	expect_error(
-		calculate_mix_fitness(data, var_names = c(
-			initial_number_A = "init_A", initial_number_B = "init_B",
-			final_number_A = "final_A", final_number_B = "final_B",
-			name_B = "B" #, name_A = "A"
-		)),
-		regexp = "not found"
-	)
-	expect_error(
-		calculate_mix_fitness(data, var_names = c(
-			initial_number_A = "init_A", initial_number_B = "init_B",
-			final_number_A = "final_A", final_number_B = "final_B",
-			name_A = "A" #, name_B = "B"
-		)),
-		regexp = "not found"
-	)
-})
+# TODO:
+# test_that("calculate_mix_fitness() warns if `keep` is malformed", {
+# 	data <- data.frame(init_A = 1, init_B = 2, final_A = 3, final_B = 4)
+# 	my_vars <- c(
+# 			initial_number_A = "init_A", initial_number_B = "init_B",
+# 			final_number_A = "final_A", final_number_B = "final_B",
+# 			name_A = "A", name_B = "B"
+# 	)
+# 		calculate_mix_fitness(data, data, var_names = my_vars)
+# 		calculate_mix_fitness(data, var_names = my_vars, keep = 1)
+# 		calculate_mix_fitness(data, var_names = my_vars, keep = NA)
+# })
 

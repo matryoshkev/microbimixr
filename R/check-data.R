@@ -1,5 +1,17 @@
 # Validate input data for calculate_mix_fitness()
 check_data <- function(data, var_names) {
+	if (missing(data) || is.null(data)) {
+		rlang::abort(
+			"argument `data` is missing, with no default",
+			call = call("calculate_mix_fitness")
+		)
+	}
+	if (!is.data.frame(data)) {
+		rlang::abort(
+			"argument `data` must be a data frame",
+			call = call("calculate_mix_fitness")
+		)
+	}
 	check_data_names(var_names)
 	check_data_values(data, var_names)
 }
@@ -8,7 +20,7 @@ check_data_names <- function(var_names) {
 	# Require var_names
 	if (missing(var_names) || is.null(var_names)) {
 		rlang::abort(
-			"argument var_names is missing, with no default",
+			"argument `var_names` is missing, with no default",
 			call = call("calculate_mix_fitness")
 		)
 	}
@@ -30,7 +42,7 @@ check_data_names <- function(var_names) {
 check_data_sufficient <- function(var_names, time_point) {
 	time_point <- rlang::arg_match(time_point, c("initial", "final"))
 	possible <- vars_possible()[grepl(time_point, vars_possible())]
-	provided <- possible[utils::hasName(var_names, possible)]
+	provided <- possible[hasName(var_names, possible)]
 	if (length(provided) < 2) {
 		rlang::abort(
 			paste(
@@ -46,7 +58,7 @@ check_data_sufficient <- function(var_names, time_point) {
 # Require strain names
 check_strain_names <- function(var_names) {
 	for (name_var in c("name_A", "name_B")) {
-		if (!utils::hasName(var_names, name_var)) {
+		if (!hasName(var_names, name_var)) {
 			rlang::abort(
 				paste0(name_var, " not found in var_names"),
 				call = call("calculate_mix_fitness")
