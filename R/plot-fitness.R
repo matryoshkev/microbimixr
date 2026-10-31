@@ -610,18 +610,10 @@ get_point_args <- function(
 # Get strain labels from data
 #   Use "strain A" and/or "strain B" if there's >1 strain combo
 get_strain_labels <- function(data) {
-	is_multistrain <- FALSE
 	label_A <- unique(data$name_A)
 	label_B <- unique(data$name_B)
-	if (length(label_A) > 1) {
-		is_multistrain <- TRUE
-		label_A <- "strain A"
-	}
-	if (length(label_B) > 1) {
-		is_multistrain <- TRUE
-		label_B <- "strain B"
-	}
-	if (is_multistrain) message("Note: >1 strain combination in data")
+	if (length(label_A) > 1) {label_A <- "strain A"}
+	if (length(label_B) > 1) {label_B <- "strain B"}
 	list(A = label_A, B = label_B)
 }
 

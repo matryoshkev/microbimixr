@@ -10,13 +10,20 @@ check_fitness_data <- function(data, vars, mix_scale, caller) {
 	data
 }
 
-# Require strain names
 check_fitness_strains <- function(data, caller) {
-	if (!utils::hasName(data, "name_A")) {
+	# Require strain names
+	if (!hasName(data, "name_A")) {
 		rlang::abort("Column `name_A` not found in data", call = call(caller))
 	}
-	if (!utils::hasName(data, "name_B")) {
+	if (!hasName(data, "name_B")) {
 		rlang::abort("Column `name_B` not found in data", call = call(caller))
+	}
+
+	# Report multiple strain combos
+	strains_A <- unique(data$name_A)
+	strains_B <- unique(data$name_B)
+	if (length(strains_A) > 1 || length(strains_B) > 1) {
+		message("Note: >1 strain combination in data")
 	}
 }
 
