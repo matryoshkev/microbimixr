@@ -199,7 +199,6 @@ test_that("plot functions report multiple strain combos", {
 	data_CD$name_B <- "STRD"
 	data <- rbind(data_AB, data_CD)
 	expect_message(expect_message(regexp = "combination", plot_mix_fitness(data)))
-		# FIXME: Four messages! Should be two.
 	expect_message(regexp = "combination", plot_strain_fitness(data))
 	expect_message(regexp = "combination", plot_total_fitness(data))
 	expect_message(regexp = "combination", plot_fitness_ratio(data))

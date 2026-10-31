@@ -70,7 +70,8 @@ plot_mix_fitness <- function(
 		data,
 		vars = c("fitness_A", "fitness_B", "fitness_total", "fitness_ratio_A_B"),
 		mix_scale = mix_scale,
-		caller = "plot_mix_fitness"
+		caller = "plot_mix_fitness",
+		report_multistrain = FALSE  # Let plot_fitness_ratio() do it
 	)
 
 	# Set y-limits so effect sizes are visually comparable

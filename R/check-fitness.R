@@ -1,8 +1,8 @@
 # Validate fitness data to plot ================================================
 # and replace unplottable values with NA
 
-check_fitness_data <- function(data, vars, mix_scale, caller) {
-	check_fitness_strains(data, caller)
+check_fitness_data <- function(data, vars, mix_scale, caller, ...) {
+	check_fitness_strains(data, caller, ...)
 	data <- data |>
 		check_fitness_columns(vars, mix_scale, caller) |>
 		check_mix_values(vars, mix_scale, caller) |>
@@ -10,7 +10,9 @@ check_fitness_data <- function(data, vars, mix_scale, caller) {
 	data
 }
 
-check_fitness_strains <- function(data, caller) {
+check_fitness_strains <- function(
+	data, caller, ..., report_multistrain = TRUE
+) {
 	# Require strain names
 	if (!hasName(data, "name_A")) {
 		rlang::abort("Column `name_A` not found in data", call = call(caller))
@@ -20,10 +22,12 @@ check_fitness_strains <- function(data, caller) {
 	}
 
 	# Report multiple strain combos
-	strains_A <- unique(data$name_A)
-	strains_B <- unique(data$name_B)
-	if (length(strains_A) > 1 || length(strains_B) > 1) {
-		message("Note: >1 strain combination in data")
+	if (report_multistrain) {
+		strains_A <- unique(data$name_A)
+		strains_B <- unique(data$name_B)
+		if (length(strains_A) > 1 || length(strains_B) > 1) {
+			message("Note: >1 strain combination in data")
+		}
 	}
 }
 
