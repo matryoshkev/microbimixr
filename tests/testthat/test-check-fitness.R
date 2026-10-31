@@ -12,20 +12,14 @@ test_that("plot functions report strain names missing from data", {
 		fitness_total = 15,
 		fitness_ratio_A_B = 10/20
 	)
-
-	# Strain A
 	data_no_A <- data[names(data) != "name_A"]
-	expect_error(regexp = "not found in data", plot_mix_fitness(data_no_A))
-	expect_error(regexp = "not found in data", plot_strain_fitness(data_no_A))
-	expect_error(regexp = "not found in data", plot_total_fitness(data_no_A))
-	expect_error(regexp = "not found in data", plot_fitness_ratio(data_no_A))
-
-	# Strain B
 	data_no_B <- data[names(data) != "name_B"]
-	expect_error(regexp = "not found in data", plot_mix_fitness(data_no_B))
-	expect_error(regexp = "not found in data", plot_strain_fitness(data_no_B))
-	expect_error(regexp = "not found in data", plot_total_fitness(data_no_B))
-	expect_error(regexp = "not found in data", plot_fitness_ratio(data_no_B))
+	for (df in c(data_no_A, data_no_B)) {
+		expect_error(regexp = "not found in data", plot_mix_fitness(df))
+		expect_error(regexp = "not found in data", plot_strain_fitness(df))
+		expect_error(regexp = "not found in data", plot_total_fitness(df))
+		expect_error(regexp = "not found in data", plot_fitness_ratio(df))
+	}
 })
 
 test_that("plot functions report missing data columns", {
