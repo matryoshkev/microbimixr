@@ -183,6 +183,28 @@ test_that("plot functions warn about nonsensical fitness values", {
 	})
 })
 
+test_that("plot functions report multiple strain combos", {
+	data_AB <- data.frame(
+		initial_fraction_A = 0.5,
+		initial_ratio_A_B = 1,
+		fitness_A	= 10,
+		fitness_B	= 20,
+		fitness_total = 15,
+		fitness_ratio_A_B = 10/20,
+		name_A = "STRA",
+		name_B = "STRB"
+	)
+	data_CD <- data_AB
+	data_CD$name_A <- "STRC"
+	data_CD$name_B <- "STRD"
+	data <- rbind(data_AB, data_CD)
+	expect_message(expect_message(regexp = "combination", plot_mix_fitness(data)))
+		# FIXME: Four messages! Should be two.
+	expect_message(regexp = "combination", plot_strain_fitness(data))
+	expect_message(regexp = "combination", plot_total_fitness(data))
+	expect_message(regexp = "combination", plot_fitness_ratio(data))
+})
+
 
 # Unplottable data -------------------------------------------------------------
 # with informative errors, warnings, and messages
