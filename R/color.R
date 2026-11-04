@@ -1,11 +1,35 @@
 # Color & fill for ggplot2 =====================================================
 
+strain_colors <- c(
+	"brown3",         # red
+	"lightseagreen",  # light blue
+	"darkorchid3",    # purple
+	"goldenrod3",     # yellow
+	"blue1",          # dark blue
+	"orchid3",        # pink
+	"darkorange3",    # orange
+	# "seagreen3",
+	"grey45"          # greyscale
+)
+
+strain_fills <- c(
+	"indianred1",      # red
+	"darkslategray1",  # light blue
+	"orchid2",         # purple
+	"yellow1",         # yellow
+	"dodgerblue1",     # dark blue
+	"plum1",           # pink
+	"darkgoldenrod1",  # orange
+	# "seagreen1",
+	"grey70"           # greyscale
+)
+
 scale_color_strain <- function(..., aesthetics = "color") {
 	ggplot2::discrete_scale(
 		...,
 		aesthetics = aesthetics,
 		scale_name = "strain_color",
-		palette = scales::pal_brewer(palette = "Dark2")
+		palette = pal_strain_color()
 	)
 }
 
@@ -14,9 +38,20 @@ scale_fill_strain <- function(..., aesthetics = "fill") {
 		...,
 		aesthetics = aesthetics,
 		scale_name = "strain_fill",
-		palette = scales::pal_brewer(palette = "Set2")
+		palette = pal_strain_fill()
 	)
 }
+
+# Color palette for scales and ggplot2
+pal_strain_color <- function() {
+	scales::pal_manual(strain_colors, type = "colour")
+}
+
+# Fill palette for scales and ggplot2
+pal_strain_fill <- function() {
+	scales::pal_manual(strain_fills, type = "colour")
+}
+
 
 # Default colors
 # color_strain_A <- function() {"#8C2F00"}  # Dark red
