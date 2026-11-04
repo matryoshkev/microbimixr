@@ -229,21 +229,14 @@ plot_strain_fitness <- function(
 	strain_labels <- get_strain_labels(data)
 
 	# Make long-format data frame for plot
-	data_to_plot <- stats::reshape(
-		as.data.frame(data),  # reshape() chokes on tibbles
-		direction = "long",
-		varying = c("fitness_A", "fitness_B"),
-		v.names = "fitness",
-		timevar = "strain",
-		times = c(strain_labels$A, strain_labels$B)
-	)
-	# data_to_plot <- lengthen_strain_fitness(data)
-	# TODO: Fix facet issue here: strain vs strain_label
+	data_to_plot <- lengthen_strain_fitness(data)
 
-	# List strain A first
-	data_to_plot$strain <- factor(
-		data_to_plot$strain, levels = c(strain_labels$A, strain_labels$B)
-	)
+	# Order strains so (first) A+B are always the same colors
+	# data_to_plot$strain <- factor(
+	# 	data_to_plot$strain, levels = c(strain_labels$A, strain_labels$B)
+	# )
+	# TODO: Allow arbitrary number of A and B strains
+	# TODO: data_to_plot <- order_strains(data_to_plot)
 
 	# Drop single-strain data if using ratio mixing scale
 	if (mix_scale == "ratio") {
@@ -257,13 +250,14 @@ plot_strain_fitness <- function(
 	if (any(is.na(ylim))) {ylim <- NULL}
 
 	# Point options
-	if (is.null(color) || is_waiver(color)) {
-		color <- c(color_strain_A(), color_strain_B())
-	}
-	if (is.null(fill) || is_waiver(fill)) {
-		fill <- c(fill_strain_A(), fill_strain_B())
-	}
 	point_args <- get_point_args(shape = shape, size = size, drop_NA = drop_NA)
+	# TODO: Allow custom A and B colors with recycling
+	# if (is.null(color) || is_waiver(color)) {
+	# 	color <- c(color_strain_A(), color_strain_B())
+	# }
+	# if (is.null(fill) || is_waiver(fill)) {
+	# 	fill <- c(fill_strain_A(), fill_strain_B())
+	# }
 
 	# Make base plot
 	fig_output <-
@@ -272,8 +266,10 @@ plot_strain_fitness <- function(
 		theme_strain_fitness(facet_strains = facet_strains) +
 		scale_y_fitness(name = ylab, limits = ylim) +
 		do.call(geom_point_overlap, point_args) +
-		ggplot2::scale_color_manual(values = color, name = "") +
-		ggplot2::scale_fill_manual(values = fill, name = "")
+		# ggplot2::scale_color_manual(values = color, name = "") +
+		# ggplot2::scale_fill_manual(values = fill, name = "")
+		scale_color_strain(name = "") +
+		scale_fill_strain(name = "")
 
 	# Add x-axis
 	fig_output <- fig_output |>
