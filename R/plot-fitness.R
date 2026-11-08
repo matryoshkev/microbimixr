@@ -229,14 +229,14 @@ plot_strain_fitness <- function(
 	strain_labels <- get_strain_labels(data)
 
 	# Make long-format data frame for plot
-	data_to_plot <- lengthen_strain_fitness(data)
+	data_to_plot <- data |>
+		lengthen_strain_fitness() |>
+		order_strains()
 
-	# Order strains so (first) A+B are always the same colors
-	# data_to_plot$strain <- factor(
-	# 	data_to_plot$strain, levels = c(strain_labels$A, strain_labels$B)
-	# )
-	# TODO: Allow arbitrary number of A and B strains
-	# TODO: data_to_plot <- order_strains(data_to_plot)
+	# Label A or B so A is always left facet
+	if (facet_strains) {
+		data_to_plot$is_B <- data_to_plot$strain == data_to_plot$name_B
+	}
 
 	# Drop single-strain data if using ratio mixing scale
 	if (mix_scale == "ratio") {
@@ -251,7 +251,7 @@ plot_strain_fitness <- function(
 
 	# Point options
 	point_args <- get_point_args(shape = shape, size = size, drop_NA = drop_NA)
-	# TODO: Allow custom A and B colors with recycling
+	# TODO: Allow custom A and B colors
 	# if (is.null(color) || is_waiver(color)) {
 	# 	color <- c(color_strain_A(), color_strain_B())
 	# }
@@ -280,11 +280,11 @@ plot_strain_fitness <- function(
 			xlim = xlim
 		)
 
-	# Show strains on separate subplots
+	# Show strain A/B on separate subplots
 	if (is.logical(facet_strains) && facet_strains == TRUE) {
-		fig_output <- fig_output + ggplot2::facet_wrap(~ strain, nrow = 1)
+		fig_output <- fig_output + ggplot2::facet_wrap(~ is_B, ncol = 2)
+		# ggplot2 order is FALSE then TRUE
 	}
-	# TODO: facet by is_A <- (strain == name_A)
 
 	fig_output
 }
@@ -672,6 +672,18 @@ lengthen_strain_fitness <- function(data) {
 	data$strain[is_A] <- data$name_A[is_A]
 	data$strain[is_B] <- data$name_B[is_B]
 
+	data
+}
+
+# Order strain levels: first A and first B at front so always same colors
+order_strains <- function(data) {
+	is_A <- data$strain == data$name_A
+	is_B <- data$strain == data$name_B
+	first_A <- unique(data$strain[is_A])[1]
+	first_B <- unique(data$strain[is_B])[1]
+	data$strain <- factor(data$strain)
+	data$strain <- relevel(data$strain, ref = first_B)
+	data$strain <- relevel(data$strain, ref = first_A)
 	data
 }
 
