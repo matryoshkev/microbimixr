@@ -1,55 +1,53 @@
 # Color & fill for ggplot2 =====================================================
 
-strain_colors <- c(
-	"brown3",         # red
-	"lightseagreen",  # light blue
-	"darkorchid3",    # purple
-	"goldenrod3",     # yellow
-	"blue1",          # dark blue
-	"orchid3",        # pink
-	"darkorange3",    # orange
-	# "seagreen3",
-	"grey45"          # greyscale
+okabe_ito_light <- c(
+	"#EFA722",  # orange
+	"#6CC4FA",  # light blue
+	"#5ACCA0",  # green
+	"#F6EA4C",  # yellow
+	"#579BDB",  # dark blue
+	"#F17639",  # red
+	"#EC99C6",  # pink
+	"#A3A3A3"   # grey
 )
 
-strain_fills <- c(
-	"indianred1",      # red
-	"darkslategray1",  # light blue
-	"orchid2",         # purple
-	"yellow1",         # yellow
-	"dodgerblue1",     # dark blue
-	"plum1",           # pink
-	"darkgoldenrod1",  # orange
-	# "seagreen1",
-	"grey70"           # greyscale
+okabe_ito_dark <- c(
+	"#A97404",  # orange
+	"#4997C3",  # light blue
+	"#058561",  # green
+	"#8A8200",  # yellow
+	"#0072B2",  # dark blue
+	"#A94A08",  # red
+	"#A85B86",  # pink
+	"#696969"   # grey
 )
 
-scale_color_strain <- function(..., aesthetics = "color") {
+scale_color_strain <- function(name = NULL, ...) {
 	ggplot2::discrete_scale(
+		name = name,
 		...,
-		aesthetics = aesthetics,
-		scale_name = "strain_color",
-		palette = pal_strain_color()
+		palette = pal_strain_color(),
+		aesthetics = "color"
 	)
 }
 
-scale_fill_strain <- function(..., aesthetics = "fill") {
+scale_fill_strain <- function(name = NULL, ...) {
 	ggplot2::discrete_scale(
+		name = name,
 		...,
-		aesthetics = aesthetics,
-		scale_name = "strain_fill",
-		palette = pal_strain_fill()
+		palette = pal_strain_fill(),
+		aesthetics = "fill"
 	)
 }
 
 # Color palette for scales and ggplot2
 pal_strain_color <- function() {
-	scales::pal_manual(strain_colors, type = "colour")
+	scales::pal_manual(okabe_ito_dark, type = "colour")
 }
 
 # Fill palette for scales and ggplot2
 pal_strain_fill <- function() {
-	scales::pal_manual(strain_fills, type = "colour")
+	scales::pal_manual(okabe_ito_light, type = "colour")
 }
 
 

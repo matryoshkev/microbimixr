@@ -268,8 +268,8 @@ plot_strain_fitness <- function(
 		do.call(geom_point_overlap, point_args) +
 		# ggplot2::scale_color_manual(values = color, name = "") +
 		# ggplot2::scale_fill_manual(values = fill, name = "")
-		scale_color_strain(name = "") +
-		scale_fill_strain(name = "")
+		scale_color_strain() +
+		scale_fill_strain()
 
 	# Add x-axis
 	fig_output <- fig_output |>
@@ -284,6 +284,7 @@ plot_strain_fitness <- function(
 	if (is.logical(facet_strains) && facet_strains == TRUE) {
 		fig_output <- fig_output + ggplot2::facet_wrap(~ strain, nrow = 1)
 	}
+	# TODO: facet by is_A <- (strain == name_A)
 
 	fig_output
 }
