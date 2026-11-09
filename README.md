@@ -81,7 +81,7 @@ head(fitness_myxo)
 plot_mix_fitness(fitness_myxo, mix_scale = "fraction")
 ```
 
-<!-- ggplot2::ggsave("README-compare-myxo.pdf", width = 6.3, height = 2.25) -->
+<!-- ggplot2::ggsave("README-compare-myxo.png", width = 6.3, height = 2.25) -->
 
 ![](./man/figures/README-compare-myxo.png)
 
