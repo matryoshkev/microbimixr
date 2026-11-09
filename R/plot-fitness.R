@@ -233,11 +233,6 @@ plot_strain_fitness <- function(
 		lengthen_strain_fitness() |>
 		order_strains()
 
-	# Label A or B so A is always left facet
-	if (facet_strains) {
-		data_to_plot$is_B <- data_to_plot$strain == data_to_plot$name_B
-	}
-
 	# Drop single-strain data if using ratio mixing scale
 	if (mix_scale == "ratio") {
 		data_to_plot <- drop_unmixed(data_to_plot, mix_scale)
@@ -271,20 +266,15 @@ plot_strain_fitness <- function(
 		scale_color_strain() +
 		scale_fill_strain()
 
-	# Add x-axis
 	fig_output <- fig_output |>
 		add_mix_axis(
 			mix_scale = mix_scale,
 			strain_labels = strain_labels,
 			xlab = xlab,
 			xlim = xlim
-		)
-
-	# Show strain A/B on separate subplots
-	if (is.logical(facet_strains) && facet_strains == TRUE) {
-		fig_output <- fig_output + ggplot2::facet_wrap(~ is_B, ncol = 2)
-		# ggplot2 order is FALSE then TRUE
-	}
+		) |>
+		add_strain_facets(facet_strains)
+		# add_strain_color(color = color, fill = fill)
 
 	fig_output
 }
@@ -726,3 +716,31 @@ add_mix_axis <- function(
 		)
 	)
 }
+
+# Show strains A and B on separate facets
+add_strain_facets <- function(plot, facet_strains) {
+	if (is.logical(facet_strains) && facet_strains == TRUE) {
+		plot <- plot + ggplot2::facet_wrap(
+			ggplot2::vars(.data$strain == .data$name_B), nrow = 1
+			# ggplot2 order is FALSE then TRUE
+		)
+	}
+	plot
+}
+
+# # Color points by strain
+# add_strain_color <- function(plot, color = waiver(), fill = waiver()) {
+# 	plot <- plot + ggplot2::aes(color = .data$strain, fill = .data$strain)
+# 	if (is.null(color) || is_waiver(color)) {
+# 		plot <- plot + scale_color_strain()
+# 	} else {
+# 		plot <- plot + ggplot2::scale_color_manual(values = color, name = "")
+# 	}
+# 	if (is.null(fill) || is_waiver(fill)) {
+# 		plot <- plot + scale_fill_strain()
+# 	} else{
+# 		plot <- plot + ggplot2::scale_fill_manual(values = fill, name = "")
+# 	}
+# 	plot
+# }
+
