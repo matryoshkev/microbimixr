@@ -246,25 +246,14 @@ plot_strain_fitness <- function(
 
 	# Point options
 	point_args <- get_point_args(shape = shape, size = size, drop_NA = drop_NA)
-	# TODO: Allow custom A and B colors
-	# if (is.null(color) || is_waiver(color)) {
-	# 	color <- c(color_strain_A(), color_strain_B())
-	# }
-	# if (is.null(fill) || is_waiver(fill)) {
-	# 	fill <- c(fill_strain_A(), fill_strain_B())
-	# }
 
 	# Make base plot
 	fig_output <-
 		ggplot2::ggplot(data_to_plot) +
-		ggplot2::aes(y = .data$fitness, color = .data$strain, fill = .data$strain) +
+		ggplot2::aes(y = .data$fitness) +
 		theme_strain_fitness(facet_strains = facet_strains) +
 		scale_y_fitness(name = ylab, limits = ylim) +
-		do.call(geom_point_overlap, point_args) +
-		# ggplot2::scale_color_manual(values = color, name = "") +
-		# ggplot2::scale_fill_manual(values = fill, name = "")
-		scale_color_strain() +
-		scale_fill_strain()
+		do.call(geom_point_overlap, point_args)
 
 	fig_output <- fig_output |>
 		add_mix_axis(
@@ -273,8 +262,8 @@ plot_strain_fitness <- function(
 			xlab = xlab,
 			xlim = xlim
 		) |>
-		add_strain_facets(facet_strains)
-		# add_strain_color(color = color, fill = fill)
+		add_strain_facets(facet_strains) |>
+		add_strain_colors(color = color, fill = fill)
 
 	fig_output
 }
@@ -721,26 +710,26 @@ add_mix_axis <- function(
 add_strain_facets <- function(plot, facet_strains) {
 	if (is.logical(facet_strains) && facet_strains == TRUE) {
 		plot <- plot + ggplot2::facet_wrap(
-			ggplot2::vars(.data$strain == .data$name_B), nrow = 1
 			# ggplot2 order is FALSE then TRUE
+			ggplot2::vars(.data$strain == .data$name_B), nrow = 1
 		)
 	}
 	plot
 }
 
-# # Color points by strain
-# add_strain_color <- function(plot, color = waiver(), fill = waiver()) {
-# 	plot <- plot + ggplot2::aes(color = .data$strain, fill = .data$strain)
-# 	if (is.null(color) || is_waiver(color)) {
-# 		plot <- plot + scale_color_strain()
-# 	} else {
-# 		plot <- plot + ggplot2::scale_color_manual(values = color, name = "")
-# 	}
-# 	if (is.null(fill) || is_waiver(fill)) {
-# 		plot <- plot + scale_fill_strain()
-# 	} else{
-# 		plot <- plot + ggplot2::scale_fill_manual(values = fill, name = "")
-# 	}
-# 	plot
-# }
+# Color points by strain (stroke and fill)
+add_strain_colors <- function(plot, color = waiver(), fill = waiver()) {
+	plot <- plot + ggplot2::aes(color = .data$strain, fill = .data$strain)
+	if (is.null(color) || is_waiver(color)) {
+		plot <- plot + scale_color_strain()
+	} else {
+		plot <- plot + ggplot2::scale_color_manual(name = NULL, values = color)
+	}
+	if (is.null(fill) || is_waiver(fill)) {
+		plot <- plot + scale_fill_strain()
+	} else {
+		plot <- plot + ggplot2::scale_fill_manual(name = NULL, values = fill)
+	}
+	plot
+}
 
