@@ -239,9 +239,7 @@ plot_strain_fitness <- function(
 	}
 
 	# Axis options
-	if (!is.expression(xlab) && !is.null(xlab) && is.na(xlab)) {xlab <- waiver()}
 	if (!is.expression(ylab) && !is.null(ylab) && is.na(ylab)) {ylab <- waiver()}
-	if (any(is.na(xlim))) {xlim <- NULL}
 	if (any(is.na(ylim))) {ylim <- NULL}
 
 	# Point options
@@ -337,11 +335,9 @@ plot_total_fitness <- function(
 	if (mix_scale == "ratio") {data <- drop_unmixed(data, mix_scale)}
 
 	# Axis options
-	if (!is.expression(xlab) && !is.null(xlab) && is.na(xlab)) {xlab <- waiver()}
 	if (!is.expression(ylab) && !is.null(ylab) && is.na(ylab)) {
 		ylab <- "Total fitness\n(final no. / initial no.)"
 	}
-	if (any(is.na(xlim))) {xlim <- NULL}
 	if (any(is.na(ylim))) {ylim <- NULL}
 
 	# Point options
@@ -435,11 +431,9 @@ plot_fitness_ratio <- function(
 	data <- drop_unmixed(data, mix_scale)
 
 	# Axis options
-	if (!is.expression(xlab) && !is.null(xlab) && is.na(xlab)) {xlab <- waiver()}
 	if (!is.expression(ylab) && !is.null(ylab) && is.na(ylab)) {
 		ylab <- paste("Fitness ratio\n", strain_labels$A, "/", strain_labels$B)
 	}
-	if (any(is.na(xlim))) {xlim <- NULL}
 	if (any(is.na(ylim))) {ylim <- NULL}
 
 	# Point options
@@ -661,8 +655,8 @@ order_strains <- function(data) {
 	first_A <- unique(data$strain[is_A])[1]
 	first_B <- unique(data$strain[is_B])[1]
 	data$strain <- factor(data$strain)
-	data$strain <- relevel(data$strain, ref = first_B)
-	data$strain <- relevel(data$strain, ref = first_A)
+	data$strain <- stats::relevel(data$strain, ref = first_B)
+	data$strain <- stats::relevel(data$strain, ref = first_A)
 	data
 }
 
@@ -676,42 +670,45 @@ drop_unmixed <- function(data, mix_scale) {
 	data[keep, ]
 }
 
-# Add x-axis mixing scale to ggplot object
+# Add x-axis: initial strain frequency
 add_mix_axis <- function(
-	fig_input,
+	plot,
 	mix_scale,
 	strain_labels,
-	xlab = waiver(),
-	xlim = NULL
+	xlab = NA,
+	xlim = c(NA, NA)
 ) {
-	# Set default axis name using strain lables
-	if (is_waiver(xlab)) {
-		if (mix_scale == "fraction") {
-			xlab <- paste("Initial fraction", strain_labels$A)
-		} else if (mix_scale == "ratio") {
-			xlab <- paste("Initial ratio", strain_labels$A, "/", strain_labels$B)
-		}
+	# Set default xlab, xlim
+	if (!is.expression(xlab) && !is.null(xlab) && is.na(xlab)) {xlab <- waiver()}
+	if (!is.null(xlim) && any(is.na(xlim))) {xlim <- NULL}
+
+	# Mix fraction
+	if (mix_scale == "fraction") {
+		if (is_waiver(xlab)) {xlab <- paste("Initial fraction", strain_labels$A)}
+		plot <- plot +
+			ggplot2::aes(x = .data$initial_fraction_A) +
+			scale_x_initial_fraction(name = xlab, limits = xlim)
 	}
 
-	fig_input + switch(
-		mix_scale,
-		fraction = list(
-			ggplot2::aes(x = .data$initial_fraction_A),
-			scale_x_initial_fraction(name = xlab, limits = xlim)
-		),
-		ratio = list(
-			ggplot2::aes(x = .data$initial_ratio_A_B),
+	# Mix ratio
+	if (mix_scale == "ratio") {
+		if (is_waiver(xlab)) {
+			xlab <- paste("Initial ratio", strain_labels$A, "/", strain_labels$B)
+		}
+		plot <- plot +
+			ggplot2::aes(x = .data$initial_ratio_A_B) +
 			scale_x_initial_ratio(name = xlab, limits = xlim)
-		)
-	)
+	}
+
+	plot
 }
 
 # Show strains A and B on separate facets
 add_strain_facets <- function(plot, facet_strains) {
 	if (is.logical(facet_strains) && facet_strains == TRUE) {
 		plot <- plot + ggplot2::facet_wrap(
-			# ggplot2 order is FALSE then TRUE
 			ggplot2::vars(.data$strain == .data$name_B), nrow = 1
+			# ggplot2 order is FALSE then TRUE
 		)
 	}
 	plot
