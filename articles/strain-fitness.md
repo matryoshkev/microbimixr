@@ -150,6 +150,8 @@ fitted_long <- expand.grid(
     initial_fraction_A = seq(0, 1, by = 0.02),
     strain = c("NC105.1", "NC34.2")
 )
+fitted_long$name_A <- "NC105.1"
+fitted_long$name_B <- "NC34.2"
 fitted_long$fitness <- predict(model_long, newdata = fitted_long)
 ```
 
