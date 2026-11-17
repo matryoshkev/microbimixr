@@ -255,8 +255,8 @@ plot_strain_fitness <- function(
 			xlim = xlim
 		) |>
 		add_axis_fitness(ylab = ylab, ylim = ylim) |>
-		add_strain_facets(facet_strains) |>
-		add_strain_colors(color = color, fill = fill)
+		add_facets_strainAB(facet_strains) |>
+		add_color_strain(color = color, fill = fill)
 
 	fig_output
 }
@@ -442,8 +442,7 @@ plot_fitness_ratio <- function(
 	fig_output
 }
 
-# Plot strain and total-group fitness
-#   Unexported. Called by plot_mix_fitness()
+# Plot strain and total-group fitness. Part of plot_mix_fitness()
 plot_fitness_strain_total <- function(
 	data,
 	mix_scale = "fraction",
@@ -460,12 +459,6 @@ plot_fitness_strain_total <- function(
 	name_total <- "total"
 
 	# Point options
-	if (is_waiver(color) || is.null(color)) {
-		color <- c(color_strain_A(), color_strain_B(), color_group())
-	}
-	if (is_waiver(fill) || is.null(fill)) {
-		fill <- c(fill_strain_A(), fill_strain_B(), fill_group())
-	}
 	point_args <- get_point_args(shape = shape, size = size, drop_NA = drop_NA)
 
 	# Make long-format data
@@ -491,17 +484,15 @@ plot_fitness_strain_total <- function(
 	# Make plot
 	fig_output <-
 		ggplot2::ggplot(data_for_plot) +
-		ggplot2::aes(color = .data$strain, fill = .data$strain) +
 		theme_strain_fitness(facet_strains = TRUE) +
-		do.call(geom_point_overlap, point_args) +
-		ggplot2::scale_color_manual(values = color, na.value = NA, name = "") +
-		ggplot2::scale_fill_manual(values = fill, na.value = NA, name = "") +
-		ggplot2::facet_wrap(~ my_facet, nrow = 1)
+		do.call(geom_point_overlap, point_args)
 	fig_output <- fig_output |>
 		add_axis_initial_freq(
 			mix_scale = mix_scale, strain_labels = strain_labels
 		) |>
-		add_axis_fitness(ylim = ylim)
+		add_axis_fitness(ylim = ylim) |>
+		add_color_strain_total(color = color, fill = fill) |>
+		add_facets_strain_total()
 
 	fig_output
 }
@@ -722,7 +713,7 @@ add_axis_fitness_ratio <- function(
 }
 
 # Show strains A and B on separate facets
-add_strain_facets <- function(plot, facet_strains) {
+add_facets_strainAB <- function(plot, facet_strains) {
 	if (is.logical(facet_strains) && facet_strains == TRUE) {
 		plot <- plot + ggplot2::facet_wrap(
 			ggplot2::vars(.data$strain == .data$name_B), nrow = 1
@@ -732,19 +723,41 @@ add_strain_facets <- function(plot, facet_strains) {
 	plot
 }
 
-# Color points by strain (stroke and fill)
-add_strain_colors <- function(plot, color = waiver(), fill = waiver()) {
-	plot <- plot + ggplot2::aes(color = .data$strain, fill = .data$strain)
-	if (is.null(color) || is_waiver(color)) {
-		plot <- plot + scale_color_strain()
-	} else {
-		plot <- plot + ggplot2::scale_color_manual(name = NULL, values = color)
-	}
-	if (is.null(fill) || is_waiver(fill)) {
-		plot <- plot + scale_fill_strain()
-	} else {
-		plot <- plot + ggplot2::scale_fill_manual(name = NULL, values = fill)
-	}
-	plot
+# Show strain and total fitness on separate facets
+add_facets_strain_total <- function(plot) {
+	plot + ggplot2::facet_wrap(ggplot2::vars(.data$my_facet), nrow = 1)
 }
 
+# Color points by strain (stroke and fill)
+add_color_strain <- function(plot, color = waiver(), fill = waiver()) {
+	color_scale <-
+		if (is.null(color) || is_waiver(color)) {
+			scale_color_strain()
+		} else {
+			ggplot2::scale_color_manual(name = NULL, values = color)
+		}
+	fill_scale <-
+		if (is.null(fill) || is_waiver(fill)) {
+			scale_fill_strain()
+		} else {
+			ggplot2::scale_fill_manual(name = NULL, values = fill)
+		}
+	plot +
+		ggplot2::aes(color = .data$strain, fill = .data$strain) +
+		color_scale +
+		fill_scale
+}
+
+# Color points (stroke and fill): strain A, strain B, total fitness
+add_color_strain_total <- function(plot, 	color = waiver(), fill = waiver()) {
+	if (is_waiver(color) || is.null(color)) {
+		color <- c(color_strain_A(), color_strain_B(), color_group())
+	}
+	if (is_waiver(fill) || is.null(fill)) {
+		fill <- c(fill_strain_A(), fill_strain_B(), fill_group())
+	}
+	plot +
+		ggplot2::aes(color = .data$strain, fill = .data$strain) +
+		ggplot2::scale_color_manual(name = NULL, values = color, na.value = NA) +
+		ggplot2::scale_fill_manual(name = NULL, values = fill, na.value = NA)
+}
