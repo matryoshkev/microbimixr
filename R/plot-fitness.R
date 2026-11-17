@@ -238,28 +238,23 @@ plot_strain_fitness <- function(
 		data_to_plot <- drop_unmixed(data_to_plot, mix_scale)
 	}
 
-	# Axis options
-	if (!is.expression(ylab) && !is.null(ylab) && is.na(ylab)) {ylab <- waiver()}
-	if (any(is.na(ylim))) {ylim <- NULL}
-
 	# Point options
 	point_args <- get_point_args(shape = shape, size = size, drop_NA = drop_NA)
 
 	# Make base plot
 	fig_output <-
 		ggplot2::ggplot(data_to_plot) +
-		ggplot2::aes(y = .data$fitness) +
 		theme_strain_fitness(facet_strains = facet_strains) +
-		scale_y_fitness(name = ylab, limits = ylim) +
 		do.call(geom_point_overlap, point_args)
 
 	fig_output <- fig_output |>
-		add_mix_axis(
+		add_axis_initial_freq(
 			mix_scale = mix_scale,
 			strain_labels = strain_labels,
 			xlab = xlab,
 			xlim = xlim
 		) |>
+		add_axis_fitness(ylab = ylab, ylim = ylim) |>
 		add_strain_facets(facet_strains) |>
 		add_strain_colors(color = color, fill = fill)
 
@@ -334,12 +329,6 @@ plot_total_fitness <- function(
 	# Drop single-strain data if using ratio mixing scale
 	if (mix_scale == "ratio") {data <- drop_unmixed(data, mix_scale)}
 
-	# Axis options
-	if (!is.expression(ylab) && !is.null(ylab) && is.na(ylab)) {
-		ylab <- "Total fitness\n(final no. / initial no.)"
-	}
-	if (any(is.na(ylim))) {ylim <- NULL}
-
 	# Point options
 	point_args <- get_point_args(
 		color = color, fill = fill, shape = shape, size = size, drop_NA = drop_NA
@@ -348,17 +337,16 @@ plot_total_fitness <- function(
 	# Make plot
 	fig_output <-
 		ggplot2::ggplot(data) +
-		ggplot2::aes(y = .data$fitness_total) +
 		theme_total_fitness() +
-		scale_y_fitness(name = ylab, limits = ylim) +
 		do.call(geom_point_overlap, point_args)
 	fig_output <- fig_output |>
-		add_mix_axis(
+		add_axis_initial_freq(
 			mix_scale = mix_scale,
 			strain_labels = strain_labels,
 			xlab = xlab,
 			xlim = xlim
-		)
+		) |>
+		add_axis_fitness_total(ylab = ylab, ylim = ylim)
 
 	fig_output
 }
@@ -430,12 +418,6 @@ plot_fitness_ratio <- function(
 	# Drop single-strain data
 	data <- drop_unmixed(data, mix_scale)
 
-	# Axis options
-	if (!is.expression(ylab) && !is.null(ylab) && is.na(ylab)) {
-		ylab <- paste("Fitness ratio\n", strain_labels$A, "/", strain_labels$B)
-	}
-	if (any(is.na(ylim))) {ylim <- NULL}
-
 	# Point options
 	point_args <- get_point_args(
 		color = color, fill = fill, shape = shape, size = size, drop_NA = drop_NA
@@ -444,16 +426,17 @@ plot_fitness_ratio <- function(
 	# Make plot
 	fig_output <-
 		ggplot2::ggplot(data) +
-		ggplot2::aes(y = .data$fitness_ratio_A_B) +
 		theme_fitness_ratio() +
-		scale_y_fitness_ratio(name = ylab, limits = ylim) +
 		do.call(geom_point_overlap, point_args)
 	fig_output <- fig_output |>
-		add_mix_axis(
+		add_axis_initial_freq(
 			mix_scale = mix_scale,
 			strain_labels = strain_labels,
 			xlab = xlab,
 			xlim = xlim
+		) |>
+		add_axis_fitness_ratio(
+			strain_labels = strain_labels, ylab = ylab, ylim = ylim
 		)
 
 	fig_output
@@ -508,15 +491,17 @@ plot_fitness_strain_total <- function(
 	# Make plot
 	fig_output <-
 		ggplot2::ggplot(data_for_plot) +
-		ggplot2::aes(y = .data$fitness, color = .data$strain, fill = .data$strain) +
+		ggplot2::aes(color = .data$strain, fill = .data$strain) +
 		theme_strain_fitness(facet_strains = TRUE) +
-		scale_y_fitness(limits = ylim) +
 		do.call(geom_point_overlap, point_args) +
 		ggplot2::scale_color_manual(values = color, na.value = NA, name = "") +
 		ggplot2::scale_fill_manual(values = fill, na.value = NA, name = "") +
 		ggplot2::facet_wrap(~ my_facet, nrow = 1)
 	fig_output <- fig_output |>
-		add_mix_axis(mix_scale = mix_scale, strain_labels = strain_labels)
+		add_axis_initial_freq(
+			mix_scale = mix_scale, strain_labels = strain_labels
+		) |>
+		add_axis_fitness(ylim = ylim)
 
 	fig_output
 }
@@ -671,7 +656,7 @@ drop_unmixed <- function(data, mix_scale) {
 }
 
 # Add x-axis: initial strain frequency
-add_mix_axis <- function(
+add_axis_initial_freq <- function(
 	plot,
 	mix_scale,
 	strain_labels,
@@ -703,12 +688,45 @@ add_mix_axis <- function(
 	plot
 }
 
+# Add axis: fitness
+add_axis_fitness <- function(plot, ylab = NA, ylim = c(NA, NA)) {
+	if (!is.expression(ylab) && !is.null(ylab) && is.na(ylab)) {ylab <- waiver()}
+	if (any(is.na(ylim))) {ylim <- NULL}
+	plot +
+		ggplot2::aes(y = .data$fitness) +
+		scale_y_fitness(name = ylab, limits = ylim)
+}
+
+# Add axis: total fitness
+add_axis_fitness_total <- function(plot, ylab = NA, ylim = c(NA, NA)) {
+	if (!is.expression(ylab) && !is.null(ylab) && is.na(ylab)) {
+		ylab <- "Total fitness\n(final no. / initial no.)"
+	}
+	if (any(is.na(ylim))) {ylim <- NULL}
+	plot +
+		ggplot2::aes(y = .data$fitness_total) +
+		scale_y_fitness(name = ylab, limits = ylim)
+}
+
+# Add axis: fitness ratio
+add_axis_fitness_ratio <- function(
+	plot, strain_labels, ylab = NA, ylim = c(NA, NA)
+) {
+	if (!is.expression(ylab) && !is.null(ylab) && is.na(ylab)) {
+		ylab <- paste("Fitness ratio\n", strain_labels$A, "/", strain_labels$B)
+	}
+	if (any(is.na(ylim))) {ylim <- NULL}
+	plot +
+		ggplot2::aes(y = .data$fitness_ratio_A_B) +
+		scale_y_fitness_ratio(name = ylab, limits = ylim)
+}
+
 # Show strains A and B on separate facets
 add_strain_facets <- function(plot, facet_strains) {
 	if (is.logical(facet_strains) && facet_strains == TRUE) {
 		plot <- plot + ggplot2::facet_wrap(
 			ggplot2::vars(.data$strain == .data$name_B), nrow = 1
-			# ggplot2 order is FALSE then TRUE
+				# ggplot2 order is FALSE then TRUE
 		)
 	}
 	plot
