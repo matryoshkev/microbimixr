@@ -78,8 +78,6 @@ plot_mix_fitness <- function(
 	ylim <- get_ylim_mix_fitness(data)
 
 	# Point options
-	color_strain_total <- if (is.null(color)) waiver() else color
-	fill_strain_total <- if (is.null(fill)) waiver() else fill
 	color_ratio <- if (is.null(color)) waiver() else color[[3]]
 	fill_ratio <- if (is.null(fill)) waiver() else fill[[3]]
 	if (is.null(shape)) {shape <- waiver()}
@@ -91,8 +89,8 @@ plot_mix_fitness <- function(
 			data,
 			mix_scale = "fraction",
 			ylim = ylim$fitness,
-			color = color_strain_total,
-			fill = fill_strain_total,
+			color = color,
+			fill = fill,
 			shape = shape,
 			size = size,
 			drop_NA = drop_NA
@@ -113,8 +111,8 @@ plot_mix_fitness <- function(
 			data,
 			mix_scale = "ratio",
 			ylim = ylim$fitness,
-			color = color_strain_total,
-			fill = fill_strain_total,
+			color = color,
+			fill = fill,
 			shape = shape,
 			size = size,
 			drop_NA = drop_NA
@@ -229,21 +227,17 @@ plot_strain_fitness <- function(
 	strain_labels <- get_strain_labels(data)
 
 	# Make long-format data frame for plot
-	data_to_plot <- data |>
-		lengthen_strain_fitness() |>
-		order_strains()
+	data <- data |> lengthen_strain_fitness() |> order_strains()
 
 	# Drop single-strain data if using ratio mixing scale
-	if (mix_scale == "ratio") {
-		data_to_plot <- drop_unmixed(data_to_plot, mix_scale)
-	}
+	if (mix_scale == "ratio") {data <- drop_unmixed(data, mix_scale)}
 
 	# Point options
 	point_args <- get_point_args(shape = shape, size = size, drop_NA = drop_NA)
 
 	# Make base plot
 	fig_output <-
-		ggplot2::ggplot(data_to_plot) +
+		ggplot2::ggplot(data) +
 		theme_strain_fitness(facet_strains = facet_strains) +
 		do.call(geom_point_overlap, point_args)
 
@@ -456,34 +450,19 @@ plot_fitness_strain_total <- function(
 	mix_scale <- rlang::arg_match(mix_scale, c("fraction", "ratio"))
 	# Data already checked by plot_mix_fitness()
 	strain_labels <- get_strain_labels(data)
-	name_total <- "total"
 
 	# Point options
 	point_args <- get_point_args(shape = shape, size = size, drop_NA = drop_NA)
 
-	# Make long-format data
-	data_for_plot <- stats::reshape(
-		as.data.frame(data),
-		direction = "long",
-		varying = c("fitness_A", "fitness_B", "fitness_total"),
-		v.names = "fitness",
-		timevar = "strain",
-		times = c(strain_labels$A, strain_labels$B, name_total)
-	)
-	data_for_plot$strain <- factor(
-		data_for_plot$strain,
-		levels = c(strain_labels$A, strain_labels$B, name_total)
-	)
-	data_for_plot$my_facet <- data_for_plot$strain == name_total
+	# Make long-format data frame for plot
+	data <- lengthen_strain_total(data, strain_labels)
 
 	# Drop single-strain data if using ratio mixing scale
-	if (mix_scale == "ratio") {
-		data_for_plot <- drop_unmixed(data_for_plot, mix_scale)
-	}
+	if (mix_scale == "ratio") {data <- drop_unmixed(data, mix_scale)}
 
 	# Make plot
 	fig_output <-
-		ggplot2::ggplot(data_for_plot) +
+		ggplot2::ggplot(data) +
 		theme_strain_fitness(facet_strains = TRUE) +
 		do.call(geom_point_overlap, point_args)
 	fig_output <- fig_output |>
@@ -624,6 +603,31 @@ lengthen_strain_fitness <- function(data) {
 	data
 }
 
+# Convert strain and total fitness data from wide to long format
+lengthen_strain_total <- function(data, strain_labels) {
+	# What to call total fitness in color/fill legend with strain
+	name_total <- "total"
+
+	# Convert to long format
+	# Collapse multiple strains into "strain A" or "strain B"
+	data <- stats::reshape(  # reshape() chokes on tibbles
+		as.data.frame(data),
+		direction = "long",
+		varying = c("fitness_A", "fitness_B", "fitness_total"),
+		v.names = "fitness",
+		timevar = "strain",
+		times = c(strain_labels$A, strain_labels$B, name_total)
+	)
+
+	# Order strains/total for consistent color/fill
+	data$strain <- factor(
+		data$strain,
+		levels = c(strain_labels$A, strain_labels$B, name_total)
+	)
+
+	data
+}
+
 # Order strain levels: first A and first B at front so always same colors
 order_strains <- function(data) {
 	is_A <- data$strain == data$name_A
@@ -716,8 +720,8 @@ add_axis_fitness_ratio <- function(
 add_facets_strainAB <- function(plot, facet_strains) {
 	if (is.logical(facet_strains) && facet_strains == TRUE) {
 		plot <- plot + ggplot2::facet_wrap(
+			# ggplot2 order is FALSE then TRUE
 			ggplot2::vars(.data$strain == .data$name_B), nrow = 1
-				# ggplot2 order is FALSE then TRUE
 		)
 	}
 	plot
@@ -725,7 +729,10 @@ add_facets_strainAB <- function(plot, facet_strains) {
 
 # Show strain and total fitness on separate facets
 add_facets_strain_total <- function(plot) {
-	plot + ggplot2::facet_wrap(ggplot2::vars(.data$my_facet), nrow = 1)
+	plot + ggplot2::facet_wrap(
+		# ggplot2 order is FALSE then TRUE
+		ggplot2::vars(.data$strain == "total"), nrow = 1
+	)
 }
 
 # Color points by strain (stroke and fill)
