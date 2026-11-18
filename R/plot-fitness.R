@@ -231,9 +231,8 @@ plot_strain_fitness <- function(
 	if (mix_scale == "ratio") {data <- drop_unmixed(data, mix_scale)}
 
 	# Make plot
-	plot <- ggplot2::ggplot(data) +
-		theme_strain_fitness(facet_strains = facet_strains)
-	plot |>
+	ggplot2::ggplot(data) |>
+		add_theme("strain_fitness", facet_strains = facet_strains) |>
 		add_axis_initial_freq(
 			mix_scale = mix_scale,
 			strain_labels = strain_labels,
@@ -315,8 +314,8 @@ plot_total_fitness <- function(
 	if (mix_scale == "ratio") {data <- drop_unmixed(data, mix_scale)}
 
 	# Make plot
-	plot <- ggplot2::ggplot(data) + theme_total_fitness()
-	plot |>
+	ggplot2::ggplot(data) |>
+		add_theme("total_fitness") |>
 		add_axis_initial_freq(
 			mix_scale = mix_scale,
 			strain_labels = strain_labels,
@@ -397,8 +396,8 @@ plot_fitness_ratio <- function(
 	data <- drop_unmixed(data, mix_scale)
 
 	# Make plot
-	plot <- ggplot2::ggplot(data) + theme_fitness_ratio()
-	plot |>
+	ggplot2::ggplot(data) |>
+		add_theme("fitness_ratio") |>
 		add_axis_initial_freq(
 			mix_scale = mix_scale,
 			strain_labels = strain_labels,
@@ -435,8 +434,8 @@ plot_fitness_strain_total <- function(
 	if (mix_scale == "ratio") {data <- drop_unmixed(data, mix_scale)}
 
 	# Make plot
-	plot <- ggplot2::ggplot(data) + theme_strain_fitness(facet_strains = TRUE)
-	plot |>
+	ggplot2::ggplot(data) |>
+		add_theme("strain_total") |>
 		add_axis_initial_freq(
 			mix_scale = mix_scale, strain_labels = strain_labels
 		) |>

@@ -26,6 +26,18 @@ theme_strain_fitness <- function(facet_strains = FALSE) {
 	output
 }
 
-theme_total_fitness <- function() theme_microbimixr()
 
-theme_fitness_ratio <- function() theme_microbimixr()
+# Plot helper ==================================================================
+
+# Add theme to plot
+add_theme <- function(plot, plot_type, facet_strains = FALSE) {
+	plot_theme <- switch(
+		plot_type,
+		strain_fitness = theme_strain_fitness(facet_strains = facet_strains),
+		total_fitness = theme_microbimixr(),
+		fitness_ratio = theme_microbimixr(),
+		strain_total = theme_strain_fitness(facet_strains = TRUE),
+		theme_microbimixr()
+	)
+	plot + plot_theme
+}
