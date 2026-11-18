@@ -215,6 +215,7 @@ plot_strain_fitness <- function(
 	size = NULL,
 	drop_NA = TRUE
 ) {
+	# Check inputs
 	mix_scale <- rlang::arg_match(mix_scale, c("fraction", "ratio"))
 	data <- check_fitness_data(
 		data,
@@ -222,7 +223,6 @@ plot_strain_fitness <- function(
 		mix_scale = mix_scale,
 		caller = "plot_strain_fitness"
 	)
-	strain_labels <- get_strain_labels(data)
 
 	# Make long-format data frame for plot
 	data <- data |> lengthen_strain_fitness() |> order_strains()
@@ -235,7 +235,7 @@ plot_strain_fitness <- function(
 		add_theme("strain_fitness", facet_strains = facet_strains) |>
 		add_axis_initial_freq(
 			mix_scale = mix_scale,
-			strain_labels = strain_labels,
+			strain_labels = get_strain_labels(data),
 			xlab = xlab,
 			xlim = xlim
 		) |>
@@ -301,6 +301,7 @@ plot_total_fitness <- function(
 	size = NULL,
 	drop_NA = TRUE
 ) {
+	# Check inputs
 	mix_scale <- rlang::arg_match(mix_scale, c("fraction", "ratio"))
 	data <- check_fitness_data(
 		data,
@@ -308,7 +309,6 @@ plot_total_fitness <- function(
 		mix_scale = mix_scale,
 		caller = "plot_total_fitness"
 	)
-	strain_labels <- get_strain_labels(data)
 
 	# Drop single-strain data if using ratio mixing scale
 	if (mix_scale == "ratio") {data <- drop_unmixed(data, mix_scale)}
@@ -318,7 +318,7 @@ plot_total_fitness <- function(
 		add_theme("total_fitness") |>
 		add_axis_initial_freq(
 			mix_scale = mix_scale,
-			strain_labels = strain_labels,
+			strain_labels = get_strain_labels(data),
 			xlab = xlab,
 			xlim = xlim
 		) |>
@@ -383,6 +383,7 @@ plot_fitness_ratio <- function(
 	size = NULL,
 	drop_NA = TRUE
 ) {
+	# Check inputs
 	mix_scale <- rlang::arg_match(mix_scale, c("fraction", "ratio"))
 	data <- check_fitness_data(
 		data,
@@ -390,12 +391,12 @@ plot_fitness_ratio <- function(
 		mix_scale = mix_scale,
 		caller = "plot_fitness_ratio"
 	)
-	strain_labels <- get_strain_labels(data)
 
 	# Drop single-strain data
 	data <- drop_unmixed(data, mix_scale)
 
 	# Make plot
+	strain_labels <- get_strain_labels(data)
 	ggplot2::ggplot(data) |>
 		add_theme("fitness_ratio") |>
 		add_axis_initial_freq(
@@ -423,11 +424,12 @@ plot_fitness_strain_total <- function(
 	size = waiver(),
 	drop_NA = TRUE
 ) {
+	# Check inputs
 	mix_scale <- rlang::arg_match(mix_scale, c("fraction", "ratio"))
 	# Data already checked by plot_mix_fitness()
-	strain_labels <- get_strain_labels(data)
 
 	# Make long-format data frame for plot
+	strain_labels <- get_strain_labels(data)
 	data <- lengthen_strain_total(data, strain_labels)
 
 	# Drop single-strain data if using ratio mixing scale
@@ -446,7 +448,7 @@ plot_fitness_strain_total <- function(
 }
 
 
-# Plot-function helpers ========================================================
+# Helpers ======================================================================
 
 # Get shared y-axis limits for fitness & fitness_ratio
 #   So log10(fitness) and log10(fitness_ratio) are visually comparable
@@ -596,72 +598,6 @@ drop_unmixed <- function(data, mix_scale) {
 		keep <- data$initial_ratio_A_B > 0 & is.finite(data$initial_ratio_A_B)
 	}
 	data[keep, ]
-}
-
-# Add x-axis: initial strain frequency
-add_axis_initial_freq <- function(
-	plot,
-	mix_scale,
-	strain_labels,
-	xlab = NA,
-	xlim = c(NA, NA)
-) {
-	# Set default xlab, xlim
-	if (!is.expression(xlab) && !is.null(xlab) && is.na(xlab)) {xlab <- waiver()}
-	if (!is.null(xlim) && any(is.na(xlim))) {xlim <- NULL}
-
-	# Mix fraction
-	if (mix_scale == "fraction") {
-		if (is_waiver(xlab)) {xlab <- paste("Initial fraction", strain_labels$A)}
-		plot <- plot +
-			ggplot2::aes(x = .data$initial_fraction_A) +
-			scale_x_initial_fraction(name = xlab, limits = xlim)
-	}
-
-	# Mix ratio
-	if (mix_scale == "ratio") {
-		if (is_waiver(xlab)) {
-			xlab <- paste("Initial ratio", strain_labels$A, "/", strain_labels$B)
-		}
-		plot <- plot +
-			ggplot2::aes(x = .data$initial_ratio_A_B) +
-			scale_x_initial_ratio(name = xlab, limits = xlim)
-	}
-
-	plot
-}
-
-# Add y-axis: fitness
-add_axis_fitness <- function(plot, ylab = NA, ylim = c(NA, NA)) {
-	if (!is.expression(ylab) && !is.null(ylab) && is.na(ylab)) {ylab <- waiver()}
-	if (any(is.na(ylim))) {ylim <- NULL}
-	plot +
-		ggplot2::aes(y = .data$fitness) +
-		scale_y_fitness(name = ylab, limits = ylim)
-}
-
-# Add y-axis: total fitness
-add_axis_fitness_total <- function(plot, ylab = NA, ylim = c(NA, NA)) {
-	if (!is.expression(ylab) && !is.null(ylab) && is.na(ylab)) {
-		ylab <- "Total fitness\n(final no. / initial no.)"
-	}
-	if (any(is.na(ylim))) {ylim <- NULL}
-	plot +
-		ggplot2::aes(y = .data$fitness_total) +
-		scale_y_fitness(name = ylab, limits = ylim)
-}
-
-# Add y-axis: fitness ratio
-add_axis_fitness_ratio <- function(
-	plot, strain_labels, ylab = NA, ylim = c(NA, NA)
-) {
-	if (!is.expression(ylab) && !is.null(ylab) && is.na(ylab)) {
-		ylab <- paste("Fitness ratio\n", strain_labels$A, "/", strain_labels$B)
-	}
-	if (any(is.na(ylim))) {ylim <- NULL}
-	plot +
-		ggplot2::aes(y = .data$fitness_ratio_A_B) +
-		scale_y_fitness_ratio(name = ylab, limits = ylim)
 }
 
 # Show strains A and B on separate facets

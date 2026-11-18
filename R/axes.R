@@ -295,9 +295,8 @@ scale_y_fitness_ratio <- function(
 }
 
 
-# Axis helpers =================================================================
-# Limits, breaks, and label functions return functions
-# like their counterparts in the scales package
+# Limits, breaks, & labels =====================================================
+# Return functions like their counterparts in the scales package
 
 # Test for ggplot2 waiver object
 is_waiver <- function(x) {inherits(x, "waiver")}
@@ -395,4 +394,82 @@ label_log10 <- function() {
 			scales::number(breaks, drop0trailing = TRUE)
 		}
 	}
+}
+
+
+# Plot helpers =================================================================
+
+# Add x-axis to plot: initial strain frequency
+add_axis_initial_freq <- function(
+	plot,
+	mix_scale,
+	strain_labels,
+	xlab = NA,
+	xlim = c(NA, NA)
+) {
+	# Set default xlab, xlim
+	if (!is.expression(xlab) && !is.null(xlab) && is.na(xlab)) {xlab <- waiver()}
+	if (!is.null(xlim) && any(is.na(xlim))) {xlim <- NULL}
+
+	# Mix fraction
+	if (mix_scale == "fraction") {
+		if (is_waiver(xlab)) {xlab <- paste("Initial fraction", strain_labels$A)}
+		plot <- plot +
+			ggplot2::aes(x = .data$initial_fraction_A) +
+			scale_x_initial_fraction(name = xlab, limits = xlim)
+	}
+
+	# Mix ratio
+	if (mix_scale == "ratio") {
+		if (is_waiver(xlab)) {
+			xlab <- paste("Initial ratio", strain_labels$A, "/", strain_labels$B)
+		}
+		plot <- plot +
+			ggplot2::aes(x = .data$initial_ratio_A_B) +
+			scale_x_initial_ratio(name = xlab, limits = xlim)
+	}
+
+	plot
+}
+
+# Add y-axis to plot: Wrightian fitness
+add_axis_fitness <- function(plot, ylab = NA, ylim = c(NA, NA)) {
+	# Set default ylab, ylim
+	if (!is.expression(ylab) && !is.null(ylab) && is.na(ylab)) {ylab <- waiver()}
+	if (any(is.na(ylim))) {ylim <- NULL}
+
+	# Add to plot
+	plot +
+		ggplot2::aes(y = .data$fitness) +
+		scale_y_fitness(name = ylab, limits = ylim)
+}
+
+# Add y-axis to plot: total fitness
+add_axis_fitness_total <- function(plot, ylab = NA, ylim = c(NA, NA)) {
+	# Set default ylab, ylim
+	if (!is.expression(ylab) && !is.null(ylab) && is.na(ylab)) {
+		ylab <- "Total fitness\n(final no. / initial no.)"
+	}
+	if (any(is.na(ylim))) {ylim <- NULL}
+
+	# Add to plot
+	plot +
+		ggplot2::aes(y = .data$fitness_total) +
+		scale_y_fitness(name = ylab, limits = ylim)
+}
+
+# Add y-axis to plot: fitness ratio
+add_axis_fitness_ratio <- function(
+	plot, strain_labels, ylab = NA, ylim = c(NA, NA)
+) {
+	# Set default ylab, ylim
+	if (!is.expression(ylab) && !is.null(ylab) && is.na(ylab)) {
+		ylab <- paste("Fitness ratio\n", strain_labels$A, "/", strain_labels$B)
+	}
+	if (any(is.na(ylim))) {ylim <- NULL}
+
+	# Add to plot
+	plot +
+		ggplot2::aes(y = .data$fitness_ratio_A_B) +
+		scale_y_fitness_ratio(name = ylab, limits = ylim)
 }
