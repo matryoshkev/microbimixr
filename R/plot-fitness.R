@@ -483,7 +483,7 @@ get_ylim_mix_fitness <- function(data) {
 }
 
 # Get strain labels from data
-#   Use "strain A" and/or "strain B" if there's >1 strain combo
+# Use "strain A" and/or "strain B" if there's >1 strain combo
 get_strain_labels <- function(data) {
 	label_A <- unique(data$name_A)
 	label_B <- unique(data$name_B)
@@ -632,7 +632,7 @@ add_axis_initial_freq <- function(
 	plot
 }
 
-# Add axis: fitness
+# Add y-axis: fitness
 add_axis_fitness <- function(plot, ylab = NA, ylim = c(NA, NA)) {
 	if (!is.expression(ylab) && !is.null(ylab) && is.na(ylab)) {ylab <- waiver()}
 	if (any(is.na(ylim))) {ylim <- NULL}
@@ -641,7 +641,7 @@ add_axis_fitness <- function(plot, ylab = NA, ylim = c(NA, NA)) {
 		scale_y_fitness(name = ylab, limits = ylim)
 }
 
-# Add axis: total fitness
+# Add y-axis: total fitness
 add_axis_fitness_total <- function(plot, ylab = NA, ylim = c(NA, NA)) {
 	if (!is.expression(ylab) && !is.null(ylab) && is.na(ylab)) {
 		ylab <- "Total fitness\n(final no. / initial no.)"
@@ -652,7 +652,7 @@ add_axis_fitness_total <- function(plot, ylab = NA, ylim = c(NA, NA)) {
 		scale_y_fitness(name = ylab, limits = ylim)
 }
 
-# Add axis: fitness ratio
+# Add y-axis: fitness ratio
 add_axis_fitness_ratio <- function(
 	plot, strain_labels, ylab = NA, ylim = c(NA, NA)
 ) {
@@ -707,38 +707,4 @@ add_facets_strain_total <- function(plot) {
 		# ggplot2 order is FALSE then TRUE
 		ggplot2::vars(.data$strain == "total"), nrow = 1
 	)
-}
-
-# Color points by strain (stroke and fill)
-add_color_strain <- function(plot, color = waiver(), fill = waiver()) {
-	color_scale <-
-		if (is.null(color) || is_waiver(color)) {
-			scale_color_strain()
-		} else {
-			ggplot2::scale_color_manual(name = NULL, values = color)
-		}
-	fill_scale <-
-		if (is.null(fill) || is_waiver(fill)) {
-			scale_fill_strain()
-		} else {
-			ggplot2::scale_fill_manual(name = NULL, values = fill)
-		}
-	plot +
-		ggplot2::aes(color = .data$strain, fill = .data$strain) +
-		color_scale +
-		fill_scale
-}
-
-# Color points (stroke and fill): strain A, strain B, total fitness
-add_color_strain_total <- function(plot, 	color = waiver(), fill = waiver()) {
-	if (is_waiver(color) || is.null(color)) {
-		color <- c(color_strain_A(), color_strain_B(), color_group())
-	}
-	if (is_waiver(fill) || is.null(fill)) {
-		fill <- c(fill_strain_A(), fill_strain_B(), fill_group())
-	}
-	plot +
-		ggplot2::aes(color = .data$strain, fill = .data$strain) +
-		ggplot2::scale_color_manual(name = NULL, values = color, na.value = NA) +
-		ggplot2::scale_fill_manual(name = NULL, values = fill, na.value = NA)
 }

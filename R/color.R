@@ -1,5 +1,7 @@
-# Color & fill for ggplot2 =====================================================
+# Color & fill =================================================================
 
+# Dark and light derivatives of the Okabe-Ito color palette
+# (accessible for people with color vision deficiency)
 okabe_ito_dark <- c(
 	"#A97404",  # orange
 	"#4997C3",  # light blue
@@ -10,7 +12,6 @@ okabe_ito_dark <- c(
 	"#A85B86",  # pink
 	"#696969"   # grey
 )
-
 okabe_ito_light <- c(
 	"#EFA722",  # orange
 	"#6CC4FA",  # light blue
@@ -22,6 +23,7 @@ okabe_ito_light <- c(
 	"#A3A3A3"   # grey
 )
 
+# Scales for ggplot2
 scale_color_strain <- function(name = NULL, ...) {
 	ggplot2::discrete_scale(
 		name = name,
@@ -30,7 +32,6 @@ scale_color_strain <- function(name = NULL, ...) {
 		aesthetics = "color"
 	)
 }
-
 scale_fill_strain <- function(name = NULL, ...) {
 	ggplot2::discrete_scale(
 		name = name,
@@ -40,20 +41,53 @@ scale_fill_strain <- function(name = NULL, ...) {
 	)
 }
 
-# Color palette for scales and ggplot2
+# Palettes for ggplot2
 pal_strain_color <- function() {
 	scales::pal_manual(okabe_ito_dark, type = "colour")
 }
-
-# Fill palette for scales and ggplot2
 pal_strain_fill <- function() {
 	scales::pal_manual(okabe_ito_light, type = "colour")
 }
 
-# Default colors for plot_mix_fitness()
-color_strain_A <- function() {okabe_ito_dark[1]}
-color_strain_B <- function() {okabe_ito_dark[2]}
-color_group    <- function() {"black"}
-fill_strain_A  <- function() {okabe_ito_light[1]}
-fill_strain_B  <- function() {okabe_ito_light[2]}
-fill_group     <- function() {"gray65"}
+
+# Plot helpers =================================================================
+
+# Add strain color & fill scales to plot
+add_color_strain <- function(plot, color = waiver(), fill = waiver()) {
+	# Set default or user-specified values
+	color_scale <-
+		if (is.null(color) || is_waiver(color)) {
+			scale_color_strain()
+		} else {
+			ggplot2::scale_color_manual(name = NULL, values = color)
+		}
+	fill_scale <-
+		if (is.null(fill) || is_waiver(fill)) {
+			scale_fill_strain()
+		} else {
+			ggplot2::scale_fill_manual(name = NULL, values = fill)
+		}
+
+	# Add to plot
+	plot +
+		ggplot2::aes(color = .data$strain, fill = .data$strain) +
+		color_scale +
+		fill_scale
+}
+
+# Add color & fill scales to plot: strain A, strain B, total fitness
+add_color_strain_total <- function(plot, 	color = waiver(), fill = waiver()) {
+	# Set default values
+	if (is_waiver(color) || is.null(color)) {
+		color <- c(okabe_ito_dark[1], okabe_ito_dark[2], "black")
+	}
+	if (is_waiver(fill) || is.null(fill)) {
+		fill <- c(okabe_ito_light[1], okabe_ito_light[2], "gray65")
+	}
+
+	# Add to plot
+	plot +
+		ggplot2::aes(color = .data$strain, fill = .data$strain) +
+		ggplot2::scale_color_manual(name = NULL, values = color, na.value = NA) +
+		ggplot2::scale_fill_manual(name = NULL, values = fill, na.value = NA)
+}
