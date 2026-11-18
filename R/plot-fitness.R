@@ -665,31 +665,6 @@ add_axis_fitness_ratio <- function(
 		scale_y_fitness_ratio(name = ylab, limits = ylim)
 }
 
-# Add data points
-add_data_points <- function(
-	plot,
-	color = waiver(),
-	fill = waiver(),
-	shape = waiver(),
-	size = waiver(),
-	drop_NA = waiver()
-) {
-	# Collect arguments for geom_point_overlap()
-	# Don't include if not given so we can use a ggplot scale instead
-	args <- mget(ls())  # List of arguments to this function
-	point_args <- list()
-	for (arg_name in c("color", "fill", "shape", "size")) {
-		arg_value <- args[[arg_name]]
-		if (!is_waiver(arg_value) && !is.null(arg_value)) {
-			point_args[[arg_name]] <- arg_value
-		}
-	}
-	if (!is_waiver(drop_NA) && !is.null(drop_NA)) {point_args$na.rm <- drop_NA}
-
-	# Add points to plot
-	plot + do.call(geom_point_overlap, point_args)
-}
-
 # Show strains A and B on separate facets
 add_facets_strainAB <- function(plot, facet_strains) {
 	if (is.logical(facet_strains) && facet_strains == TRUE) {

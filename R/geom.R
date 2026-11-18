@@ -28,10 +28,7 @@ geom_point_overlap <- function(...) {
 	)
 }
 
-# Helpers ======================================================================
-
 # Point geom for ggplot that defaults to filled-grey circles
-
 geom_point_microbimixr <- function(
 	data = NULL,
 	mapping = NULL,
@@ -67,73 +64,30 @@ GeomPointMicrobimixr <- ggplot2::ggproto(
 	)
 )
 
-# Failed attempt at simpler implementation
-#
-# geom_point_overlap <- function(
-# 	data = NULL,
-# 	mapping = NULL,
-# 	stat = "identity",
-# 	position = "identity",
-# 	...,
-# 	na.rm = FALSE,
-# 	show.legend = NA,
-# 	inherit.aes = TRUE
-# ) {
-# 	ggplot2::layer(
-# 		data = data,
-# 		mapping = mapping,
-# 		stat = stat,
-# 		geom = GeomPointOverlap,
-# 		position = position,
-# 		show.legend = show.legend,
-# 		inherit.aes = inherit.aes,
-# 		params = list(na.rm = na.rm, ...)
-# 	)
-# }
-#
-# GeomPointOverlap <- ggplot2::ggproto(
-# 	`_class` = "GeomPointOverlap",
-# 	`_inherit` = ggplot2::GeomPoint,
-# 	required_aes = c("x", "y"),
-#
-# 	default_aes = ggplot2::aes(
-# 		shape = 21,
-# 		colour = "black",
-# 		fill = "grey65",
-# 		size = 2,
-# 		alpha = NA,
-# 		stroke = 0.5
-# 	),
-#
-# 	draw_panel = function(data, panel_params, coord) {
-# 		# na.rm = FALSE, flipped_aes = FALSE) {
-# 		coords <- coord$transform(data, panel_params)
-# 		filled <- grid::pointsGrob(
-# 			x = coords$x,
-# 			y = coords$y,
-# 			pch = coords$shape,
-# 			size = grid::unit(coords$size, "mm"),
-# 			gp = grid::gpar(
-# 				col = alpha(coords$colour, 0),
-# 				fill = alpha(coords$fill, coords$alpha),
-# 				lwd = coords$stroke * .pt / 2
-# 				# fontsize = coords$size * .pt + coords$stroke * .stroke / 2
-# 			)
-# 		)
-# 		open <- grid::pointsGrob(
-# 			x = coords$x,
-# 			y = coords$y,
-# 			pch = coords$shape,
-# 			size = grid::unit(coords$size, "mm"),
-# 			gp = grid::gpar(
-# 				col = alpha(coords$colour, coords$alpha),
-# 				fill = NA,
-# 				lwd = coords$stroke * .pt / 2
-# 				# fontsize = coords$size * .pt + coords$stroke * .stroke / 2
-# 			)
-# 		)
-# 		grid::grobTree(filled, open)
-# 	}
-# )
-# # TODO: This isn't drawing stroke on outside of point like geom_point does
 
+# Plot helper ==================================================================
+
+# Add data points to plot
+add_data_points <- function(
+	plot,
+	color = waiver(),
+	fill = waiver(),
+	shape = waiver(),
+	size = waiver(),
+	drop_NA = waiver()
+) {
+	# Collect arguments for geom_point_overlap()
+	# Don't include if not given so we can use a ggplot scale instead
+	args <- mget(ls())  # List of arguments to this function
+	point_args <- list()
+	for (arg_name in c("color", "fill", "shape", "size")) {
+		arg_value <- args[[arg_name]]
+		if (!is_waiver(arg_value) && !is.null(arg_value)) {
+			point_args[[arg_name]] <- arg_value
+		}
+	}
+	if (!is_waiver(drop_NA) && !is.null(drop_NA)) {point_args$na.rm <- drop_NA}
+
+	# Add to plot
+	plot + do.call(geom_point_overlap, point_args)
+}
