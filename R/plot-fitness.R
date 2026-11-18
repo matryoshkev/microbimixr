@@ -80,8 +80,6 @@ plot_mix_fitness <- function(
 	# Point options
 	color_ratio <- if (is.null(color)) waiver() else color[[3]]
 	fill_ratio <- if (is.null(fill)) waiver() else fill[[3]]
-	if (is.null(shape)) {shape <- waiver()}
-	if (is.null(size)) {size <- waiver()}
 
 	# Make subplots
 	if ("fraction" %in% mix_scale) {
@@ -232,16 +230,10 @@ plot_strain_fitness <- function(
 	# Drop single-strain data if using ratio mixing scale
 	if (mix_scale == "ratio") {data <- drop_unmixed(data, mix_scale)}
 
-	# Point options
-	point_args <- get_point_args(shape = shape, size = size, drop_NA = drop_NA)
-
-	# Make base plot
-	fig_output <-
-		ggplot2::ggplot(data) +
-		theme_strain_fitness(facet_strains = facet_strains) +
-		do.call(geom_point_overlap, point_args)
-
-	fig_output <- fig_output |>
+	# Make plot
+	plot <- ggplot2::ggplot(data) +
+		theme_strain_fitness(facet_strains = facet_strains)
+	plot |>
 		add_axis_initial_freq(
 			mix_scale = mix_scale,
 			strain_labels = strain_labels,
@@ -249,10 +241,9 @@ plot_strain_fitness <- function(
 			xlim = xlim
 		) |>
 		add_axis_fitness(ylab = ylab, ylim = ylim) |>
-		add_facets_strainAB(facet_strains) |>
-		add_color_strain(color = color, fill = fill)
-
-	fig_output
+		add_data_points(shape = shape, size = size, drop_NA = drop_NA) |>
+		add_color_strain(color = color, fill = fill) |>
+		add_facets_strainAB(facet_strains)
 }
 
 #' Plot fitness of total group or subpopulation
@@ -323,26 +314,19 @@ plot_total_fitness <- function(
 	# Drop single-strain data if using ratio mixing scale
 	if (mix_scale == "ratio") {data <- drop_unmixed(data, mix_scale)}
 
-	# Point options
-	point_args <- get_point_args(
-		color = color, fill = fill, shape = shape, size = size, drop_NA = drop_NA
-	)
-
 	# Make plot
-	fig_output <-
-		ggplot2::ggplot(data) +
-		theme_total_fitness() +
-		do.call(geom_point_overlap, point_args)
-	fig_output <- fig_output |>
+	plot <- ggplot2::ggplot(data) + theme_total_fitness()
+	plot |>
 		add_axis_initial_freq(
 			mix_scale = mix_scale,
 			strain_labels = strain_labels,
 			xlab = xlab,
 			xlim = xlim
 		) |>
-		add_axis_fitness_total(ylab = ylab, ylim = ylim)
-
-	fig_output
+		add_axis_fitness_total(ylab = ylab, ylim = ylim) |>
+		add_data_points(
+			color = color, fill = fill, shape = shape, size = size, drop_NA = drop_NA
+		)
 }
 
 #' Plot within-group ratio of strain fitnesses
@@ -412,17 +396,9 @@ plot_fitness_ratio <- function(
 	# Drop single-strain data
 	data <- drop_unmixed(data, mix_scale)
 
-	# Point options
-	point_args <- get_point_args(
-		color = color, fill = fill, shape = shape, size = size, drop_NA = drop_NA
-	)
-
 	# Make plot
-	fig_output <-
-		ggplot2::ggplot(data) +
-		theme_fitness_ratio() +
-		do.call(geom_point_overlap, point_args)
-	fig_output <- fig_output |>
+	plot <- ggplot2::ggplot(data) + theme_fitness_ratio()
+	plot |>
 		add_axis_initial_freq(
 			mix_scale = mix_scale,
 			strain_labels = strain_labels,
@@ -431,9 +407,10 @@ plot_fitness_ratio <- function(
 		) |>
 		add_axis_fitness_ratio(
 			strain_labels = strain_labels, ylab = ylab, ylim = ylim
+		) |>
+		add_data_points(
+			color = color, fill = fill, shape = shape, size = size, drop_NA = drop_NA
 		)
-
-	fig_output
 }
 
 # Plot strain and total-group fitness. Part of plot_mix_fitness()
@@ -451,9 +428,6 @@ plot_fitness_strain_total <- function(
 	# Data already checked by plot_mix_fitness()
 	strain_labels <- get_strain_labels(data)
 
-	# Point options
-	point_args <- get_point_args(shape = shape, size = size, drop_NA = drop_NA)
-
 	# Make long-format data frame for plot
 	data <- lengthen_strain_total(data, strain_labels)
 
@@ -461,23 +435,19 @@ plot_fitness_strain_total <- function(
 	if (mix_scale == "ratio") {data <- drop_unmixed(data, mix_scale)}
 
 	# Make plot
-	fig_output <-
-		ggplot2::ggplot(data) +
-		theme_strain_fitness(facet_strains = TRUE) +
-		do.call(geom_point_overlap, point_args)
-	fig_output <- fig_output |>
+	plot <- ggplot2::ggplot(data) + theme_strain_fitness(facet_strains = TRUE)
+	plot |>
 		add_axis_initial_freq(
 			mix_scale = mix_scale, strain_labels = strain_labels
 		) |>
 		add_axis_fitness(ylim = ylim) |>
+		add_data_points(shape = shape, size = size, drop_NA = drop_NA) |>
 		add_color_strain_total(color = color, fill = fill) |>
 		add_facets_strain_total()
-
-	fig_output
 }
 
 
-# Helper functions =============================================================
+# Plot-function helpers ========================================================
 
 # Get shared y-axis limits for fitness & fitness_ratio
 #   So log10(fitness) and log10(fitness_ratio) are visually comparable
@@ -510,27 +480,6 @@ get_ylim_mix_fitness <- function(data) {
 	)
 
 	list(fitness = ylim_fitness, fitness_ratio = ylim_fitness_ratio)
-}
-
-# Collect arguments for geom_point_overlap()
-#   Don't include if not given so we can use ggplot scale instead
-get_point_args <- function(
-	color = waiver(),
-	fill = waiver(),
-	shape = waiver(),
-	size = waiver(),
-	drop_NA = waiver()
-) {
-	args <- mget(ls())  # List of arguments to this function
-	point_args <- list()
-	for (arg_name in c("color", "fill", "shape", "size")) {
-		arg_value <- args[[arg_name]]
-		if (!is_waiver(arg_value) && !is.null(arg_value)) {
-			point_args[[arg_name]] <- arg_value
-		}
-	}
-	if (!is_waiver(drop_NA) && !is.null(drop_NA)) {point_args$na.rm <- drop_NA}
-	point_args
 }
 
 # Get strain labels from data
@@ -714,6 +663,31 @@ add_axis_fitness_ratio <- function(
 	plot +
 		ggplot2::aes(y = .data$fitness_ratio_A_B) +
 		scale_y_fitness_ratio(name = ylab, limits = ylim)
+}
+
+# Add data points
+add_data_points <- function(
+	plot,
+	color = waiver(),
+	fill = waiver(),
+	shape = waiver(),
+	size = waiver(),
+	drop_NA = waiver()
+) {
+	# Collect arguments for geom_point_overlap()
+	# Don't include if not given so we can use a ggplot scale instead
+	args <- mget(ls())  # List of arguments to this function
+	point_args <- list()
+	for (arg_name in c("color", "fill", "shape", "size")) {
+		arg_value <- args[[arg_name]]
+		if (!is_waiver(arg_value) && !is.null(arg_value)) {
+			point_args[[arg_name]] <- arg_value
+		}
+	}
+	if (!is_waiver(drop_NA) && !is.null(drop_NA)) {point_args$na.rm <- drop_NA}
+
+	# Add points to plot
+	plot + do.call(geom_point_overlap, point_args)
 }
 
 # Show strains A and B on separate facets
